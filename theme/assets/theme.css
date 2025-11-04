@@ -1,7 +1,6 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* Typography */
 body {
   /*added Montserrat as default*/
   font-family: sans-serif, "Rubik"; 
