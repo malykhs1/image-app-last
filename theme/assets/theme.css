@@ -109,7 +109,7 @@ canvas {
 }
 
 /* Custom button styles - ONLY for Browse File and Generate Artwork */
-[name="file_loader_1"] button,
+[name="file_loader_1"],
 [name="button_create"] {
   background: #FFC985 !important;
   font-family: 'Mona Sans', sans-serif !important;
@@ -228,6 +228,9 @@ canvas {
   display: none !important;
 }
 
+.anvil-m3-card.anvil-m3-elevated {
+  box-shadow: none !important;
+}
 
 @media (max-width: 600px) {
   .anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter {
