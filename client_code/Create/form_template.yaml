@@ -53,12 +53,12 @@ components:
       - event_bindings: {click: button_minus_click}
         layout_properties: {}
         name: button_minus
-        properties: {appearance: text, icon: 'mi:search', icon_align: top, spacing_above: none, spacing_below: none, text: ZOOM}
-        type: form:dep_lin1x4oec0ytd:_Components.Button
+        properties: {appearance: text, icon: 'mi:zoom_out', icon_align: top, spacing_above: none, spacing_below: none, text: ''}
+        type: form:dep_lin1x4oec0ytd:_Components.IconButton
       - event_bindings: {click: button_plus_click}
         layout_properties: {}
         name: button_plus
-        properties: {appearance: text, icon: 'mi:add', visible: false}
+        properties: {appearance: text, icon: 'mi:zoom_in', icon_align: top, spacing_above: none, spacing_below: none, text: '', visible: true}
         type: form:dep_lin1x4oec0ytd:_Components.IconButton
       layout_properties: {grid_position: 'SGZSKI,ZZOBUR'}
       name: flow_panel_zoom

@@ -54,8 +54,8 @@ body {
 
 [anvil-name="button_close"] {
   position: fixed;
-  top: 10px;
-  right: 0;
+  top: 20px;
+  right: 40px;
 }
 
 /* Upload panel */
@@ -96,9 +96,16 @@ canvas {
 }
 
 /* Generate button styling */
-[anvil-role="crop-panel"] button {
-  margin-top: 15px !important;
-  margin-bottom: 5px !important;
+[anvil-role="crop-panel"] {
+  position: relative !important;
+}
+
+[name="button_create"] {
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 100 !important;
 }
 
 /* Custom button styles - ONLY for Browse File and Generate Artwork */
@@ -130,12 +137,40 @@ canvas {
   display: none !important;
 }
 
-/* Zoom buttons -$557$>D4=652>7>$D>=0 */
+/* Zoom buttons container */
+[name="flow_panel_zoom"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  position: fixed !important;
+  bottom: 120px !important;
+  left: 40px !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-radius: 50px !important;
+  padding: 8px 16px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Add ZOOM label before buttons */
+[name="flow_panel_zoom"]::before {
+  content: "ZOOM";
+  font-size: 14px;
+  font-weight: 600;
+  color: #666666;
+  letter-spacing: 0.5px;
+  margin-right: 4px;
+}
+
+/* Zoom buttons - отдельно для zoom */
 [name="button_plus"],
 [name="button_minus"] {
   background: transparent !important;
   color: #666666 !important;
   border: none !important;
+  font-size: 20px !important;
+  padding: 4px !important;
+  min-width: 32px !important;
+  cursor: pointer !important;
 }
 
 [name="button_plus"]:hover,
@@ -143,21 +178,26 @@ canvas {
   background: rgba(0, 0, 0, 0.05) !important;
   transform: none !important;
   box-shadow: none !important;
+  border-radius: 50% !important;
 }
 
-/* Close button -$157 >D0=656>3>$D>=0 */
+/* Close button - без фонового тона */
 [name="button_close"] {
-  background: transparent !important;
+  background: rgba(255, 255, 255, 0.9) !important;
   color: #666666 !important;
   border: none !important;
   font-size: 14px !important;
-  padding: 8px !important;
+  font-weight: 600 !important;
+  padding: 8px 16px !important;
+  border-radius: 50px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  letter-spacing: 0.5px !important;
 }
 
 [name="button_close"]:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
+  background: rgba(255, 255, 255, 1) !important;
   transform: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Result card - 557$D>=0 8$157 D4<>8 */
@@ -203,7 +243,26 @@ canvas {
   }
 
   .anvil-flow-panel-item:nth-child(3) {
-    grid-column: 1 / span 2 !important; /*$70=<<45B$425$:>?>=>8 */
+    grid-column: 1 / span 2 !important;
     width: 100%;
+  }
+
+  /* Mobile positioning for zoom buttons */
+  [name="flow_panel_zoom"] {
+    bottom: 100px !important;
+    left: 20px !important;
+    padding: 6px 12px !important;
+  }
+
+  /* Mobile positioning for close button */
+  [anvil-name="button_close"],
+  [name="button_close"] {
+    top: 10px !important;
+    right: 20px !important;
+  }
+
+  /* Mobile positioning for generate button */
+  [name="button_create"] {
+    bottom: 15px !important;
   }
 }
