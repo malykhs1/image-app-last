@@ -11,7 +11,7 @@ container:
               <img src="https://cdn-icons-png.flaticon.com/512/126/126477.png" alt="upload icon" />
               <h2>Upload your image</h2>
               <p>We support png and jpg files</p>
-              <input type="file" id="fileInput" accept="image/*" />
+              <input anvil-name="file_loader_1" type="file" id="fileInput" accept="image/*" />
             </div>
           </div>
 
@@ -133,5 +133,8 @@ container:
       </center>
 
       <div anvil-slot="default"></div>
+    visible: true
   type: HtmlTemplate
+custom_component: false
 is_package: true
+slots: {}

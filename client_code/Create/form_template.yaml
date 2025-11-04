@@ -30,9 +30,9 @@ components:
       properties: {align: center, font_size: 16, spacing_above: none, spacing_below: small, text: We support png and jpg files}
       type: Label
     - event_bindings: {change: file_loader_1_change}
-      layout_properties: {}
+      layout_properties: {full_width_row: false, grid_position: 'LIVLGX,QFHUFD', row_background: ''}
       name: file_loader_1
-      properties: {align: center, appearance: elevated, bold: false, file_types: image/*, show_state: false, text: Browse file}
+      properties: {align: center, appearance: elevated, bold: false, file_types: image/*, icon: '', show_state: false, text: Browse file}
       type: form:dep_lin1x4oec0ytd:_Components.FileLoader
     layout_properties: {slot: default}
     name: step1_panel
