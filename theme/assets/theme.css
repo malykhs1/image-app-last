@@ -15,6 +15,7 @@ body {
 }
 
 /* Step indicators - with white background */
+.anvil-flow-panel.anvil-flow-spacing-huge>.anvil-flow-panel-gutter>.anvil-flow-panel-item,
 .anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter>.anvil-flow-panel-item {
   margin: 0 4px !important;
 }
