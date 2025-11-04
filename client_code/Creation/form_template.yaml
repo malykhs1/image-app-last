@@ -1,0 +1,94 @@
+components:
+- components:
+  - components:
+    - components:
+      - layout_properties: {grid_position: 'QDODGV,TVUEOM'}
+        name: spacer_1
+        properties: {height: '0'}
+        type: Spacer
+      - event_bindings: {click: link_delete_click}
+        layout_properties: {grid_position: 'QDODGV,PYZCFX'}
+        name: link_delete
+        properties:
+          align: right
+          bold: true
+          font_family: Montserrat
+          font_size: 12
+          italic: false
+          spacing:
+            margin: [null, '0', null, null]
+            padding: [null, '0', null, '0']
+          text: X
+          underline: false
+          visible: true
+        type: form:dep_lin1x4oec0ytd:_Components.Link
+      layout_properties: {slot: card-content-container-slot}
+      name: column_panel_2
+      properties:
+        col_widths: '{"TVUEOM":50,"PYZCFX":10}'
+        spacing:
+          margin: ['0', null, '0', null]
+        spacing_above: none
+        spacing_below: none
+        wrap_on: never
+      type: ColumnPanel
+    - layout_properties: {slot: card-content-container-slot}
+      name: image_1
+      properties:
+        display_mode: shrink_to_fit
+        height: '100'
+        margin: ['0', null, '0', null]
+        spacing_above: none
+        spacing_below: none
+      type: Image
+    - components:
+      - layout_properties: {grid_position: 'TDJSVT,MWZWLY'}
+        name: linear_progress_cart
+        properties: {visible: false}
+        type: form:dep_lin1x4oec0ytd:_Components.LinearProgressIndicator
+      - layout_properties: {grid_position: 'TJREPV,KSZYHU'}
+        name: text_length
+        properties: {align: center}
+        type: form:dep_lin1x4oec0ytd:_Components.Text
+      - layout_properties: {grid_position: 'HHFWHB,XYGGVD'}
+        name: spacer_bottom
+        properties: {height: 20, visible: false}
+        type: Spacer
+      - event_bindings: {click: button_add_to_cart_click}
+        layout_properties: {grid_position: 'OTRBCW,MFCKGQ'}
+        name: button_add_to_cart
+        properties:
+          align: center
+          appearance: outlined
+          icon: mi:shopping_cart
+          icon_align: left
+          spacing:
+            margin: ['0', '0', '0', '0']
+          text: Add to cart
+        type: form:dep_lin1x4oec0ytd:_Components.Button
+      layout_properties: {slot: card-content-container-slot}
+      name: column_panel_1
+      properties: {col_widths: '{"MFCKGQ":40}'}
+      type: ColumnPanel
+    layout_properties: {slot: card-content-slot}
+    name: card_content_container_2
+    properties:
+      margin: ['0', '5', '16', '5']
+    type: form:dep_lin1x4oec0ytd:_Components.Card.CardContentContainer
+  layout_properties: {full_width_row: true, grid_position: 'KABWGS,GLHCOE'}
+  name: card_1
+  properties:
+    align: center
+    appearance: elevated
+    orientation: column
+    spacing:
+      margin: [null, '8', null, '8']
+  type: form:dep_lin1x4oec0ytd:_Components.Card
+container:
+  properties:
+    col_spacing: medium
+    col_widths: '{}'
+    spacing:
+      margin: ['0', null, '0', null]
+  type: ColumnPanel
+is_package: true

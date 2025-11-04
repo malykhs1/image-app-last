@@ -1,0 +1,50 @@
+color_scheme:
+  colors:
+  - {color: '#1f1f1f', name: Primary}
+  - {color: '#96F0FF', name: Primary Container}
+  - {color: '#FFFFFF', name: On Primary}
+  - {color: '#001F24', name: On Primary Container}
+  - {color: '#4A6267', name: Secondary}
+  - {color: '#CDE7EC', name: Secondary Container}
+  - {color: '#FFFFFF', name: On Secondary}
+  - {color: '#051F23', name: On Secondary Container}
+  - {color: '#535E7E', name: Tertiary}
+  - {color: '#DAE2FF', name: Tertiary Container}
+  - {color: '#FFFFFF', name: On Tertiary}
+  - {color: '#0F1A37', name: On Tertiary Container}
+  - {color: '#BA1A1A', name: Error}
+  - {color: '#ffffff', name: Background}
+  - {color: '#F8FAFA', name: Surface}
+  - {color: '#191C1D', name: On Background}
+  - {color: '#191C1D', name: On Surface}
+  - {color: '#ffffff', name: Surface Variant}
+  - {color: '#3F484A', name: On Surface Variant}
+  - {color: '#6F797A', name: Outline}
+  - {color: '#ffffff', name: On Disabled}
+  - {color: '#ffffff', name: Disabled Container}
+  - {color: '#ffffff', name: Light Overlay 1}
+  - {color: '#ffffff', name: Light Overlay 2}
+  - {color: '#ffffff', name: Dark Overlay 1}
+  - {color: '#ffffff', name: Dark Overlay 2}
+  - {color: '#ffffff', name: Primary Overlay 1}
+  - {color: '#ffffff', name: Primary Overlay 2}
+  - {color: '#ffffff', name: Primary Overlay 3}
+  - {color: '#BFC8CA', name: Outline Variant}
+  - {color: '#FFFFFF', name: On Error}
+  - {color: '#ffffff', name: Surface Container Low}
+  - {color: '#ffffff', name: Surface Container High}
+  - {color: '#ffffff', name: Surface Container Highest}
+  - {color: '#ffffff', name: Disabled Container 2}
+  - {color: '#ffffff', name: Error Overlay 1}
+  - {color: '#ffffff', name: Error Overlay 2}
+  - {color: '#ffffff', name: Dark Overlay 3}
+  - {color: '#410002', name: On Error Container}
+  - {color: '#ffffff', name: Surface Container}
+  - {color: '#2E3132', name: Inverse Surface}
+  - {color: '#ffffff', name: Inverse On Surface}
+  - {color: '#ffffff', name: On Surface Variant Overlay 1}
+  - {color: '#ffffff', name: On Surface Variant Overlay 2}
+  - {color: '#ffffff', name: Inverse On Surface Overlay 1}
+  - {color: '#ffffff', name: Inverse On Surface Overlay 2}
+  preset_groups: []
+roles: []

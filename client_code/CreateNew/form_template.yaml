@@ -1,0 +1,137 @@
+components: []
+container:
+  properties:
+    html: |-
+      <center style="font-style:italic; color:#888; margin: 3em;">
+        <div id="wizard-container">
+
+          <!-- STEP 1 -->
+          <div id="step1" class="wizard-step active-step">
+            <div class="circle">
+              <img src="https://cdn-icons-png.flaticon.com/512/126/126477.png" alt="upload icon" />
+              <h2>Upload your image</h2>
+              <p>We support png and jpg files</p>
+              <input type="file" id="fileInput" accept="image/*" />
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step2" class="wizard-step">
+            <div class="circle">
+              <canvas id="cropCanvas" width="300" height="300"></canvas>
+              <button id="confirmCrop">Confirm crop</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step3" class="wizard-step">
+            <div class="circle">
+              <img id="resultImage" src="https://placehold.co/400x400?text=Your+Artwork" alt="result" />
+              <button id="downloadBtn">Download</button>
+            </div>
+          </div>
+
+          <!-- NAVIGATION -->
+          <div id="wizard-nav">
+            <span id="step1Label" class="active">1/3 Upload file</span>
+            <span id="step2Label">2/3 Adjust crop</span>
+            <span id="step3Label">3/3 Get your Artwork</span>
+          </div>
+
+          <div anvil-slot="default"></div>
+        </div>
+
+        <style>
+          #wizard-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+            font-family: Inter, sans-serif;
+            background: url('https://images.unsplash.com/photo-1524593119773-1acb6fef90a2?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            border-radius: 12px;
+          }
+          .wizard-step { display: none; text-align: center; transition: opacity 0.5s ease; }
+          .active-step { display: block; }
+          .circle {
+            width: 420px; height: 420px; border-radius: 50%;
+            background-color: #fff; box-shadow: 0 6px 25px rgba(0,0,0,0.06);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 40px auto;
+          }
+          .circle img { width: 48px; height: 48px; margin-bottom: 16px; }
+          .circle h2 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
+          .circle p { color: #666; margin-bottom: 16px; }
+          .circle input[type="file"], .circle button {
+            background-color: #FFD48A; color: #000; border: none; border-radius: 8px; padding: 10px 24px; cursor: pointer; font-size: 15px;
+          }
+          #wizard-nav { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+          #wizard-nav span { color: #aaa; border-bottom: 2px solid transparent; padding-bottom: 2px; }
+          #wizard-nav .active { font-weight: bold; color: #000; border-bottom: 2px solid #000; }
+        </style>
+
+        <script>
+          // ——— UI helpers ———
+          function showStep(id) {
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active-step'));
+            document.getElementById(id).classList.add('active-step');
+          }
+          function activateLabel(id) {
+            document.querySelectorAll('#wizard-nav span').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+          }
+
+          const fileInput   = document.getElementById('fileInput');
+          const confirmCrop = document.getElementById('confirmCrop');
+          const downloadBtn = document.getElementById('downloadBtn');
+          const canvas      = document.getElementById('cropCanvas');
+
+          // ——— FILE UPLOAD → Python ———
+          fileInput?.addEventListener('change', (e) => {
+            const file = e.target.files?.[0];
+            if (file && window.anvil) {
+              console.log("📤 Sending file to Python via anvil.call...");
+              anvil.call('file_loader_1_change', file);
+              showStep('step2');
+              activateLabel('step2Label');
+            } else {
+              console.warn("❌ anvil.call or file missing");
+            }
+          });
+
+          // ——— Confirm crop (UI only; Python возьмёт кроп позже) ———
+          confirmCrop?.addEventListener('click', () => {
+            showStep('step3');
+            activateLabel('step3Label');
+          });
+
+          // ——— Download / Create product ———
+          downloadBtn?.addEventListener('click', () => {
+            if (window.anvil) {
+              console.log("🎯 Calling Python create...");
+              anvil.call('button_create_click');
+            } else {
+              console.warn("❌ anvil.call not available");
+            }
+          });
+
+          // ——— ПЕРЕДАЧА CANVAS В PYTHON — через anvil.call ———
+          document.addEventListener("DOMContentLoaded", function() {
+            function tryConnectCanvas() {
+              if (canvas && window.anvil) {
+                console.log("🎨 Linking canvas with Python via anvil.call...");
+                // Передаём нативный canvas — Python сам обернёт при необходимости
+                anvil.call('set_canvas_ref', canvas);
+              } else {
+                console.warn("⏳ Waiting for anvil...");
+                setTimeout(tryConnectCanvas, 500);
+              }
+            }
+            tryConnectCanvas();
+          });
+        </script>
+      </center>
+
+      <div anvil-slot="default"></div>
+  type: HtmlTemplate
+is_package: true

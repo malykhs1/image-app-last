@@ -1,0 +1,115 @@
+components:
+- event_bindings: {tick: timer_1_tick}
+  layout_properties: {slot: default}
+  name: timer_1
+  properties: {interval: 0}
+  type: Timer
+- event_bindings: {tick: timer_0_tick}
+  layout_properties: {slot: default}
+  name: timer_0
+  properties: {}
+  type: Timer
+- components:
+  - event_bindings: {click: button_close_click}
+    layout_properties: {grid_position: 'CLHDR,JDKSLA'}
+    name: button_close
+    properties: {align: right, appearance: text, icon: 'mi:close', icon_align: top, spacing_above: none, spacing_below: none, text: CLOSE, visible: false}
+    type: form:dep_lin1x4oec0ytd:_Components.Button
+  layout_properties: {slot: default}
+  name: header_panel
+  properties: {col_widths: '{}'}
+  type: ColumnPanel
+- components:
+  - components:
+    - layout_properties: {}
+      name: label_upload_title
+      properties: {align: center, bold: true, font_size: 28, spacing_above: small, spacing_below: small, text: Upload your image}
+      type: Label
+    - layout_properties: {}
+      name: label_upload_subtitle
+      properties: {align: center, font_size: 16, spacing_above: none, spacing_below: small, text: We support png and jpg files}
+      type: Label
+    - event_bindings: {change: file_loader_1_change}
+      layout_properties: {}
+      name: file_loader_1
+      properties: {align: center, appearance: elevated, bold: false, file_types: image/*, show_state: false, text: Browse file}
+      type: form:dep_lin1x4oec0ytd:_Components.FileLoader
+    layout_properties: {slot: default}
+    name: step1_panel
+    properties: {align: center, role: upload-panel, visible: true}
+    type: ColumnPanel
+  - components:
+    - event_bindings: {mouse_down: canvas_1_mouse_down, mouse_leave: canvas_1_mouse_leave, mouse_move: canvas_1_mouse_move, mouse_up: canvas_1_mouse_up, reset: canvas_1_reset}
+      layout_properties: {width: 122.6015625}
+      name: canvas_1
+      properties: {}
+      type: Canvas
+    layout_properties: {slot: default}
+    name: flow_panel_canvas
+    properties: {align: center}
+    type: FlowPanel
+  - components:
+    - components:
+      - event_bindings: {click: button_minus_click}
+        layout_properties: {}
+        name: button_minus
+        properties: {appearance: text, icon: 'mi:search', icon_align: top, spacing_above: none, spacing_below: none, text: ZOOM}
+        type: form:dep_lin1x4oec0ytd:_Components.Button
+      - event_bindings: {click: button_plus_click}
+        layout_properties: {}
+        name: button_plus
+        properties: {appearance: text, icon: 'mi:add', visible: false}
+        type: form:dep_lin1x4oec0ytd:_Components.IconButton
+      layout_properties: {grid_position: 'SGZSKI,ZZOBUR'}
+      name: flow_panel_zoom
+      properties: {align: left, spacing_above: small, spacing_below: small, visible: false}
+      type: FlowPanel
+    - event_bindings: {click: button_create_click}
+      layout_properties: {grid_position: 'GOIVRJ,VBNZAL'}
+      name: button_create
+      properties: {align: center, appearance: elevated, bold: false, font_size: 18, spacing_above: small, spacing_below: large, text: Generate Artwork, visible: false}
+      type: form:dep_lin1x4oec0ytd:_Components.Button
+    - layout_properties: {grid_position: 'KMYXGC,GVGONG'}
+      name: spacer_progress
+      properties: {height: '20', visible: false}
+      type: Spacer
+    layout_properties: {slot: default}
+    name: step2_panel
+    properties: {align: center, role: crop-panel, visible: false}
+    type: ColumnPanel
+  - layout_properties: {slot: default}
+    name: linear_progress
+    properties: {visible: false}
+    type: form:dep_lin1x4oec0ytd:_Components.LinearProgressIndicator
+  - layout_properties: {slot: default}
+    name: flow_panel_creations
+    properties: {align: center, visible: false}
+    type: FlowPanel
+  layout_properties: {slot: default}
+  name: main_content_panel
+  properties: {align: center}
+  type: ColumnPanel
+- components:
+  - event_bindings: {click: step_indicator_1_click}
+    layout_properties: {}
+    name: step_indicator_1
+    properties: {align: center, bold: true, font_size: 18, role: step-active, spacing_above: small, spacing_below: small, text: 1/3    Upload file}
+    type: Label
+  - event_bindings: {click: step_indicator_2_click}
+    layout_properties: {}
+    name: step_indicator_2
+    properties: {align: center, font_size: 18, role: step-inactive, spacing_above: small, spacing_below: small, text: 2/3    Adjust crop}
+    type: Label
+  - event_bindings: {click: step_indicator_3_click}
+    layout_properties: {}
+    name: step_indicator_3
+    properties: {align: center, font_size: 18, role: step-inactive, spacing_above: small, spacing_below: small, text: 3/3    Get your Artwork}
+    type: Label
+  layout_properties: {slot: default}
+  name: footer_panel
+  properties: {align: center, spacing: huge}
+  type: FlowPanel
+container:
+  properties: {html: ''}
+  type: HtmlTemplate
+is_package: true

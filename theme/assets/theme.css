@@ -1,0 +1,210 @@
+/* Import Mona Sans font */
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
+
+/* Typography */
+body {
+  /*added Montserrat as default*/
+  font-family: sans-serif, "Rubik"; 
+  font-size: 14px;
+  line-height: 1.4286;
+  background-image: url('https://cdn.shopify.com/s/files/1/0656/0202/7564/files/Frame_1597882285.png?v=1761476620');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Step indicators - with white background */
+.anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter>.anvil-flow-panel-item {
+  margin: 0 4px !important;
+}
+
+[anvil-role="step-active"] {
+  color: #191919;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 130%; /* 18.2px */
+  letter-spacing: 0.14px;
+  border: 1px solid #191919;
+  background: #FAFAFA;
+  padding: 4px 16px;
+  width: 215px;
+  cursor: pointer;
+}
+
+[anvil-role="step-inactive"] {
+  color: #9FA196;
+  cursor: pointer;
+  padding: 4px 16px;
+  width: 215px;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 130%; /* 18.2px */
+  letter-spacing: 0.14px;
+  border: 1px solid rgba(159, 161, 150, 0.30);
+}
+
+[anvil-role="step-inactive"]:hover {
+  color: #333333;
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+
+[anvil-name="button_close"] {
+  position: fixed;
+  top: 10px;
+  right: 0;
+}
+
+/* Upload panel */
+[anvil-role="upload-panel"] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 50%;
+  max-width: 500px;
+  max-height: 500px;
+  aspect-ratio: 1;
+  margin: 0px auto;
+  padding: 0px;
+}
+
+/* Crop panel */
+[anvil-role="crop-panel"] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  gap: 15px;
+}
+
+/* Canvas styling */
+canvas {
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+}
+
+/* Compact spacing for form elements */
+.anvil-role-crop-panel > * {
+  margin: 5px 0 !important;
+}
+
+/* Generate button styling */
+[anvil-role="crop-panel"] button {
+  margin-top: 15px !important;
+  margin-bottom: 5px !important;
+}
+
+/* Custom button styles - ONLY for Browse File and Generate Artwork */
+[name="file_loader_1"] button,
+[name="button_create"] {
+  background: #FFC985 !important;
+  font-family: 'Mona Sans', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 19px !important;
+  line-height: 100% !important;
+  letter-spacing: -0.03em !important;
+  border: none !important;
+  padding: 16px 32px !important;
+  border-radius: 50px !important;
+  transition: all 0.3s ease !important;
+  color: #000000 !important;
+}
+
+[name="file_loader_1"] button:hover,
+[name="button_create"]:hover {
+  background: #FFB85D !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 201, 133, 0.4) !important;
+}
+
+/* Hide upload icon in Browse file button */
+[name="file_loader_1"] .upload-icon,
+[name="file_loader_1"] i {
+  display: none !important;
+}
+
+/* Zoom buttons -$557$>D4=652>7>$D>=0 */
+[name="button_plus"],
+[name="button_minus"] {
+  background: transparent !important;
+  color: #666666 !important;
+  border: none !important;
+}
+
+[name="button_plus"]:hover,
+[name="button_minus"]:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Close button -$157 >D0=656>3>$D>=0 */
+[name="button_close"] {
+  background: transparent !important;
+  color: #666666 !important;
+  border: none !important;
+  font-size: 14px !important;
+  padding: 8px !important;
+}
+
+[name="button_close"]:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Result card - 557$D>=0 8$157 D4<>8 */
+.anvil-component[data-anvil-name="card_1"],
+.anvil-component[data-anvil-name="card_1"] .anvil-m3-card,
+.anvil-component[data-anvil-name="card_1"] > * {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/*$#5<@45<$55?O9$D>=$C$6A5E >4@F>G5: D57G?LF4B0 */
+.anvil-m3-card {
+  background: transparent !important;
+  border: none !important;
+}
+
+.anvil-m3-card-content-container {
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+
+#anvil-header {
+  display: none !important;
+}
+
+
+@media (max-width: 600px) {
+  .anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter {
+    margin-left: 3px !important;
+    margin-right: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  [anvil-role="step-inactive"],
+  [anvil-role="step-active"] { 
+    width: 95% !important;
+  }
+
+  .anvil-flow-panel-item:nth-child(3) {
+    grid-column: 1 / span 2 !important; /*$70=<<45B$425$:>?>=>8 */
+    width: 100%;
+  }
+}

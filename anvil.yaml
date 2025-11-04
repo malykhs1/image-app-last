@@ -1,0 +1,90 @@
+allow_embedding: true
+correct_dependency_ids: {dep_lin1x4oec0ytd: 4UK6WHQ6UX7AKELK}
+db_schema:
+  cart_added:
+    client: none
+    columns:
+    - {admin_ui: null, name: wire_len_km, type: number}
+    - {admin_ui: null, name: time_waited, type: number}
+    - {admin_ui: null, name: created_at, type: datetime}
+    - {admin_ui: null, name: out_image, type: media}
+    - {admin_ui: null, name: mask_img, type: unresolved}
+    - {admin_ui: null, name: pins, type: media}
+    - {admin_ui: null, name: session_id, type: string}
+    - {admin_ui: null, name: in_image, type: media}
+    - {admin_ui: null, name: params, type: simpleObject}
+    - {admin_ui: null, name: num_lines, type: number}
+    - {admin_ui: null, name: time_calculated, type: number}
+    - {admin_ui: null, name: out_image_medium, type: media}
+    server: full
+    title: Cart_Added
+  creations:
+    client: none
+    columns:
+    - admin_ui: {width: 200}
+      name: in_image
+      type: media
+    - admin_ui: {width: 200}
+      name: out_image
+      type: media
+    - admin_ui: {width: 200}
+      name: num_lines
+      type: number
+    - admin_ui: {width: 200}
+      name: pins
+      type: media
+    - admin_ui: {width: 200}
+      name: wire_len_km
+      type: number
+    - admin_ui: {width: 200}
+      name: params
+      type: simpleObject
+    - admin_ui: {width: 200}
+      name: mask_img
+      type: media
+    - admin_ui: {width: 200}
+      name: session_id
+      type: string
+    - admin_ui: {width: 200}
+      name: time_calculated
+      type: number
+    - admin_ui: {width: 200}
+      name: time_waited
+      type: number
+    - admin_ui: {width: 200}
+      name: created_at
+      type: datetime
+    - admin_ui: {width: 488}
+      name: out_image_medium
+      type: media
+    server: full
+    title: Creations
+dependencies:
+- config: {}
+  dep_id: dep_lin1x4oec0ytd
+  resolution_hints: {app_id: 4UK6WHQ6UX7AKELK, name: Material 3 Theme, package_name: m3}
+  version: {version_tag: v1.2.2}
+name: 'Clone of Clean App '
+native_deps:
+  head_html: "<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap\" rel=\"stylesheet\">\n\n<script>\nfunction getUrlParams() {\n  const urlParams = new URLSearchParams(window.location.search);\n  const params = {};\n  for (const [key, value] of urlParams) {\n    params[key] = value;\n  }\n  return params;\n}\n  \nfunction getFileContents(node, reader, file) {\n  // Read a file and call an Anvil method.\n  reader.onloadend = function() {\n    anvil.call(node, \"handle_drag_drop\", file.type, reader.result, file.name);\n  }        \n  reader.readAsBinaryString(file);\n}\n  \nfunction setUpListeners(dropAreaNode) {\n  dropAreaNode.addEventListener('dragover', function(event) {\n    event.preventDefault();\n  });\n\n  dropAreaNode.addEventListener('drop', function(event) {\n    event.preventDefault();\n    var reader = new FileReader();\n      // Thanks to browser differences, we need an if-else...\n    if (event.dataTransfer.items) {\n      // Use DataTransferItemList interface to access the file(s)\n      for (var i = 0; i < event.dataTransfer.items.length; i++) {\n        // If dropped items aren't files, reject them\n        if (event.dataTransfer.items[i].kind === 'file') {\n          var file = event.dataTransfer.items[i].getAsFile();\n          // Call an Anvil method with the file contents\n          getFileContents(dropAreaNode, reader, file);\n        }\n      }\n      event.dataTransfer.items.clear();\n    } else {\n      // Use DataTransfer interface to access the file(s)\n      for (var i = 0; i < event.dataTransfer.files.length; i++) {\n          var file = event.dataTransfer.files[i].getAsFile();\n          // Call an Anvil method with the file contents\n          getFileContents(dropAreaNode, reader, file);\n      }\n      event.dataTransfer.clearData();\n    }\n    });\n}\n</script>"
+package_name: Create_embedded
+runtime_options:
+  client_version: '3'
+  server_spec: null
+  server_spec_disabled: {base: python310-minimal, requirements: ''}
+  server_version: python3-sandbox
+  version: 3
+secrets:
+  admin_API_token:
+    type: secret
+    value: {POY3XLKM3H3FLBA5: qNC/gOo88NQvhNtpIfYumRr9aEPhdkC4q+w8LiB+3GqJRhYk1VTVMbd1Tq7tLKI+4+pcD3wtjbtTMiTIyIHsMpnRk/hM8bDBrGdduoAg2Txv4nPC52NY3ZnXruIYMiPCMCMkGgkiQNi8Vys0waGqMNiN+MDrmhR+jciUABRzHlawM5gZjw==}
+services:
+- client_config: {enable_v2: true}
+  server_config: {}
+  source: /runtime/services/tables.yml
+- client_config: {}
+  server_config: {}
+  source: /runtime/services/anvil/secrets.yml
+startup: {module: Create, type: form}
+startup_form: null
+uplink_visible: true
