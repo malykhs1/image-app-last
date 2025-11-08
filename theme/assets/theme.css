@@ -162,26 +162,35 @@ canvas {
 }
 
 /* Custom button styles - ONLY for Browse File and Generate Artwork */
-[name="file_loader_1"],
+[name="file_loader_1"] button,
 [name="button_create"] {
   background: #FFC985 !important;
   font-family: 'Mona Sans', sans-serif !important;
   font-weight: 500 !important;
-  font-size: 19px !important;
+  font-size: 22px !important;
   line-height: 100% !important;
-  letter-spacing: -0.03em !important;
+  letter-spacing: -0.02em !important;
   border: none !important;
-  padding: 16px 32px !important;
-  border-radius: 50px !important;
-  transition: all 0.3s ease !important;
+  padding: 18px 48px !important;
+  border-radius: 60px !important;
+  transition: all 0.2s ease !important;
   color: #000000 !important;
+  box-shadow: 0 4px 16px rgba(255, 201, 133, 0.3) !important;
+  cursor: pointer !important;
 }
 
-[name="file_loader_1"] button:hover,
+/* Hover для Browse File button */
+[name="file_loader_1"] button:hover {
+  background: #FFB85D !important;
+  transform: scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(255, 201, 133, 0.5) !important;
+}
+
+/* Hover для Generate button с учетом fixed position transform */
 [name="button_create"]:hover {
   background: #FFB85D !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 201, 133, 0.4) !important;
+  transform: translateX(-50%) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(255, 201, 133, 0.5) !important;
 }
 
 /* Hide upload icon in Browse file button */
@@ -193,65 +202,109 @@ canvas {
 /* Zoom buttons container */
 [name="flow_panel_zoom"] {
   display: flex !important;
+  flex-direction: column !important;
   align-items: center !important;
   gap: 8px !important;
   position: fixed !important;
   bottom: 140px !important;
   left: 40px !important;
-  background: rgba(255, 255, 255, 0.9) !important;
-  border-radius: 50px !important;
-  padding: 8px 16px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
   z-index: 60 !important;
 }
 
-/* Add ZOOM label before buttons */
-[name="flow_panel_zoom"]::before {
+/* Add ZOOM label after buttons */
+[name="flow_panel_zoom"]::after {
   content: "ZOOM";
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #666666;
+  color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.5px;
-  margin-right: 4px;
+  text-align: center;
+  margin-top: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Inner container for buttons */
+[name="flow_panel_zoom"] > * {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px !important;
 }
 
 /* Zoom buttons - отдельно для zoom */
 [name="button_plus"],
 [name="button_minus"] {
-  background: transparent !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   color: #666666 !important;
   border: none !important;
-  font-size: 20px !important;
-  padding: 4px !important;
-  min-width: 32px !important;
+  font-size: 24px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  border-radius: 50% !important;
   cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
 }
 
 [name="button_plus"]:hover,
 [name="button_minus"]:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
-  transform: none !important;
-  box-shadow: none !important;
-  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 1) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Close button - без фонового тона */
+/* Close button wrapper */
+[anvil-name="button_close"] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Close button - круглая кнопка */
 [name="button_close"] {
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   color: #666666 !important;
   border: none !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  padding: 8px 16px !important;
-  border-radius: 50px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-  letter-spacing: 0.5px !important;
+  font-size: 0 !important; /* Скрываем текст внутри */
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Иконка крестика */
+[name="button_close"] i {
+  font-size: 24px !important;
+  color: #666666 !important;
+}
+
+/* Текст CLOSE под кнопкой */
+[name="button_close"]::after {
+  content: "CLOSE";
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+  text-align: center;
+  position: absolute;
+  top: 52px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 [name="button_close"]:hover {
   background: rgba(255, 255, 255, 1) !important;
-  transform: none !important;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15) !important;
+  transform: scale(1.05) !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* Result card - 557$D>=0 8$157 D4<>8 */
@@ -337,26 +390,44 @@ canvas {
   [name="flow_panel_zoom"] {
     bottom: 180px !important;
     left: 15px !important;
-    padding: 6px 10px !important;
   }
 
-  [name="flow_panel_zoom"]::before {
-    font-size: 12px;
+  [name="flow_panel_zoom"]::after {
+    font-size: 11px !important;
+  }
+
+  [name="button_plus"],
+  [name="button_minus"] {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    font-size: 20px !important;
   }
 
   /* Mobile positioning for close button */
-  [anvil-name="button_close"],
-  [name="button_close"] {
+  [anvil-name="button_close"] {
     top: 10px !important;
     right: 15px !important;
-    padding: 6px 12px !important;
-    font-size: 12px !important;
+  }
+
+  [name="button_close"] {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  [name="button_close"]::after {
+    font-size: 11px !important;
+    top: 46px !important;
+  }
+
+  [name="button_close"] i {
+    font-size: 20px !important;
   }
 
   /* Mobile positioning for generate button */
   [name="button_create"] {
     bottom: 170px !important;
-    padding: 12px 24px !important;
-    font-size: 16px !important;
+    padding: 14px 32px !important;
+    font-size: 18px !important;
   }
 }
