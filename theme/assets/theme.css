@@ -16,6 +16,10 @@ body {
   padding-bottom: 120px; /* Место для footer */
 }
 
+.anvil-show-banner {
+  overflow: hidden;
+}
+
 /* Main layout container */
 [name="main_content_panel"] {
   min-height: calc(100vh - 220px) !important;
