@@ -20,6 +20,10 @@ body {
   overflow: hidden;
 }
 
+.anvil-m3-iconbutton-container {
+  margin: 11px !important;
+}
+
 /* Main layout container */
 [name="main_content_panel"] {
   min-height: calc(100vh - 220px) !important;
