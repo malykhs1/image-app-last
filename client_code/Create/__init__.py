@@ -188,12 +188,20 @@ class Create(CreateTemplate):
       self.step_indicator_1.role = 'step-active'
       self.step_indicator_1.bold = True
       self.button_close.visible = False
-      print(f"CLIENT: Step 1 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
+      # Явно скрываем все элементы управления других этапов
+      self.canvas_1.visible = False
+      self.flow_panel_canvas.visible = False
+      self.flow_panel_zoom.visible = False
+      self.button_create.visible = False
+      self.flow_panel_creations.visible = False
+      print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
       self.step_indicator_2.role = 'step-active'
       self.step_indicator_2.bold = True
       self.button_close.visible = True
+      # Явно скрываем creations на этапе 2
+      self.flow_panel_creations.visible = False
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
@@ -215,9 +223,13 @@ class Create(CreateTemplate):
       self.button_close.visible = True
       print(f"CLIENT: Step 3 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Скрываем canvas и элементы управления на этапе 3
+      self.canvas_1.visible = False
       self.flow_panel_canvas.visible = False
       self.flow_panel_zoom.visible = False
       self.button_create.visible = False
+      # Убеждаемся, что step1 и step2 панели скрыты
+      self.step1_panel.visible = False
+      self.step2_panel.visible = False
 
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
