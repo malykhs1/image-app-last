@@ -174,28 +174,27 @@ body {
   padding: 20px 0 !important;
 }
 
-/* Previous creations container - под навигацией (ниже footer) */
+/* Previous creations container - ВЫЕЗЖАЕТ ИЗ-ПОД footer */
 [name="container_previous_creations"] {
   position: fixed !important;
-  top: auto !important;
-  bottom: 0 !important;
+  bottom: -500px !important;
   left: 50% !important;
-  transform: translateX(-50%) translateY(100%) !important;
-  z-index: 40 !important;
-  padding: 20px !important;
-  background: rgba(250, 250, 250, 0.98) !important;
+  transform: translateX(-50%) !important;
+  z-index: 30 !important;
+  padding: 120px 20px 20px 20px !important;
+  background: linear-gradient(to bottom, transparent 0%, transparent 100px, rgba(250, 250, 250, 0.98) 100px, rgba(250, 250, 250, 0.98) 100%) !important;
   backdrop-filter: blur(10px) !important;
-  border-radius: 20px 20px 0 0 !important;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15) !important;
-  max-width: 750px !important;
-  width: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: 100vw !important;
+  width: 100vw !important;
   pointer-events: auto !important;
-  transition: transform 0.3s ease !important;
+  transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Показываем container, поднимая его вверх */
 [name="container_previous_creations"][data-visible="true"] {
-  transform: translateX(-50%) translateY(0) !important;
+  bottom: 0 !important;
 }
 
 /* Ряды с карточками */
@@ -504,10 +503,10 @@ canvas {
 
   /* Previous creations на мобильном - одна колонка */
   [name="container_previous_creations"] {
-    padding: 15px !important;
-    max-height: 60vh !important;
+    padding: 120px 15px 15px 15px !important;
+    max-height: 70vh !important;
     overflow-y: auto !important;
-    max-width: 95vw !important;
+    max-width: 100vw !important;
   }
 
   [name="row1_previous_creations"],
