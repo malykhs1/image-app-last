@@ -104,13 +104,16 @@ class Create(CreateTemplate):
   # Методы управления этапами
   def set_step(self, step):
     """Переключение между этапами"""
-    print(f"CLIENT: set_step({step}) called")
-    print(f"CLIENT: Creations in flow_panel before set_step: {len(self.flow_panel_creations.get_components())}")
+    print(f"CLIENT: set_step({step}) called, current_step={self.current_step}, reached_step_3={self.reached_step_3}")
+    print(f"CLIENT: img exists: {self.img is not None}")
+    print(f"CLIENT: Creations count: {len(self.flow_panel_creations.get_components())}")
+    
     self.current_step = step
     
     # Отмечаем, что пользователь достиг этапа 3
     if step == 3:
       self.reached_step_3 = True
+      print(f"CLIENT: User reached step 3! Navigation unlocked.")
 
     # Скрываем все панели
     self.step1_panel.visible = False
@@ -142,11 +145,19 @@ class Create(CreateTemplate):
       self.step_indicator_2.role = 'step-active'
       self.step_indicator_2.bold = True
       self.button_close.visible = True
-      self.canvas_1.visible = True
-      self.flow_panel_canvas.visible = True  # Показываем canvas panel
-      self.flow_panel_zoom.visible = True
-      self.button_create.visible = True
-      self.drawCanvas()
+      # Показываем canvas только если есть изображение
+      if self.img is not None:
+        self.canvas_1.visible = True
+        self.flow_panel_canvas.visible = True
+        self.flow_panel_zoom.visible = True
+        self.button_create.visible = True
+        self.drawCanvas()
+      else:
+        # Если изображения нет, скрываем элементы управления
+        self.canvas_1.visible = False
+        self.flow_panel_canvas.visible = False
+        self.flow_panel_zoom.visible = False
+        self.button_create.visible = False
     elif step == 3:
       self.flow_panel_creations.visible = True
       self.step_indicator_3.role = 'step-active'
@@ -159,15 +170,16 @@ class Create(CreateTemplate):
 
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
-    # Если достигли этап 3, навигация всегда доступна
-    if self.reached_step_3:
-      self.set_step(1)
-    # Иначе можно всегда вернуться к этапу 1
-    else:
+    print(f"CLIENT: step_indicator_1_click, reached_step_3={self.reached_step_3}")
+    # Переход на этап 1 всегда разрешен (если уже не на нем)
+    if self.current_step != 1:
+      # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
+      # (только кнопка Close сбрасывает изображение)
       self.set_step(1)
 
   def step_indicator_2_click(self, **event_args):
     """Переход к этапу 2"""
+    print(f"CLIENT: step_indicator_2_click, reached_step_3={self.reached_step_3}, img={self.img is not None}")
     # Если достигли этап 3, навигация всегда доступна
     if self.reached_step_3:
       self.set_step(2)
@@ -177,21 +189,25 @@ class Create(CreateTemplate):
 
   def step_indicator_3_click(self, **event_args):
     """Переход к этапу 3"""
+    print(f"CLIENT: step_indicator_3_click, creations={len(self.flow_panel_creations.get_components())}")
     # Можно перейти только если есть результаты
     if len(self.flow_panel_creations.get_components()) > 0:
       self.set_step(3)
 
   def button_close_click(self, **event_args):
     """Закрытие: на 3-м этапе -> к этапу 2, на 2-м этапе -> к этапу 1"""
-    print(f"CLIENT: button_close_click, current_step={self.current_step}")
+    print(f"CLIENT: button_close_click, current_step={self.current_step}, reached_step_3={self.reached_step_3}")
     if self.current_step == 3:
       # С третьего этапа возвращаемся ко второму
       self.set_step(2)
     else:
-      # Со второго этапа возвращаемся к первому и сбрасываем изображение
-      self.img = None
-      self.resetMoveAndZoom()
-      self.canvas_1.visible = False
+      # Со второго этапа возвращаемся к первому
+      # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
+      if not self.reached_step_3:
+        # Сбрасываем изображение только если еще не прошли весь flow
+        self.img = None
+        self.resetMoveAndZoom()
+        self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
