@@ -324,10 +324,14 @@ class Create(CreateTemplate):
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
       for idx, creation in enumerate(previous_creations, start=1):
-        comp = Creation(locale=self.locale, item=creation)
-        # Добавляем обработчик клика для переключения активного товара
-        comp.tag.creation_index = idx  # Сохраняем индекс в списке all_creations
-        comp.add_event_handler('click', self.on_previous_creation_click)
+        # Передаем callback функцию и индекс в компонент
+        comp = Creation(
+          locale=self.locale, 
+          item=creation,
+          is_in_grid=True,
+          grid_index=idx,
+          on_click_callback=self.on_previous_creation_click
+        )
         # Ширина для grid будет контролироваться через CSS
         self.flow_panel_previous_creations.add_component(comp)
       self.flow_panel_previous_creations.visible = True
@@ -335,17 +339,14 @@ class Create(CreateTemplate):
     else:
       self.flow_panel_previous_creations.visible = False
   
-  def on_previous_creation_click(self, **event_args):
+  def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
-    sender = event_args.get('sender')
-    if sender and hasattr(sender.tag, 'creation_index'):
-      clicked_index = sender.tag.creation_index
-      print(f"CLIENT: Clicked on creation at index {clicked_index}")
-      # Перемещаем выбранный товар в начало списка
-      clicked_creation = self.all_creations.pop(clicked_index)
-      self.all_creations.insert(0, clicked_creation)
-      # Обновляем отображение
-      self.refresh_creations_display()
+    print(f"CLIENT: Clicked on creation at index {grid_index}")
+    # Перемещаем выбранный товар в начало списка
+    clicked_creation = self.all_creations.pop(grid_index)
+    self.all_creations.insert(0, clicked_creation)
+    # Обновляем отображение
+    self.refresh_creations_display()
 
   def handle_drag_drop(self, content_type, data, name):
     if 'image' in content_type:

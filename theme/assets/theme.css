@@ -211,6 +211,17 @@ body {
   z-index: 10;
 }
 
+/* Кликабельные изображения в grid */
+[anvil-role="clickable-creation"] {
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+[anvil-role="clickable-creation"]:hover {
+  filter: brightness(1.1) !important;
+  transform: scale(1.05) !important;
+}
+
 /* Плавные переходы для всех интерактивных элементов */
 [anvil-role="step-active"],
 [anvil-role="step-inactive"],

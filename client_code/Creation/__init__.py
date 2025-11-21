@@ -31,7 +31,7 @@ def send_add_to_cart(variant_id, anvil_id, add_frame):
   # и открыть cart-drawer автоматически
 
 class Creation(CreationTemplate):
-  def __init__(self, locale, **properties):
+  def __init__(self, locale, is_in_grid=False, grid_index=None, on_click_callback=None, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
     self.image_1.height = WH_IMG_CARD
@@ -40,6 +40,26 @@ class Creation(CreationTemplate):
     length_meters = int(self.item['wire_len_km']*1000)
     self.text_length.text = 'String length: ' + str(length_meters) + ' meters'
     self.locale = locale
+    
+    # Сохраняем параметры для grid
+    self.is_in_grid = is_in_grid
+    self.grid_index = grid_index
+    self.on_click_callback = on_click_callback
+    
+    # Если это карточка в grid, добавляем обработчик клика на изображение
+    if is_in_grid and on_click_callback:
+      self.image_1.role = 'clickable-creation'
+      # Добавляем JavaScript обработчик клика на изображение
+      from anvil.js import get_dom_node
+      try:
+        img_node = get_dom_node(self.image_1)
+        def click_handler(event):
+          print(f"Creation image clicked, calling callback with index {grid_index}")
+          on_click_callback(grid_index)
+        img_node.onclick = click_handler
+        img_node.style.cursor = 'pointer'
+      except Exception as e:
+        print(f"Error setting up click handler: {e}")
 
     if locale == 'he':
       self.button_add_to_cart.text = 'הוספה לעגלה'
