@@ -96,10 +96,54 @@ class Create(CreateTemplate):
 
     # Устанавливаем начальный этап
     self.set_step(1)
+    
+    # Добавляем JavaScript обработчики кликов для надежности
+    self.setup_step_indicators_click_handlers()
 
   def form_show(self, **event_args):
     """This method is called when the form is shown on the page"""
     pass
+
+  def setup_step_indicators_click_handlers(self):
+    """Добавляем JavaScript обработчики кликов напрямую для надежности"""
+    try:
+      # Получаем DOM элементы индикаторов
+      from anvil.js import window
+      
+      indicator1_node = get_dom_node(self.step_indicator_1)
+      indicator2_node = get_dom_node(self.step_indicator_2)
+      indicator3_node = get_dom_node(self.step_indicator_3)
+      
+      print(f"CLIENT: Got DOM nodes: {indicator1_node}, {indicator2_node}, {indicator3_node}")
+      
+      # Создаем Python обработчики, которые будут вызываться из JS
+      def handler1(event):
+        print("CLIENT: ✓✓✓ JS handler1 FIRED!")
+        self.step_indicator_1_click()
+      
+      def handler2(event):
+        print("CLIENT: ✓✓✓ JS handler2 FIRED!")
+        self.step_indicator_2_click()
+      
+      def handler3(event):
+        print("CLIENT: ✓✓✓ JS handler3 FIRED!")
+        self.step_indicator_3_click()
+      
+      # Регистрируем обработчики через addEventListener
+      indicator1_node.addEventListener('click', handler1, False)
+      indicator2_node.addEventListener('click', handler2, False)
+      indicator3_node.addEventListener('click', handler3, False)
+      
+      # Также добавляем через onclick для максимальной совместимости
+      indicator1_node.onclick = handler1
+      indicator2_node.onclick = handler2
+      indicator3_node.onclick = handler3
+      
+      print("CLIENT: ✓ JS click handlers registered successfully")
+    except Exception as e:
+      print(f"CLIENT: ✗ Error setting up JS click handlers: {e}")
+      import traceback
+      traceback.print_exc()
 
   # Методы управления этапами
   def set_step(self, step):
