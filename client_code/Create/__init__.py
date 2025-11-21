@@ -335,9 +335,23 @@ class Create(CreateTemplate):
         # Ширина для grid будет контролироваться через CSS
         self.flow_panel_previous_creations.add_component(comp)
       self.flow_panel_previous_creations.visible = True
+      # Устанавливаем data-visible для CSS анимации
+      try:
+        from anvil.js import get_dom_node
+        grid_node = get_dom_node(self.flow_panel_previous_creations)
+        grid_node.setAttribute('data-visible', 'true')
+      except:
+        pass
       print(f"CLIENT: Showing {len(previous_creations)} previous creations in grid")
     else:
       self.flow_panel_previous_creations.visible = False
+      # Убираем data-visible
+      try:
+        from anvil.js import get_dom_node
+        grid_node = get_dom_node(self.flow_panel_previous_creations)
+        grid_node.removeAttribute('data-visible')
+      except:
+        pass
   
   def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
