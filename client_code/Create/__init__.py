@@ -149,7 +149,7 @@ class Create(CreateTemplate):
     """Переключение между этапами"""
     print(f"CLIENT: set_step({step}) called, current_step={self.current_step}, reached_step_3={self.reached_step_3}")
     print(f"CLIENT: img exists: {self.img is not None}")
-    print(f"CLIENT: Creations count: {len(self.flow_panel_creations.get_components())}")
+    print(f"CLIENT: Creations count: {len(self.all_creations)}")
     
     self.current_step = step
     
@@ -454,7 +454,9 @@ class Create(CreateTemplate):
   def drop_down_to_show_change(self, **event_args):
     #self.refresh_creations()
     show_all = self.drop_down_to_show.selected_value == "All"
-    components = self.flow_panel_creations.get_components()
+    # Получаем компоненты из обеих панелей
+    components = (self.flow_panel_active_creation.get_components() + 
+                  self.flow_panel_previous_creations.get_components())
     for c in components:
       if show_all:
         c.visible = True
