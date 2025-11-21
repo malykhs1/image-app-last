@@ -90,9 +90,8 @@ class Create(CreateTemplate):
     self.drawCanvas()
     self.setup_drag_and_drop()
 
-    # Очищаем старые creations (если есть)
-    for comp in self.flow_panel_creations.get_components():
-      comp.remove_from_parent()
+    # Инициализируем списки creations
+    self.all_creations = []  # Все созданные товары в сессии
 
     # Устанавливаем начальный этап
     self.set_step(1)
@@ -162,7 +161,8 @@ class Create(CreateTemplate):
     # Скрываем все панели
     self.step1_panel.visible = False
     self.step2_panel.visible = False
-    self.flow_panel_creations.visible = False
+    self.flow_panel_active_creation.visible = False
+    self.flow_panel_previous_creations.visible = False
 
     # Обновляем индикаторы этапов
     # Если пользователь достиг этапа 3, неактивные индикаторы становятся навигационными
@@ -193,7 +193,8 @@ class Create(CreateTemplate):
       self.flow_panel_canvas.visible = False
       self.flow_panel_zoom.visible = False
       self.button_create.visible = False
-      self.flow_panel_creations.visible = False
+      self.flow_panel_active_creation.visible = False
+      self.flow_panel_previous_creations.visible = False
       print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
@@ -201,7 +202,8 @@ class Create(CreateTemplate):
       self.step_indicator_2.bold = True
       self.button_close.visible = True
       # Явно скрываем creations на этапе 2
-      self.flow_panel_creations.visible = False
+      self.flow_panel_active_creation.visible = False
+      self.flow_panel_previous_creations.visible = False
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
@@ -217,7 +219,6 @@ class Create(CreateTemplate):
         self.flow_panel_zoom.visible = False
         self.button_create.visible = False
     elif step == 3:
-      self.flow_panel_creations.visible = True
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
       self.button_close.visible = True
@@ -230,6 +231,8 @@ class Create(CreateTemplate):
       # Убеждаемся, что step1 и step2 панели скрыты
       self.step1_panel.visible = False
       self.step2_panel.visible = False
+      # Обновляем отображение creations
+      self.refresh_creations_display()
 
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
@@ -266,11 +269,11 @@ class Create(CreateTemplate):
     """Переход к этапу 3"""
     print("=" * 50)
     print(f"CLIENT: ✓ step_indicator_3_click TRIGGERED!")
-    print(f"CLIENT: creations={len(self.flow_panel_creations.get_components())}, current_step={self.current_step}")
+    print(f"CLIENT: creations count={len(self.all_creations)}, current_step={self.current_step}")
     print(f"CLIENT: event_args={event_args}")
     print("=" * 50)
     # Можно перейти только если есть результаты
-    if len(self.flow_panel_creations.get_components()) > 0:
+    if len(self.all_creations) > 0:
       self.set_step(3)
     else:
       print("CLIENT: Cannot navigate to step 3 - no creations")
@@ -295,12 +298,54 @@ class Create(CreateTemplate):
     drop_panel_node = get_dom_node(self.flow_panel_canvas)
     call_js("setUpListeners", drop_panel_node)
 
-  def refresh_creations(self, my_creations):
-    #my_creations = anvil.server.call('get_my_creations')
-    for comp in self.flow_panel_creations.get_components():
+  def refresh_creations_display(self):
+    """Распределяет товары между активной панелью (центр) и grid панелью (под footer)"""
+    print(f"CLIENT: refresh_creations_display, total={len(self.all_creations)}")
+    
+    # Очищаем обе панели
+    for comp in self.flow_panel_active_creation.get_components():
       comp.remove_from_parent()
-    for c in my_creations.search(tables.order_by('created_at', ascending=False)):
-      self.flow_panel_creations.add_component(Creation(locale=self.locale,item=c), width=CARD_WIDTH)
+    for comp in self.flow_panel_previous_creations.get_components():
+      comp.remove_from_parent()
+    
+    if len(self.all_creations) == 0:
+      # Нет товаров - скрываем обе панели
+      self.flow_panel_active_creation.visible = False
+      self.flow_panel_previous_creations.visible = False
+      return
+    
+    # Последний созданный товар (индекс 0) - показываем в центре над footer
+    active_creation = self.all_creations[0]
+    comp = Creation(locale=self.locale, item=active_creation)
+    self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
+    self.flow_panel_active_creation.visible = True
+    
+    # Если есть предыдущие товары (от 1 до 4) - показываем в grid под footer
+    if len(self.all_creations) > 1:
+      previous_creations = self.all_creations[1:5]  # Максимум 4 товара
+      for idx, creation in enumerate(previous_creations, start=1):
+        comp = Creation(locale=self.locale, item=creation)
+        # Добавляем обработчик клика для переключения активного товара
+        comp.tag.creation_index = idx  # Сохраняем индекс в списке all_creations
+        comp.add_event_handler('click', self.on_previous_creation_click)
+        # Ширина для grid будет контролироваться через CSS
+        self.flow_panel_previous_creations.add_component(comp)
+      self.flow_panel_previous_creations.visible = True
+      print(f"CLIENT: Showing {len(previous_creations)} previous creations in grid")
+    else:
+      self.flow_panel_previous_creations.visible = False
+  
+  def on_previous_creation_click(self, **event_args):
+    """Обработчик клика на предыдущий товар - делает его активным"""
+    sender = event_args.get('sender')
+    if sender and hasattr(sender.tag, 'creation_index'):
+      clicked_index = sender.tag.creation_index
+      print(f"CLIENT: Clicked on creation at index {clicked_index}")
+      # Перемещаем выбранный товар в начало списка
+      clicked_creation = self.all_creations.pop(clicked_index)
+      self.all_creations.insert(0, clicked_creation)
+      # Обновляем отображение
+      self.refresh_creations_display()
 
   def handle_drag_drop(self, content_type, data, name):
     if 'image' in content_type:
@@ -333,7 +378,7 @@ class Create(CreateTemplate):
   ##### CALL SERVER FUNC #####
   def button_create_click(self, **event_args):
     print(f"CLIENT: button_create_click called")
-    print(f"CLIENT: Current creations in UI BEFORE: {len(self.flow_panel_creations.get_components())}")
+    print(f"CLIENT: Current creations count BEFORE: {len(self.all_creations)}")
 
     # Защита от двойного нажатия
     if hasattr(self, 'is_creating') and self.is_creating:
@@ -389,17 +434,13 @@ class Create(CreateTemplate):
     self.is_creating = False  # Разрешаем повторное нажатие после завершения
 
     #display results
-    print(f"CLIENT: Adding creation to UI, row ID: {row.get_id()}")
-    comp = Creation(locale=self.locale,item=row)
-    self.flow_panel_creations.add_component(comp, width=CARD_WIDTH, index=0)
-    print(f"CLIENT: Total creations in UI: {len(self.flow_panel_creations.get_components())}")
+    print(f"CLIENT: Adding creation to list, row ID: {row.get_id()}")
+    # Добавляем в начало списка (последний созданный)
+    self.all_creations.insert(0, row)
+    print(f"CLIENT: Total creations: {len(self.all_creations)}")
 
     # Автоматически переходим к этапу 3 после генерации
     self.set_step(3)
-
-    #on mobile - scroll to the result
-    if self.is_mobile:
-      anvil.js.window.setTimeout(lambda: comp.scroll_into_view(), 100)
 
 
   def drop_down_effect_change(self, **event_args):
