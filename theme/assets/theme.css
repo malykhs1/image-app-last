@@ -72,7 +72,7 @@ body {
 
 [anvil-role="step-inactive"] {
   color: #9FA196;
-  cursor: pointer;
+  cursor: default;
   padding: 4px 16px;
   width: 215px;
   font-size: 14px !important;
@@ -81,11 +81,30 @@ body {
   line-height: 130%; /* 18.2px */
   letter-spacing: 0.14px;
   border: 1px solid rgba(159, 161, 150, 0.30);
+  opacity: 0.7;
 }
 
-[anvil-role="step-inactive"]:hover {
-  color: #333333;
+/* Навигационные индикаторы - доступны для клика после достижения этапа 3 */
+[anvil-role="step-navigable"] {
+  color: #191919;
+  cursor: pointer;
+  padding: 4px 16px;
+  width: 215px;
+  font-size: 14px !important;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 130%; /* 18.2px */
+  letter-spacing: 0.14px;
+  border: 1px solid rgba(159, 161, 150, 0.50);
+  background: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease !important;
+}
+
+[anvil-role="step-navigable"]:hover {
+  color: #191919;
   background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(159, 161, 150, 0.70);
+  transform: translateY(-1px);
 }
 
 
@@ -126,7 +145,8 @@ body {
 
 /* Плавные переходы для всех интерактивных элементов */
 [anvil-role="step-active"],
-[anvil-role="step-inactive"] {
+[anvil-role="step-inactive"],
+[anvil-role="step-navigable"] {
   transition: all 0.3s ease !important;
 }
 
@@ -362,7 +382,8 @@ canvas {
   }
 
   [anvil-role="step-inactive"],
-  [anvil-role="step-active"] { 
+  [anvil-role="step-active"],
+  [anvil-role="step-navigable"] { 
     width: 95% !important;
     font-size: 12px !important;
     padding: 4px 8px !important;

@@ -27,6 +27,7 @@ class Create(CreateTemplate):
     url_params = anvil.js.call_js('getUrlParams')
     self.locale = url_params.get('locale', 'en')
     self.current_step = 1  # Текущий этап: 1, 2 или 3
+    self.reached_step_3 = False  # Флаг: достиг ли пользователь этапа 3
     self.brush_size = 10
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
@@ -106,6 +107,10 @@ class Create(CreateTemplate):
     print(f"CLIENT: set_step({step}) called")
     print(f"CLIENT: Creations in flow_panel before set_step: {len(self.flow_panel_creations.get_components())}")
     self.current_step = step
+    
+    # Отмечаем, что пользователь достиг этапа 3
+    if step == 3:
+      self.reached_step_3 = True
 
     # Скрываем все панели
     self.step1_panel.visible = False
@@ -119,6 +124,12 @@ class Create(CreateTemplate):
     self.step_indicator_2.bold = False
     self.step_indicator_3.role = 'step-inactive'
     self.step_indicator_3.bold = False
+    
+    # Если пользователь достиг этапа 3, делаем все индикаторы навигационными
+    if self.reached_step_3:
+      self.step_indicator_1.role = 'step-navigable'
+      self.step_indicator_2.role = 'step-navigable'
+      self.step_indicator_3.role = 'step-navigable'
 
     # Показываем нужную панель и активируем индикатор
     if step == 1:
@@ -148,16 +159,26 @@ class Create(CreateTemplate):
 
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
-    self.set_step(1)
+    # Если достигли этап 3, навигация всегда доступна
+    if self.reached_step_3:
+      self.set_step(1)
+    # Иначе можно всегда вернуться к этапу 1
+    else:
+      self.set_step(1)
 
   def step_indicator_2_click(self, **event_args):
     """Переход к этапу 2"""
-    if self.img is not None:  # Можно перейти только если изображение загружено
+    # Если достигли этап 3, навигация всегда доступна
+    if self.reached_step_3:
+      self.set_step(2)
+    # Иначе можно перейти только если изображение загружено
+    elif self.img is not None:
       self.set_step(2)
 
   def step_indicator_3_click(self, **event_args):
     """Переход к этапу 3"""
-    if len(self.flow_panel_creations.get_components()) > 0:  # Есть результаты
+    # Можно перейти только если есть результаты
+    if len(self.flow_panel_creations.get_components()) > 0:
       self.set_step(3)
 
   def button_close_click(self, **event_args):
