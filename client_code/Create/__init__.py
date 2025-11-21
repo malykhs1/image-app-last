@@ -162,7 +162,7 @@ class Create(CreateTemplate):
     self.step1_panel.visible = False
     self.step2_panel.visible = False
     self.flow_panel_active_creation.visible = False
-    self.flow_panel_previous_creations.visible = False
+    self.container_previous_creations.visible = False
 
     # Обновляем индикаторы этапов
     # Если пользователь достиг этапа 3, неактивные индикаторы становятся навигационными
@@ -194,7 +194,7 @@ class Create(CreateTemplate):
       self.flow_panel_zoom.visible = False
       self.button_create.visible = False
       self.flow_panel_active_creation.visible = False
-      self.flow_panel_previous_creations.visible = False
+      self.container_previous_creations.visible = False
       print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
@@ -203,7 +203,7 @@ class Create(CreateTemplate):
       self.button_close.visible = True
       # Явно скрываем creations на этапе 2
       self.flow_panel_active_creation.visible = False
-      self.flow_panel_previous_creations.visible = False
+      self.container_previous_creations.visible = False
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
@@ -302,16 +302,18 @@ class Create(CreateTemplate):
     """Распределяет товары между активной панелью (центр) и grid панелью (под footer)"""
     print(f"CLIENT: refresh_creations_display, total={len(self.all_creations)}")
     
-    # Очищаем обе панели
+    # Очищаем все панели
     for comp in self.flow_panel_active_creation.get_components():
       comp.remove_from_parent()
-    for comp in self.flow_panel_previous_creations.get_components():
+    for comp in self.row1_previous_creations.get_components():
+      comp.remove_from_parent()
+    for comp in self.row2_previous_creations.get_components():
       comp.remove_from_parent()
     
     if len(self.all_creations) == 0:
       # Нет товаров - скрываем обе панели
       self.flow_panel_active_creation.visible = False
-      self.flow_panel_previous_creations.visible = False
+      self.container_previous_creations.visible = False
       return
     
     # Последний созданный товар (индекс 0) - показываем в центре над footer
@@ -323,6 +325,8 @@ class Create(CreateTemplate):
     # Если есть предыдущие товары (от 1 до 4) - показываем в grid под footer
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
+      
+      # Распределяем по рядам: 2 карточки в ряд
       for idx, creation in enumerate(previous_creations, start=1):
         # Передаем callback функцию и индекс в компонент
         comp = Creation(
@@ -332,24 +336,31 @@ class Create(CreateTemplate):
           grid_index=idx,
           on_click_callback=self.on_previous_creation_click
         )
-        # Ширина для grid будет контролироваться через CSS
-        self.flow_panel_previous_creations.add_component(comp)
-      self.flow_panel_previous_creations.visible = True
+        
+        # Определяем в какой ряд добавить (2 карточки на ряд)
+        if idx <= 2:
+          # Первый ряд
+          self.row1_previous_creations.add_component(comp, width='320px')
+        else:
+          # Второй ряд
+          self.row2_previous_creations.add_component(comp, width='320px')
+      
+      self.container_previous_creations.visible = True
       # Устанавливаем data-visible для CSS анимации
       try:
         from anvil.js import get_dom_node
-        grid_node = get_dom_node(self.flow_panel_previous_creations)
-        grid_node.setAttribute('data-visible', 'true')
+        container_node = get_dom_node(self.container_previous_creations)
+        container_node.setAttribute('data-visible', 'true')
       except:
         pass
-      print(f"CLIENT: Showing {len(previous_creations)} previous creations in grid")
+      print(f"CLIENT: Showing {len(previous_creations)} previous creations in 2 rows")
     else:
-      self.flow_panel_previous_creations.visible = False
+      self.container_previous_creations.visible = False
       # Убираем data-visible
       try:
         from anvil.js import get_dom_node
-        grid_node = get_dom_node(self.flow_panel_previous_creations)
-        grid_node.removeAttribute('data-visible')
+        container_node = get_dom_node(self.container_previous_creations)
+        container_node.removeAttribute('data-visible')
       except:
         pass
   
@@ -469,9 +480,10 @@ class Create(CreateTemplate):
   def drop_down_to_show_change(self, **event_args):
     #self.refresh_creations()
     show_all = self.drop_down_to_show.selected_value == "All"
-    # Получаем компоненты из обеих панелей
+    # Получаем компоненты из всех панелей
     components = (self.flow_panel_active_creation.get_components() + 
-                  self.flow_panel_previous_creations.get_components())
+                  self.row1_previous_creations.get_components() +
+                  self.row2_previous_creations.get_components())
     for c in components:
       if show_all:
         c.visible = True

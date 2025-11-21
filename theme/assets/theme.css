@@ -174,18 +174,14 @@ body {
   padding: 20px 0 !important;
 }
 
-/* Previous creations grid - под навигацией (ниже footer) */
-[name="flow_panel_previous_creations"] {
+/* Previous creations container - под навигацией (ниже footer) */
+[name="container_previous_creations"] {
   position: fixed !important;
   top: auto !important;
   bottom: 0 !important;
   left: 50% !important;
   transform: translateX(-50%) translateY(100%) !important;
   z-index: 40 !important;
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  grid-template-rows: repeat(2, 1fr) !important;
-  gap: 15px !important;
   padding: 20px !important;
   background: rgba(250, 250, 250, 0.98) !important;
   backdrop-filter: blur(10px) !important;
@@ -195,35 +191,38 @@ body {
   width: auto !important;
   pointer-events: auto !important;
   transition: transform 0.3s ease !important;
-  justify-items: center !important;
-  align-items: start !important;
 }
 
-/* Переопределяем FlowPanel стили */
-[name="flow_panel_previous_creations"] > .anvil-flow-panel-gutter {
-  display: contents !important;
-}
-
-/* Показываем grid, поднимая его вверх */
-[name="flow_panel_previous_creations"][data-visible="true"] {
+/* Показываем container, поднимая его вверх */
+[name="container_previous_creations"][data-visible="true"] {
   transform: translateX(-50%) translateY(0) !important;
 }
 
+/* Ряды с карточками */
+[name="row1_previous_creations"],
+[name="row2_previous_creations"] {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 15px !important;
+  flex-wrap: nowrap !important;
+}
+
 /* Creations cards в grid - уменьшенный размер */
-[name="flow_panel_previous_creations"] .anvil-flow-panel-item,
-[name="flow_panel_previous_creations"] > * > * {
-  max-width: 320px !important;
-  width: 320px !important;
+[name="row1_previous_creations"] > *,
+[name="row2_previous_creations"] > * {
   transform: scale(0.85) !important;
   transform-origin: center !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   opacity: 0.9;
+  flex-shrink: 0 !important;
 }
 
 /* Hover эффект для предыдущих товаров */
-[name="flow_panel_previous_creations"] .anvil-flow-panel-item:hover,
-[name="flow_panel_previous_creations"] > * > *:hover {
+[name="row1_previous_creations"] > *:hover,
+[name="row2_previous_creations"] > *:hover {
   transform: scale(0.9) !important;
   opacity: 1;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
@@ -504,21 +503,24 @@ canvas {
   }
 
   /* Previous creations на мобильном - одна колонка */
-  [name="flow_panel_previous_creations"] {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto !important;
-    gap: 10px !important;
+  [name="container_previous_creations"] {
     padding: 15px !important;
     max-height: 60vh !important;
     overflow-y: auto !important;
     max-width: 95vw !important;
   }
 
-  [name="flow_panel_previous_creations"] .anvil-flow-panel-item,
-  [name="flow_panel_previous_creations"] > * > * {
-    max-width: 90vw !important;
-    width: 90vw !important;
+  [name="row1_previous_creations"],
+  [name="row2_previous_creations"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  [name="row1_previous_creations"] > *,
+  [name="row2_previous_creations"] > * {
     transform: scale(0.95) !important;
+    width: 85vw !important;
+    max-width: 85vw !important;
   }
 
   [anvil-role="upload-panel"] {

@@ -89,10 +89,19 @@ components:
   name: main_content_panel
   properties: {align: center}
   type: ColumnPanel
-- layout_properties: {slot: default}
-  name: flow_panel_previous_creations
-  properties: {align: center, visible: false}
-  type: FlowPanel
+- components:
+  - layout_properties: {}
+    name: row1_previous_creations
+    properties: {align: center, spacing: medium, visible: true}
+    type: FlowPanel
+  - layout_properties: {}
+    name: row2_previous_creations
+    properties: {align: center, spacing: medium, visible: true}
+    type: FlowPanel
+  layout_properties: {slot: default}
+  name: container_previous_creations
+  properties: {align: center, spacing_above: small, spacing_below: small, visible: false}
+  type: ColumnPanel
 - components:
   - event_bindings: {click: step_indicator_1_click}
     layout_properties: {}
