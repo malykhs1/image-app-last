@@ -177,29 +177,47 @@ class Create(CreateTemplate):
 
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
-    print(f"CLIENT: step_indicator_1_click, reached_step_3={self.reached_step_3}")
+    print("=" * 50)
+    print(f"CLIENT: ✓ step_indicator_1_click TRIGGERED!")
+    print(f"CLIENT: reached_step_3={self.reached_step_3}, current_step={self.current_step}")
+    print(f"CLIENT: event_args={event_args}")
+    print("=" * 50)
     # Переход на этап 1 всегда разрешен (если уже не на нем)
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
       self.set_step(1)
+    else:
+      print("CLIENT: Already on step 1, ignoring click")
 
   def step_indicator_2_click(self, **event_args):
     """Переход к этапу 2"""
-    print(f"CLIENT: step_indicator_2_click, reached_step_3={self.reached_step_3}, img={self.img is not None}")
+    print("=" * 50)
+    print(f"CLIENT: ✓ step_indicator_2_click TRIGGERED!")
+    print(f"CLIENT: reached_step_3={self.reached_step_3}, img={self.img is not None}, current_step={self.current_step}")
+    print(f"CLIENT: event_args={event_args}")
+    print("=" * 50)
     # Если достигли этап 3, навигация всегда доступна
     if self.reached_step_3:
       self.set_step(2)
     # Иначе можно перейти только если изображение загружено
     elif self.img is not None:
       self.set_step(2)
+    else:
+      print("CLIENT: Cannot navigate to step 2 - no image and haven't reached step 3")
 
   def step_indicator_3_click(self, **event_args):
     """Переход к этапу 3"""
-    print(f"CLIENT: step_indicator_3_click, creations={len(self.flow_panel_creations.get_components())}")
+    print("=" * 50)
+    print(f"CLIENT: ✓ step_indicator_3_click TRIGGERED!")
+    print(f"CLIENT: creations={len(self.flow_panel_creations.get_components())}, current_step={self.current_step}")
+    print(f"CLIENT: event_args={event_args}")
+    print("=" * 50)
     # Можно перейти только если есть результаты
     if len(self.flow_panel_creations.get_components()) > 0:
       self.set_step(3)
+    else:
+      print("CLIENT: Cannot navigate to step 3 - no creations")
 
   def button_close_click(self, **event_args):
     """Закрытие: на 3-м этапе -> к этапу 2, на 2-м этапе -> к этапу 1"""
