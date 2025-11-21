@@ -48,6 +48,12 @@ body {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  pointer-events: auto !important;
+}
+
+/* Убеждаемся, что дочерние элементы footer тоже получают клики */
+[name="footer_panel"] * {
+  pointer-events: auto !important;
 }
 
 /* Step indicators - with white background */
@@ -86,8 +92,8 @@ body {
 
 /* Навигационные индикаторы - доступны для клика после достижения этапа 3 */
 [anvil-role="step-navigable"] {
-  color: #191919;
-  cursor: pointer;
+  color: #191919 !important;
+  cursor: pointer !important;
   padding: 4px 16px;
   width: 215px;
   font-size: 14px !important;
@@ -95,16 +101,19 @@ body {
   font-weight: 700;
   line-height: 130%; /* 18.2px */
   letter-spacing: 0.14px;
-  border: 1px solid rgba(159, 161, 150, 0.50);
-  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(159, 161, 150, 0.60) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
   transition: all 0.3s ease !important;
+  pointer-events: auto !important;
+  position: relative;
 }
 
 [anvil-role="step-navigable"]:hover {
-  color: #191919;
-  background-color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(159, 161, 150, 0.70);
+  color: #000000 !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid #191919 !important;
   transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 

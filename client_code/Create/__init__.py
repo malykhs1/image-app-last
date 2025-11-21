@@ -121,18 +121,22 @@ class Create(CreateTemplate):
     self.flow_panel_creations.visible = False
 
     # Обновляем индикаторы этапов
-    self.step_indicator_1.role = 'step-inactive'
-    self.step_indicator_1.bold = False
-    self.step_indicator_2.role = 'step-inactive'
-    self.step_indicator_2.bold = False
-    self.step_indicator_3.role = 'step-inactive'
-    self.step_indicator_3.bold = False
-    
-    # Если пользователь достиг этапа 3, делаем все индикаторы навигационными
+    # Если пользователь достиг этапа 3, неактивные индикаторы становятся навигационными
     if self.reached_step_3:
+      # Все индикаторы изначально навигационные (кликабельные)
       self.step_indicator_1.role = 'step-navigable'
       self.step_indicator_2.role = 'step-navigable'
       self.step_indicator_3.role = 'step-navigable'
+    else:
+      # До достижения этапа 3 - неактивные индикаторы неинтерактивные
+      self.step_indicator_1.role = 'step-inactive'
+      self.step_indicator_2.role = 'step-inactive'
+      self.step_indicator_3.role = 'step-inactive'
+    
+    # Сбрасываем bold для всех
+    self.step_indicator_1.bold = False
+    self.step_indicator_2.bold = False
+    self.step_indicator_3.bold = False
 
     # Показываем нужную панель и активируем индикатор
     if step == 1:
@@ -140,11 +144,13 @@ class Create(CreateTemplate):
       self.step_indicator_1.role = 'step-active'
       self.step_indicator_1.bold = True
       self.button_close.visible = False
+      print(f"CLIENT: Step 1 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
       self.step_indicator_2.role = 'step-active'
       self.step_indicator_2.bold = True
       self.button_close.visible = True
+      print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
         self.canvas_1.visible = True
@@ -163,6 +169,7 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
       self.button_close.visible = True
+      print(f"CLIENT: Step 3 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Скрываем canvas и элементы управления на этапе 3
       self.flow_panel_canvas.visible = False
       self.flow_panel_zoom.visible = False
