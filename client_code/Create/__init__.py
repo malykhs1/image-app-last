@@ -416,15 +416,29 @@ class Create(CreateTemplate):
     
     # Берем первый товар из списка (активный, в центре)
     active_creation = self.all_creations[0]
-    variant_id = active_creation['shopify_variant_id']
-    anvil_id = active_creation.get_id()
     
-    print(f"CLIENT: Adding active creation to cart: variant_id={variant_id}, anvil_id={anvil_id}")
+    print(f"CLIENT: Starting add to cart for active creation, row ID: {active_creation.get_id()}")
     
-    # Используем тот же механизм, что и в Creation компоненте
-    from .Creation import send_add_to_cart
     try:
-      send_add_to_cart(variant_id, anvil_id, False)
+      # Запускаем background task для создания товара в Shopify (так же как в Creation)
+      add_frame = False  # По умолчанию без рамки
+      task = anvil.server.call('launch_add_to_cart_task', active_creation, self.locale)
+      
+      print(f"CLIENT: Background task launched, waiting for completion...")
+      
+      # Ждем завершения task
+      while task.is_completed() is False:
+        pass
+      
+      # Получаем результат: variant_id, anvil_id
+      variant_id, anvil_id = task.get_return_value()
+      
+      print(f"CLIENT: Received variant_id: {variant_id}, anvil_id: {anvil_id}")
+      
+      # Отправляем postMessage для добавления в корзину
+      from .Creation import send_add_to_cart
+      send_add_to_cart(variant_id, anvil_id, add_frame)
+      
       print(f"CLIENT: Active creation added to cart successfully")
       
       # Отправляем подтверждение родительскому окну
@@ -435,7 +449,8 @@ class Create(CreateTemplate):
       
     except Exception as e:
       print(f"CLIENT: Error adding active creation to cart: {e}")
-      alert(f"Failed to add to cart: {str(e)}", title="Error")
+      import traceback
+      traceback.print_exc()
       
       # Отправляем сообщение об ошибке родительскому окну
       anvil.js.window.parent.postMessage({
