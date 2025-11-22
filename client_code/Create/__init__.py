@@ -411,44 +411,59 @@ class Create(CreateTemplate):
     """Добавляет активный товар (последний созданный) в корзину по команде из внешней кнопки"""
     if not self.all_creations:
       print("CLIENT: No active creation to add to cart")
-      alert("Please generate artwork first", title="No Artwork")
+      anvil.js.window.parent.postMessage({
+        'action': 'cart_add_error',
+        'error': 'No artwork generated yet'
+      }, '*')
       return
     
-    # Берем первый товар из списка (активный, в центре)
-    active_creation = self.all_creations[0]
-    
-    print(f"CLIENT: Starting add to cart for active creation, row ID: {active_creation.get_id()}")
+    print(f"CLIENT: Attempting to click Add to cart button in active creation...")
     
     try:
-      # Запускаем background task для создания товара в Shopify (так же как в Creation)
-      add_frame = False  # По умолчанию без рамки
-      task = anvil.server.call('launch_add_to_cart_task', active_creation, self.locale)
+      # Находим активную карточку (первую в flow_panel_active_creation)
+      active_components = self.flow_panel_active_creation.get_components()
       
-      print(f"CLIENT: Background task launched, waiting for completion...")
+      if not active_components:
+        print("CLIENT: No active creation component found")
+        anvil.js.window.parent.postMessage({
+          'action': 'cart_add_error',
+          'error': 'No active creation component'
+        }, '*')
+        return
       
-      # Ждем завершения task
-      while task.is_completed() is False:
-        pass
+      active_creation_component = active_components[0]
+      print(f"CLIENT: Found active creation component")
       
-      # Получаем результат: variant_id, anvil_id
-      variant_id, anvil_id = task.get_return_value()
+      # Находим кнопку "Add to cart" внутри компонента через JavaScript
+      from anvil.js import get_dom_node
+      component_node = get_dom_node(active_creation_component)
       
-      print(f"CLIENT: Received variant_id: {variant_id}, anvil_id: {anvil_id}")
+      # Ищем кнопку Add to cart внутри компонента
+      add_to_cart_button = component_node.querySelector('button')
       
-      # Отправляем postMessage для добавления в корзину
-      from .Creation import send_add_to_cart
-      send_add_to_cart(variant_id, anvil_id, add_frame)
-      
-      print(f"CLIENT: Active creation added to cart successfully")
-      
-      # Отправляем подтверждение родительскому окну
-      anvil.js.window.parent.postMessage({
-        'action': 'cart_add_success',
-        'variant_id': variant_id
-      }, '*')
+      if add_to_cart_button:
+        print(f"CLIENT: Found Add to cart button, simulating click...")
+        add_to_cart_button.click()
+        
+        # Даем время на обработку клика и отправляем подтверждение
+        def send_success():
+          anvil.js.window.parent.postMessage({
+            'action': 'cart_add_success'
+          }, '*')
+        
+        # Задержка 500мс для завершения обработки клика
+        anvil.js.window.setTimeout(send_success, 500)
+        
+        print(f"CLIENT: Click simulated successfully")
+      else:
+        print("CLIENT: Add to cart button not found in component")
+        anvil.js.window.parent.postMessage({
+          'action': 'cart_add_error',
+          'error': 'Add to cart button not found'
+        }, '*')
       
     except Exception as e:
-      print(f"CLIENT: Error adding active creation to cart: {e}")
+      print(f"CLIENT: Error simulating click: {e}")
       print(f"CLIENT: Error type: {type(e).__name__}")
       
       # Отправляем сообщение об ошибке родительскому окну
