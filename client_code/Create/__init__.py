@@ -381,11 +381,14 @@ class Create(CreateTemplate):
       data = event.data
       print(f"CLIENT: Received postMessage: {data}")
       
-      if isinstance(data, dict):
-        action = data.get('action')
+      # Пробуем получить action (работает и с dict, и с proxyobject)
+      try:
+        action = data.get('action') if hasattr(data, 'get') else data['action']
+        print(f"CLIENT: PostMessage action: {action}")
         
         if action == 'add_active_to_cart':
           # Добавляем активный товар (последний созданный) в корзину
+          print(f"CLIENT: Calling add_active_creation_to_cart()...")
           self.add_active_creation_to_cart()
         elif action == 'get_active_product':
           # Отправляем информацию об активном товаре обратно
@@ -397,6 +400,8 @@ class Create(CreateTemplate):
               'anvil_id': active.get_id()
             }
             anvil.js.window.parent.postMessage(response, '*')
+      except (AttributeError, KeyError, TypeError) as e:
+        print(f"CLIENT: Error processing postMessage: {e}, data type: {type(data)}")
     
     # Регистрируем обработчик через JavaScript
     anvil.js.window.addEventListener('message', handle_message)
