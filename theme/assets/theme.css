@@ -180,12 +180,12 @@ body {
   max-width: 95vw !important;
 }
 
-/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer */
+/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer, grid 2x2 */
 [name="container_previous_creations"],
 div[anvil-name="container_previous_creations"],
 .anvil-component[anvil-name="container_previous_creations"] {
   position: fixed !important;
-  bottom: -400px !important; /* Скрыт по умолчанию */
+  bottom: -500px !important; /* Скрыт по умолчанию (увеличили для 2 рядов) */
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important; /* НИЖЕ footer (z-index: 999) */
@@ -193,12 +193,14 @@ div[anvil-name="container_previous_creations"],
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 15px !important;
-  padding: 20px !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  padding: 30px 20px !important;
   
   width: 100vw !important;
-  max-height: 300px !important;
+  max-height: 450px !important; /* Больше для 2 рядов */
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   
   background: rgba(250, 250, 250, 0.98) !important;
   backdrop-filter: blur(10px) !important;
@@ -214,50 +216,59 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   bottom: 0 !important; /* Выезжает снизу ДО footer */
 }
 
-/* Ряды с карточками */
+/* Ряды с карточками - grid 2x2 */
 [name="row1_previous_creations"],
 [name="row2_previous_creations"] {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
-  align-items: flex-start !important;
-  gap: 15px !important;
-  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 20px !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  padding: 10px 0 !important;
 }
 
-/* Grid creation cards - уменьшенная версия карточек */
+/* Grid creation cards - уменьшенная версия карточек для 2x2 grid */
 [anvil-role~="grid-creation-card"] {
-  max-width: 220px !important;
-  width: 220px !important;
+  max-width: 240px !important;
+  width: 240px !important;
+  min-width: 240px !important;
   cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  opacity: 0.9;
+  transition: all 0.3s ease !important;
+  opacity: 0.85;
+  flex-shrink: 0 !important;
 }
 
 [anvil-role~="grid-creation-card"]:hover {
   opacity: 1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+  z-index: 5 !important;
 }
 
 /* Внутренние элементы grid карточек */
 [anvil-role~="grid-creation-card"] [anvil-role="card"] {
-  padding: 10px !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
 }
 
 [anvil-role~="grid-creation-card"] img {
   max-width: 200px !important;
   height: 200px !important;
   object-fit: cover !important;
+  border-radius: 12px !important;
 }
 
 [anvil-role~="grid-creation-card"] .anvil-label {
   font-size: 14px !important;
+  margin: 8px 0 !important;
 }
 
 [anvil-role~="grid-creation-card"] .anvil-button {
-  padding: 8px 16px !important;
+  padding: 10px 20px !important;
   font-size: 14px !important;
+  border-radius: 50px !important;
 }
 
 /* Кликабельные изображения в grid */
@@ -535,34 +546,41 @@ canvas {
 
   /* Previous creations на мобильном - фиксированный контейнер */
   [name="container_previous_creations"] {
-    bottom: -350px !important; /* Скрыт глубже на мобильном */
-    max-height: 250px !important;
-    padding: 15px !important;
+    bottom: -600px !important; /* Скрыт глубже на мобильном */
+    max-height: 500px !important;
+    padding: 20px 10px !important;
   }
   
   [name="container_previous_creations"][data-visible="true"] {
     bottom: 0 !important; /* Выезжает вверх */
   }
 
+  /* На мобильном - вертикальный стэк всех карточек */
   [name="row1_previous_creations"],
   [name="row2_previous_creations"] {
-    flex-direction: row !important;
-    gap: 10px !important;
-    overflow-x: auto !important;
-    justify-content: flex-start !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    overflow-x: visible !important;
+    justify-content: center !important;
     padding: 10px !important;
+    width: 100% !important;
   }
 
-  /* Grid карточки на мобильном - еще меньше */
+  /* Grid карточки на мобильном - немного больше для лучшей читаемости */
   [anvil-role~="grid-creation-card"] {
-    width: 180px !important;
-    max-width: 180px !important;
-    min-width: 180px !important;
+    width: 280px !important;
+    max-width: 90vw !important;
+    min-width: 280px !important;
   }
   
   [anvil-role~="grid-creation-card"] img {
-    height: 180px !important;
-    max-width: 160px !important;
+    height: 220px !important;
+    max-width: 260px !important;
+  }
+  
+  /* Активная карточка на мобильном */
+  [name="flow_panel_active_creation"] > * {
+    max-width: 90vw !important;
   }
 
   [anvil-role="upload-panel"] {

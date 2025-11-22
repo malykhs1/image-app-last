@@ -322,11 +322,11 @@ class Create(CreateTemplate):
     self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
     self.flow_panel_active_creation.visible = True
     
-    # Если есть предыдущие товары (от 1 до 4) - показываем в один ряд
+    # Если есть предыдущие товары (от 1 до 4) - показываем в grid 2x2
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
       
-      # Все карточки в первый ряд с уменьшенной шириной
+      # Распределяем карточки по рядам: 2 в row1, 2 в row2
       for idx, creation in enumerate(previous_creations, start=1):
         # Передаем callback функцию и индекс в компонент
         comp = Creation(
@@ -336,8 +336,11 @@ class Create(CreateTemplate):
           grid_index=idx,
           on_click_callback=self.on_previous_creation_click
         )
-        # Ширина управляется через CSS роль grid-creation-card
-        self.row1_previous_creations.add_component(comp)
+        # Первые 2 карточки в row1, следующие 2 в row2
+        if idx <= 2:
+          self.row1_previous_creations.add_component(comp)
+        else:
+          self.row2_previous_creations.add_component(comp)
       
       self.container_previous_creations.visible = True
       # Устанавливаем data-visible для CSS анимации
