@@ -326,7 +326,7 @@ class Create(CreateTemplate):
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
       
-      # Все карточки в первый ряд
+      # Все карточки в первый ряд с уменьшенной шириной
       for idx, creation in enumerate(previous_creations, start=1):
         # Передаем callback функцию и индекс в компонент
         comp = Creation(
@@ -336,7 +336,8 @@ class Create(CreateTemplate):
           grid_index=idx,
           on_click_callback=self.on_previous_creation_click
         )
-        self.row1_previous_creations.add_component(comp, width='250px')
+        # Ширина управляется через CSS роль grid-creation-card
+        self.row1_previous_creations.add_component(comp)
       
       self.container_previous_creations.visible = True
       print(f"CLIENT: Showing {len(previous_creations)} previous creations")

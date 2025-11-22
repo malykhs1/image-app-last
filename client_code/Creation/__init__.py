@@ -34,7 +34,12 @@ class Creation(CreationTemplate):
   def __init__(self, locale, is_in_grid=False, grid_index=None, on_click_callback=None, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
-    self.image_1.height = WH_IMG_CARD
+    # Уменьшаем размер для grid карточек
+    if is_in_grid:
+      self.image_1.height = 200  # Меньше для превью
+      self.add_role('grid-creation-card')  # Добавляем роль для CSS
+    else:
+      self.image_1.height = WH_IMG_CARD
     # self.image_1.width = WH_IMG_CARD
     self.image_1.source = self.item['out_image_medium']
     length_meters = int(self.item['wire_len_km']*1000)
