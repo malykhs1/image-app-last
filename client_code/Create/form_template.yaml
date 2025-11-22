@@ -90,19 +90,6 @@ components:
   properties: {align: center}
   type: ColumnPanel
 - components:
-  - layout_properties: {}
-    name: row1_previous_creations
-    properties: {align: center, spacing: medium, visible: true}
-    type: FlowPanel
-  - layout_properties: {}
-    name: row2_previous_creations
-    properties: {align: center, spacing: medium, visible: true}
-    type: FlowPanel
-  layout_properties: {slot: default}
-  name: container_previous_creations
-  properties: {align: center, spacing_above: small, spacing_below: small, visible: false}
-  type: ColumnPanel
-- components:
   - event_bindings: {click: step_indicator_1_click}
     layout_properties: {}
     name: step_indicator_1
@@ -122,6 +109,19 @@ components:
   name: footer_panel
   properties: {align: center, spacing: huge}
   type: FlowPanel
+- components:
+  - layout_properties: {}
+    name: row1_previous_creations
+    properties: {align: center, spacing: medium, visible: true}
+    type: FlowPanel
+  - layout_properties: {}
+    name: row2_previous_creations
+    properties: {align: center, spacing: medium, visible: true}
+    type: FlowPanel
+  layout_properties: {slot: default}
+  name: container_previous_creations
+  properties: {align: center, spacing_above: small, spacing_below: small, visible: false}
+  type: ColumnPanel
 container:
   properties: {html: ''}
   type: HtmlTemplate
