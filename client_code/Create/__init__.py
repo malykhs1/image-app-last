@@ -322,11 +322,11 @@ class Create(CreateTemplate):
     self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
     self.flow_panel_active_creation.visible = True
     
-    # Если есть предыдущие товары (от 1 до 4) - показываем в grid под footer
+    # Если есть предыдущие товары (от 1 до 4) - показываем в один ряд
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
       
-      # Распределяем по рядам: 2 карточки в ряд
+      # Все карточки в первый ряд
       for idx, creation in enumerate(previous_creations, start=1):
         # Передаем callback функцию и индекс в компонент
         comp = Creation(
@@ -336,42 +336,13 @@ class Create(CreateTemplate):
           grid_index=idx,
           on_click_callback=self.on_previous_creation_click
         )
-        
-        # Определяем в какой ряд добавить (2 карточки на ряд)
-        if idx <= 2:
-          # Первый ряд
-          self.row1_previous_creations.add_component(comp, width='320px')
-        else:
-          # Второй ряд
-          self.row2_previous_creations.add_component(comp, width='320px')
+        self.row1_previous_creations.add_component(comp, width='250px')
       
       self.container_previous_creations.visible = True
-      # Устанавливаем data-visible для CSS анимации
-      try:
-        from anvil.js import get_dom_node
-        container_node = get_dom_node(self.container_previous_creations)
-        container_node.setAttribute('data-visible', 'true')
-        # Принудительно устанавливаем fixed position через style
-        container_node.style.position = 'fixed'
-        container_node.style.bottom = '0'
-        container_node.style.left = '0'
-        container_node.style.right = '0'
-        container_node.style.zIndex = '30'
-        print(f"CLIENT: Container positioned, data-visible set")
-      except Exception as e:
-        print(f"CLIENT: Error positioning container: {e}")
-      print(f"CLIENT: Showing {len(previous_creations)} previous creations in 2 rows")
+      print(f"CLIENT: Showing {len(previous_creations)} previous creations")
     else:
       self.container_previous_creations.visible = False
-      # Убираем data-visible и сбрасываем позицию
-      try:
-        from anvil.js import get_dom_node
-        container_node = get_dom_node(self.container_previous_creations)
-        container_node.removeAttribute('data-visible')
-        container_node.style.bottom = '-500px'
-        print(f"CLIENT: Container hidden")
-      except Exception as e:
-        print(f"CLIENT: Error hiding container: {e}")
+      print(f"CLIENT: Container hidden")
   
   def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
