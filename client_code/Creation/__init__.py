@@ -111,8 +111,21 @@ class Creation(CreationTemplate):
       self.spacer_bottom.visible = False
 
   def link_delete_click(self, **event_args):
-    self.remove_from_parent()
-    get_open_form().force_resize()
+    """Удаляем товар из списка и обновляем отображение"""
+    parent_form = get_open_form()
+    
+    # Удаляем товар из списка all_creations родительской формы
+    if hasattr(parent_form, 'all_creations') and self.item in parent_form.all_creations:
+      parent_form.all_creations.remove(self.item)
+      print(f"CLIENT: Removed creation from list, remaining: {len(parent_form.all_creations)}")
+    
+    # Удаляем из базы данных
     anvil.server.call_s('delete_creation', self.item)
-    pass
+    
+    # Обновляем отображение всех карточек
+    if hasattr(parent_form, 'refresh_creations_display'):
+      parent_form.refresh_creations_display()
+    else:
+      # Если refresh_creations_display недоступен, просто удаляем компонент
+      self.remove_from_parent()
 
