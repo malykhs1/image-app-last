@@ -449,8 +449,7 @@ class Create(CreateTemplate):
       
     except Exception as e:
       print(f"CLIENT: Error adding active creation to cart: {e}")
-      import traceback
-      traceback.print_exc()
+      print(f"CLIENT: Error type: {type(e).__name__}")
       
       # Отправляем сообщение об ошибке родительскому окну
       anvil.js.window.parent.postMessage({
