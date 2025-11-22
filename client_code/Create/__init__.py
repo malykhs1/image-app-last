@@ -340,10 +340,24 @@ class Create(CreateTemplate):
         self.row1_previous_creations.add_component(comp)
       
       self.container_previous_creations.visible = True
-      print(f"CLIENT: Showing {len(previous_creations)} previous creations")
+      # Устанавливаем data-visible для CSS анимации
+      try:
+        from anvil.js import get_dom_node
+        container_node = get_dom_node(self.container_previous_creations)
+        container_node.setAttribute('data-visible', 'true')
+        print(f"CLIENT: Container visible, showing {len(previous_creations)} previous creations")
+      except Exception as e:
+        print(f"CLIENT: Error setting data-visible: {e}")
     else:
       self.container_previous_creations.visible = False
-      print(f"CLIENT: Container hidden")
+      # Убираем data-visible
+      try:
+        from anvil.js import get_dom_node
+        container_node = get_dom_node(self.container_previous_creations)
+        container_node.removeAttribute('data-visible')
+        print(f"CLIENT: Container hidden")
+      except Exception as e:
+        print(f"CLIENT: Error removing data-visible: {e}")
   
   def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
