@@ -37,7 +37,9 @@ class Creation(CreationTemplate):
     # Уменьшаем размер для grid карточек
     if is_in_grid:
       self.image_1.height = 200  # Меньше для превью
-      self.add_role('grid-creation-card')  # Добавляем роль для CSS
+      # Добавляем роль к текущей роли компонента
+      current_role = self.role or ''
+      self.role = (current_role + ' grid-creation-card').strip()
     else:
       self.image_1.height = WH_IMG_CARD
     # self.image_1.width = WH_IMG_CARD
