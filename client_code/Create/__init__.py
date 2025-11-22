@@ -351,18 +351,27 @@ class Create(CreateTemplate):
         from anvil.js import get_dom_node
         container_node = get_dom_node(self.container_previous_creations)
         container_node.setAttribute('data-visible', 'true')
-      except:
-        pass
+        # Принудительно устанавливаем fixed position через style
+        container_node.style.position = 'fixed'
+        container_node.style.bottom = '0'
+        container_node.style.left = '0'
+        container_node.style.right = '0'
+        container_node.style.zIndex = '30'
+        print(f"CLIENT: Container positioned, data-visible set")
+      except Exception as e:
+        print(f"CLIENT: Error positioning container: {e}")
       print(f"CLIENT: Showing {len(previous_creations)} previous creations in 2 rows")
     else:
       self.container_previous_creations.visible = False
-      # Убираем data-visible
+      # Убираем data-visible и сбрасываем позицию
       try:
         from anvil.js import get_dom_node
         container_node = get_dom_node(self.container_previous_creations)
         container_node.removeAttribute('data-visible')
-      except:
-        pass
+        container_node.style.bottom = '-500px'
+        print(f"CLIENT: Container hidden")
+      except Exception as e:
+        print(f"CLIENT: Error hiding container: {e}")
   
   def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
