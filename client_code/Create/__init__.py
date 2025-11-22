@@ -96,6 +96,9 @@ class Create(CreateTemplate):
     # Устанавливаем начальный этап
     self.set_step(1)
     
+    # Настраиваем обработчик postMessage для внешних кнопок
+    self.setup_postmessage_listener()
+    
     # Добавляем JavaScript обработчики кликов для надежности
     self.setup_step_indicators_click_handlers()
 
@@ -370,6 +373,70 @@ class Create(CreateTemplate):
     self.all_creations.insert(0, clicked_creation)
     # Обновляем отображение
     self.refresh_creations_display()
+
+  def setup_postmessage_listener(self):
+    """Настраиваем прослушивание сообщений от родительского окна (внешняя кнопка Add to cart)"""
+    def handle_message(event):
+      # Проверяем, что сообщение от доверенного источника
+      data = event.data
+      print(f"CLIENT: Received postMessage: {data}")
+      
+      if isinstance(data, dict):
+        action = data.get('action')
+        
+        if action == 'add_active_to_cart':
+          # Добавляем активный товар (последний созданный) в корзину
+          self.add_active_creation_to_cart()
+        elif action == 'get_active_product':
+          # Отправляем информацию об активном товаре обратно
+          if self.all_creations:
+            active = self.all_creations[0]
+            response = {
+              'action': 'active_product_info',
+              'variant_id': active['shopify_variant_id'],
+              'anvil_id': active.get_id()
+            }
+            anvil.js.window.parent.postMessage(response, '*')
+    
+    # Регистрируем обработчик через JavaScript
+    anvil.js.window.addEventListener('message', handle_message)
+    print("CLIENT: PostMessage listener registered for external Add to cart button")
+
+  def add_active_creation_to_cart(self):
+    """Добавляет активный товар (последний созданный) в корзину по команде из внешней кнопки"""
+    if not self.all_creations:
+      print("CLIENT: No active creation to add to cart")
+      alert("Please generate artwork first", title="No Artwork")
+      return
+    
+    # Берем первый товар из списка (активный, в центре)
+    active_creation = self.all_creations[0]
+    variant_id = active_creation['shopify_variant_id']
+    anvil_id = active_creation.get_id()
+    
+    print(f"CLIENT: Adding active creation to cart: variant_id={variant_id}, anvil_id={anvil_id}")
+    
+    # Используем тот же механизм, что и в Creation компоненте
+    from .Creation import send_add_to_cart
+    try:
+      send_add_to_cart(variant_id, anvil_id, False)
+      print(f"CLIENT: Active creation added to cart successfully")
+      
+      # Отправляем подтверждение родительскому окну
+      anvil.js.window.parent.postMessage({
+        'action': 'cart_add_success',
+        'variant_id': variant_id
+      }, '*')
+      
+    except Exception as e:
+      print(f"CLIENT: Error adding active creation to cart: {e}")
+      alert(f"Failed to add to cart: {str(e)}", title="Error")
+      
+      # Отправляем сообщение об ошибке родительскому окну
+      anvil.js.window.parent.postMessage({
+        'action': 'cart_add_error',
+        'error': str(e)
+      }, '*')
 
   def handle_drag_drop(self, content_type, data, name):
     if 'image' in content_type:
