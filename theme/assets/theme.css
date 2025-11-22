@@ -26,11 +26,6 @@ body {
   margin: 11px !important;
 }
 
-#appGoesHere div {
-  display: flex;
-  flex-direction: column;
-}
-
 /* Main layout container */
 [name="main_content_panel"] {
   min-height: calc(100vh - 220px) !important;
