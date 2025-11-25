@@ -107,7 +107,7 @@ components:
     type: Label
   layout_properties: {slot: default}
   name: footer_panel
-  properties: {align: center, spacing: huge}
+  properties: {align: center, spacing: huge, visible: true}
   type: FlowPanel
 - components:
   - layout_properties: {}
