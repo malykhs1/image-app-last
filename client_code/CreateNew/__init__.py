@@ -103,8 +103,8 @@ class Create(CreateTemplate):
   # Методы управления этапами
   def set_step(self, step):
     """Переключение между этапами"""
-    print(f"CLIENT: set_step({step}) called")
-    print(f"CLIENT: Creations in flow_panel before set_step: {len(self.flow_panel_creations.get_components())}")
+    print("CLIENT: set_step(" + str(step) + ") called")
+    print("CLIENT: Creations in flow_panel before set_step: " + str(len(self.flow_panel_creations.get_components())))
     self.current_step = step
 
     # Скрываем все панели
@@ -162,7 +162,7 @@ class Create(CreateTemplate):
 
   def button_close_click(self, **event_args):
     """Закрытие: на 3-м этапе -> к этапу 2, на 2-м этапе -> к этапу 1"""
-    print(f"CLIENT: button_close_click, current_step={self.current_step}")
+    print("CLIENT: button_close_click, current_step=" + str(self.current_step))
     if self.current_step == 3:
       # С третьего этапа возвращаемся ко второму
       self.set_step(2)
@@ -209,13 +209,13 @@ class Create(CreateTemplate):
       # Автоматически переходим к этапу 2 после загрузки изображения
       self.set_step(2)
     else:
-      alert(f"Maximal size is {MAX_MB_IMG} MB",title="File size too large",large=True,dismissible=False)
+      alert("Maximal size is " + str(MAX_MB_IMG) + " MB",title="File size too large",large=True,dismissible=False)
 
 
   ##### CALL SERVER FUNC #####
   def button_create_click(self, **event_args):
-    print(f"CLIENT: button_create_click called")
-    print(f"CLIENT: Current creations in UI BEFORE: {len(self.flow_panel_creations.get_components())}")
+    print("CLIENT: button_create_click called")
+    print("CLIENT: Current creations in UI BEFORE: " + str(len(self.flow_panel_creations.get_components())))
 
     # Защита от двойного нажатия
     if hasattr(self, 'is_creating') and self.is_creating:
@@ -250,10 +250,10 @@ class Create(CreateTemplate):
     self.spacer_progress.visible = True
     self.button_create.visible = False
     ############# call SERVER function ################
-    print(f"CLIENT: Calling server create() for {self.img.name}")
+    print("CLIENT: Calling server create() for " + str(self.img.name))
     try:
       row = anvil.server.call('create',cropped_img,paramsDict,mask_img,self.img.name) #nLines,resMediaImg
-      print(f"CLIENT: Server returned row with ID: {row.get_id()}")
+      print("CLIENT: Server returned row with ID: " + str(row.get_id()))
     except Exception as e:
       print(e)
       self.linear_progress.visible = False
@@ -271,10 +271,10 @@ class Create(CreateTemplate):
     self.is_creating = False  # Разрешаем повторное нажатие после завершения
 
     #display results
-    print(f"CLIENT: Adding creation to UI, row ID: {row.get_id()}")
+    print("CLIENT: Adding creation to UI, row ID: " + str(row.get_id()))
     comp = Creation(locale=self.locale,item=row)
     self.flow_panel_creations.add_component(comp, width=CARD_WIDTH, index=0)
-    print(f"CLIENT: Total creations in UI: {len(self.flow_panel_creations.get_components())}")
+    print("CLIENT: Total creations in UI: " + str(len(self.flow_panel_creations.get_components())))
 
     # Автоматически переходим к этапу 3 после генерации
     self.set_step(3)
@@ -412,7 +412,7 @@ class Create(CreateTemplate):
     # fill large circle gray
     self.canvas_1.arc(self.canvas_1.width/2,self.canvas_1.height/2,self.canvas_1.width/2-4)
     val = 128
-    self.canvas_1.fill_style = f'rgb({val},{val},{val})'
+    self.canvas_1.fill_style = 'rgb(' + str(val) + ',' + str(val) + ',' + str(val) + ')'
     self.canvas_1.fill()
 
     # fill highlighted with white
