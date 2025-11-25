@@ -253,7 +253,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-    self.set_step(1)
+      self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -297,9 +297,9 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-      self.img = None
-      self.resetMoveAndZoom()
-      self.canvas_1.visible = False
+        self.img = None
+        self.resetMoveAndZoom()
+        self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
