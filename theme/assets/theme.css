@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v3.2 - Mobile navigation: direct grid positioning by names */
+/* CACHE BUSTER v3.3 - Mobile navigation: using anvil-role-footer_panel class */
 
 body {
   /*added Montserrat as default*/
@@ -550,32 +550,38 @@ canvas {
     padding: 15px 5px !important;
   }
 
-  /* Footer panel - переопределяем FlowPanel на Grid */
-  [name="footer_panel"],
-  [name="footer_panel"].anvil-flow-panel {
+  /* Footer panel с уникальным классом - Grid на мобильных */
+  .anvil-role-footer_panel,
+  [anvil-role="footer_panel"] {
     padding: 15px 10px !important;
     width: 100% !important;
   }
 
-  /* Применяем Grid к gutter */
-  [name="footer_panel"] > .anvil-flow-panel-gutter {
+  /* Применяем Grid к gutter внутри footer_panel */
+  .anvil-role-footer_panel > .anvil-flow-panel-gutter,
+  [anvil-role="footer_panel"] > .anvil-flow-panel-gutter {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
     gap: 10px 8px !important;
     width: 100% !important;
     margin: 0 !important;
+    justify-content: center !important;
   }
 
   /* Убираем FlexBox стили у item'ов */
-  [name="footer_panel"] > .anvil-flow-panel-gutter > .anvil-flow-panel-item {
+  .anvil-role-footer_panel .anvil-flow-panel-item,
+  [anvil-role="footer_panel"] .anvil-flow-panel-item {
     margin: 0 !important;
     display: block !important;
   }
 
   /* Все индикаторы - базовые стили */
-  [name="footer_panel"] [anvil-role="step-inactive"],
-  [name="footer_panel"] [anvil-role="step-active"],
-  [name="footer_panel"] [anvil-role="step-navigable"] { 
+  .anvil-role-footer_panel [anvil-role="step-inactive"],
+  .anvil-role-footer_panel [anvil-role="step-active"],
+  .anvil-role-footer_panel [anvil-role="step-navigable"],
+  [anvil-role="footer_panel"] [anvil-role="step-inactive"],
+  [anvil-role="footer_panel"] [anvil-role="step-active"],
+  [anvil-role="footer_panel"] [anvil-role="step-navigable"] { 
     width: 100% !important;
     font-size: 12px !important;
     padding: 8px 6px !important;
@@ -584,14 +590,9 @@ canvas {
   }
 
   /* Третий flow-panel-item - занимает обе колонки */
-  [name="footer_panel"] > .anvil-flow-panel-gutter > .anvil-flow-panel-item:nth-child(3) {
+  .anvil-role-footer_panel .anvil-flow-panel-item:nth-child(3),
+  [anvil-role="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
     grid-column: 1 / span 2 !important;
-  }
-
-  /* Третий индикатор - полная ширина */
-  [name="step_indicator_3"] {
-    width: 100% !important;
-    max-width: 100% !important;
   }
 
   /* Mobile content height */
