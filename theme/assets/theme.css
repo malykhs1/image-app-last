@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v2.1 - Horizontal grid cards like screenshot */
+/* CACHE BUSTER v2.2 - Improved grid card design + no scrolling */
 
 body {
   /*added Montserrat as default*/
@@ -223,7 +223,7 @@ body {
 div[anvil-name="container_previous_creations"],
 .anvil-component[anvil-name="container_previous_creations"] {
   position: fixed !important;
-  bottom: -280px !important; /* Скрыт по умолчанию (меньше, т.к. карточки горизонтальные) */
+  bottom: -240px !important; /* Скрыт по умолчанию */
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important; /* НИЖЕ footer (z-index: 999) */
@@ -232,13 +232,12 @@ div[anvil-name="container_previous_creations"],
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
-  padding: 20px 20px !important;
+  gap: 10px !important;
+  padding: 20px 20px 25px 20px !important;
   
   width: 100vw !important;
-  max-height: 250px !important; /* Меньше для горизонтальных карточек (2 ряда по 90px + gap + padding) */
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  max-height: 220px !important; /* Точная высота: 2 ряда по 80px + gaps + padding */
+  overflow: hidden !important; /* УБРАЛИ СКРОЛЛИНГ */
   
   background: rgba(250, 250, 250, 0.98) !important;
   backdrop-filter: blur(10px) !important;
@@ -261,46 +260,53 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 16px !important;
+  gap: 14px !important;
   flex-wrap: nowrap !important;
   width: 100% !important;
-  max-width: 680px !important; /* 2 карточки по 320px + gap 16px */
-  padding: 8px 0 !important;
+  max-width: 640px !important; /* 2 карточки по 310px + gap 14px */
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 /* Grid creation cards - ГОРИЗОНТАЛЬНЫЕ карточки как на скриншоте */
 [anvil-role~="grid-creation-card"] {
-  max-width: 320px !important;
-  width: 320px !important;
-  min-width: 320px !important;
-  height: 90px !important;
-  max-height: 90px !important;
+  max-width: 310px !important;
+  width: 310px !important;
+  min-width: 310px !important;
+  height: 80px !important;
+  max-height: 80px !important;
   cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  opacity: 0.95 !important;
+  transition: all 0.2s ease !important;
+  opacity: 1 !important;
   flex-shrink: 0 !important;
   position: relative !important;
 }
 
 [anvil-role~="grid-creation-card"]:hover {
-  opacity: 1 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-2px) !important;
+  transform: translateY(-2px) scale(1.01) !important;
   z-index: 5 !important;
 }
 
 /* Внутренние элементы grid карточек - ГОРИЗОНТАЛЬНАЯ раскладка */
 [anvil-role~="grid-creation-card"] [name="card_1"] {
-  padding: 12px 16px !important;
-  border-radius: 16px !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: flex-start !important;
   gap: 12px !important;
-  height: 90px !important;
-  background: #F5F5F5 !important;
+  height: 80px !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
   position: relative !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.2s ease !important;
+}
+
+[anvil-role~="grid-creation-card"]:hover [name="card_1"] {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Контейнер с контентом - горизонтальная раскладка */
@@ -330,42 +336,50 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
 /* Круглое изображение слева */
 [anvil-role~="grid-creation-card"] img,
 [anvil-role~="grid-creation-card"] [name="image_1"] {
-  width: 60px !important;
-  height: 60px !important;
-  min-width: 60px !important;
-  min-height: 60px !important;
-  max-width: 60px !important;
-  max-height: 60px !important;
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
   object-fit: cover !important;
   border-radius: 50% !important;
   flex-shrink: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  border: 2px solid #FFFFFF !important;
 }
 
 /* Название в центре */
 [anvil-role~="grid-creation-card"] [name="label_artwork_name"] {
-  font-size: 16px !important;
+  font-size: 15px !important;
   font-weight: 600 !important;
   color: #191919 !important;
   margin: 0 !important;
   flex: 1 !important;
   text-align: left !important;
-  padding-left: 8px !important;
+  padding-left: 4px !important;
+  letter-spacing: 0.01em !important;
 }
 
 /* Кнопка Add to Cart справа */
 [anvil-role~="grid-creation-card"] [name="button_add_to_cart"] {
-  padding: 8px 16px !important;
-  font-size: 14px !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
   border-radius: 50px !important;
   background: #FFC985 !important;
   color: #000000 !important;
   border: none !important;
   white-space: nowrap !important;
   flex-shrink: 0 !important;
+  box-shadow: 0 2px 6px rgba(255, 201, 133, 0.3) !important;
+  transition: all 0.2s ease !important;
 }
 
 [anvil-role~="grid-creation-card"] [name="button_add_to_cart"]:hover {
   background: #FFB85D !important;
+  box-shadow: 0 3px 8px rgba(255, 201, 133, 0.4) !important;
+  transform: scale(1.03) !important;
 }
 
 /* Контейнер с крестиком - позиционируем абсолютно */
@@ -381,26 +395,25 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
 /* Крестик для удаления - в правом верхнем углу */
 [anvil-role~="grid-creation-card"] [name="link_delete"] {
   position: relative !important;
-  font-size: 18px !important;
-  font-weight: bold !important;
-  color: #666666 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #888888 !important;
   cursor: pointer !important;
-  width: 28px !important;
-  height: 28px !important;
+  width: 24px !important;
+  height: 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(255, 255, 255, 0.0) !important;
   transition: all 0.2s ease !important;
-  margin: 6px !important;
+  margin: 4px !important;
 }
 
 [anvil-role~="grid-creation-card"] [name="link_delete"]:hover {
-  background: rgba(255, 255, 255, 1) !important;
-  color: #000000 !important;
+  background: rgba(255, 100, 100, 0.12) !important;
+  color: #FF3333 !important;
   transform: scale(1.15) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Скрываем прогресс и лишние элементы для grid карточек */
@@ -688,10 +701,11 @@ canvas {
 
   /* Previous creations на мобильном - фиксированный контейнер с горизонтальными карточками */
   [name="container_previous_creations"] {
-    bottom: -420px !important; /* Скрыт (4 карточки по 90px + gaps + padding) */
-    max-height: 420px !important;
-    padding: 16px 10px !important;
-    gap: 12px !important;
+    bottom: -380px !important; /* Скрыт (4 карточки по 80px + gaps + padding) */
+    max-height: 380px !important;
+    padding: 16px 10px 20px 10px !important;
+    gap: 10px !important;
+    overflow: hidden !important; /* БЕЗ СКРОЛЛИНГА */
   }
   
   [name="container_previous_creations"][data-visible="true"] {
@@ -702,8 +716,8 @@ canvas {
   [name="row1_previous_creations"],
   [name="row2_previous_creations"] {
     flex-direction: column !important;
-    gap: 12px !important;
-    overflow-x: visible !important;
+    gap: 10px !important;
+    overflow: hidden !important;
     justify-content: center !important;
     padding: 0 !important;
     width: 100% !important;
@@ -715,30 +729,39 @@ canvas {
     width: 90vw !important;
     max-width: 90vw !important;
     min-width: 280px !important;
-    height: 90px !important;
-    max-height: 90px !important;
+    height: 80px !important;
+    max-height: 80px !important;
   }
   
   [anvil-role~="grid-creation-card"] [name="card_1"] {
-    padding: 10px 12px !important;
-    height: 90px !important;
+    padding: 8px 12px !important;
+    height: 80px !important;
   }
   
   [anvil-role~="grid-creation-card"] img,
   [anvil-role~="grid-creation-card"] [name="image_1"] {
-    width: 60px !important;
-    height: 60px !important;
-    min-width: 60px !important;
-    min-height: 60px !important;
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    max-width: 56px !important;
+    max-height: 56px !important;
   }
   
   [anvil-role~="grid-creation-card"] [name="label_artwork_name"] {
     font-size: 14px !important;
+    padding-left: 2px !important;
   }
   
   [anvil-role~="grid-creation-card"] [name="button_add_to_cart"] {
-    padding: 6px 12px !important;
+    padding: 7px 14px !important;
     font-size: 12px !important;
+  }
+  
+  [anvil-role~="grid-creation-card"] [name="link_delete"] {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 14px !important;
   }
   
   /* Активная карточка на мобильном */
