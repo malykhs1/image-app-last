@@ -47,4 +47,5 @@ color_scheme:
   - {color: '#ffffff', name: Inverse On Surface Overlay 1}
   - {color: '#ffffff', name: Inverse On Surface Overlay 2}
   preset_groups: []
-roles: []
+roles:
+- {name: footer_panel}
