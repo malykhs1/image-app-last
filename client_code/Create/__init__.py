@@ -161,11 +161,9 @@ class Create(CreateTemplate):
       self.reached_step_3 = True
       print(f"CLIENT: User reached step 3! Navigation unlocked.")
 
-    # Скрываем все панели
+    # Скрываем панели шагов (но не контейнеры с карточками - ими управляет refresh_creations_display)
     self.step1_panel.visible = False
     self.step2_panel.visible = False
-    self.flow_panel_active_creation.visible = False
-    self.container_previous_creations.visible = False
 
     # Обновляем индикаторы этапов
     # Если пользователь достиг этапа 3, неактивные индикаторы становятся навигационными
@@ -196,17 +194,19 @@ class Create(CreateTemplate):
       self.flow_panel_canvas.visible = False
       self.flow_panel_zoom.visible = False
       self.button_create.visible = False
-      self.flow_panel_active_creation.visible = False
-      self.container_previous_creations.visible = False
+      # Сбрасываем file_loader для возможности повторной загрузки
+      self.file_loader_1.clear()
+      # Сбрасываем текущее изображение
+      self.img = None
+      # Если есть созданные карточки, показываем их
+      if len(self.all_creations) > 0:
+        self.refresh_creations_display()
       print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
       self.step_indicator_2.role = 'step-active'
       self.step_indicator_2.bold = True
       self.button_close.visible = True
-      # Явно скрываем creations на этапе 2
-      self.flow_panel_active_creation.visible = False
-      self.container_previous_creations.visible = False
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
@@ -221,6 +221,9 @@ class Create(CreateTemplate):
         self.flow_panel_canvas.visible = False
         self.flow_panel_zoom.visible = False
         self.button_create.visible = False
+      # Если есть созданные карточки, показываем их
+      if len(self.all_creations) > 0:
+        self.refresh_creations_display()
     elif step == 3:
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
@@ -321,7 +324,9 @@ class Create(CreateTemplate):
     
     # Последний созданный товар (индекс 0) - показываем в центре над footer
     active_creation = self.all_creations[0]
-    comp = Creation(locale=self.locale, item=active_creation)
+    # Скрываем крестик удаления, если это единственная карточка
+    show_delete = len(self.all_creations) > 1
+    comp = Creation(locale=self.locale, item=active_creation, show_delete=show_delete)
     self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
     self.flow_panel_active_creation.visible = True
     
