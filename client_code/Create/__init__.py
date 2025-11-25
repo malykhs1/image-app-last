@@ -211,11 +211,11 @@ class Create(CreateTemplate):
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-      self.canvas_1.visible = True
+        self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-      self.flow_panel_zoom.visible = True
-      self.button_create.visible = True
-      self.drawCanvas()
+        self.flow_panel_zoom.visible = True
+        self.button_create.visible = True
+        self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
