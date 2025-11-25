@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v3.0 - Mobile fixes: canvas centered, cards single column */
+/* CACHE BUSTER v3.1 - Mobile navigation: 2 buttons top row, 1 bottom (full width) */
 
 body {
   /*added Montserrat as default*/
@@ -550,26 +550,36 @@ canvas {
     padding: 15px 5px !important;
   }
 
-  /* Grid только для footer_panel с индикаторами этапов */
+  /* Grid для footer_panel: 2 колонки в первом ряду, 1 во втором */
   [name="footer_panel"] > .anvil-flow-panel-gutter {
     margin-left: 3px !important;
     margin-right: 0 !important;
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
+    gap: 10px 8px !important; /* 10px вертикально между рядами, 8px горизонтально */
+    width: 100% !important;
   }
 
-  [anvil-role="step-inactive"],
-  [anvil-role="step-active"],
-  [anvil-role="step-navigable"] { 
-    width: 95% !important;
+  /* Первые два индикатора */
+  [name="footer_panel"] [anvil-role="step-inactive"],
+  [name="footer_panel"] [anvil-role="step-active"],
+  [name="footer_panel"] [anvil-role="step-navigable"] { 
+    width: 100% !important;
     font-size: 12px !important;
-    padding: 4px 8px !important;
+    padding: 8px 6px !important;
+    margin: 0 !important;
   }
 
-  /* Третий индикатор на всю ширину */
-  [name="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
+  /* Третий индикатор на всю ширину второй строки */
+  [name="footer_panel"] > .anvil-flow-panel-gutter > .anvil-flow-panel-item:nth-child(3) {
     grid-column: 1 / span 2 !important;
-    width: 100%;
+    width: 100% !important;
+  }
+  
+  /* Третий индикатор по имени - полная ширина */
+  [name="step_indicator_3"] {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Mobile content height */
