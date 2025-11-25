@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v3.1 - Mobile navigation: 2 buttons top row, 1 bottom (full width) */
+/* CACHE BUSTER v3.2 - Mobile navigation: direct grid positioning by names */
 
 body {
   /*added Montserrat as default*/
@@ -550,17 +550,29 @@ canvas {
     padding: 15px 5px !important;
   }
 
-  /* Grid для footer_panel: 2 колонки в первом ряду, 1 во втором */
-  [name="footer_panel"] > .anvil-flow-panel-gutter {
-    margin-left: 3px !important;
-    margin-right: 0 !important;
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px 8px !important; /* 10px вертикально между рядами, 8px горизонтально */
+  /* Footer panel - переопределяем FlowPanel на Grid */
+  [name="footer_panel"],
+  [name="footer_panel"].anvil-flow-panel {
+    padding: 15px 10px !important;
     width: 100% !important;
   }
 
-  /* Первые два индикатора */
+  /* Применяем Grid к gutter */
+  [name="footer_panel"] > .anvil-flow-panel-gutter {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* Убираем FlexBox стили у item'ов */
+  [name="footer_panel"] > .anvil-flow-panel-gutter > .anvil-flow-panel-item {
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  /* Все индикаторы - базовые стили */
   [name="footer_panel"] [anvil-role="step-inactive"],
   [name="footer_panel"] [anvil-role="step-active"],
   [name="footer_panel"] [anvil-role="step-navigable"] { 
@@ -568,15 +580,15 @@ canvas {
     font-size: 12px !important;
     padding: 8px 6px !important;
     margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  /* Третий индикатор на всю ширину второй строки */
+  /* Третий flow-panel-item - занимает обе колонки */
   [name="footer_panel"] > .anvil-flow-panel-gutter > .anvil-flow-panel-item:nth-child(3) {
     grid-column: 1 / span 2 !important;
-    width: 100% !important;
   }
-  
-  /* Третий индикатор по имени - полная ширина */
+
+  /* Третий индикатор - полная ширина */
   [name="step_indicator_3"] {
     width: 100% !important;
     max-width: 100% !important;
