@@ -617,6 +617,7 @@ canvas {
     max-width: 260px !important;
   }
   
+  
   /* Активная карточка на мобильном */
   [name="flow_panel_active_creation"] > * {
     max-width: 90vw !important;
