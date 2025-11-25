@@ -174,9 +174,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-    self.step_indicator_1.role = 'step-inactive'
-    self.step_indicator_2.role = 'step-inactive'
-    self.step_indicator_3.role = 'step-inactive'
+      self.step_indicator_1.role = 'step-inactive'
+      self.step_indicator_2.role = 'step-inactive'
+      self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
