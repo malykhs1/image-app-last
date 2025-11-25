@@ -50,6 +50,10 @@ components:
         name: text_length
         properties: {align: center}
         type: form:dep_lin1x4oec0ytd:_Components.Text
+      - layout_properties: {grid_position: 'DDKPLA,BTEVUT'}
+        name: label_artwork_name
+        properties: {align: center, bold: true, font_size: 16, text: Artwork, visible: false}
+        type: Label
       - layout_properties: {grid_position: 'HHFWHB,XYGGVD'}
         name: spacer_bottom
         properties: {height: 20, visible: false}

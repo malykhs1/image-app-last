@@ -34,14 +34,27 @@ class Creation(CreationTemplate):
   def __init__(self, locale, is_in_grid=False, grid_index=None, on_click_callback=None, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
+    
     # Уменьшаем размер для grid карточек
     if is_in_grid:
-      self.image_1.height = 200  # Меньше для превью
+      # Горизонтальная раскладка для grid
+      self.card_1.orientation = 'row'  # Горизонтальная карточка
+      self.image_1.height = 60  # Круглое маленькое изображение
+      # Скрываем String length для grid карточек
+      self.text_length.visible = False
+      # Показываем название Artwork
+      self.label_artwork_name.visible = True
+      self.label_artwork_name.text = f"Artwork {grid_index}" if grid_index else "Artwork"
       # Добавляем роль к текущей роли компонента
       current_role = self.role or ''
       self.role = (current_role + ' grid-creation-card').strip()
     else:
+      # Вертикальная раскладка для обычной карточки
+      self.card_1.orientation = 'column'
       self.image_1.height = WH_IMG_CARD
+      self.text_length.visible = True
+      self.label_artwork_name.visible = False
+    
     # self.image_1.width = WH_IMG_CARD
     self.image_1.source = self.item['out_image_medium']
     length_meters = int(self.item['wire_len_km']*1000)
@@ -53,18 +66,18 @@ class Creation(CreationTemplate):
     self.grid_index = grid_index
     self.on_click_callback = on_click_callback
     
-    # Если это карточка в grid, добавляем обработчик клика на изображение
+    # Если это карточка в grid, добавляем обработчик клика на всю карточку
     if is_in_grid and on_click_callback:
-      self.image_1.role = 'clickable-creation'
-      # Добавляем JavaScript обработчик клика на изображение
+      self.card_1.role = (self.card_1.role or '') + ' clickable-grid-card'
+      # Добавляем JavaScript обработчик клика на всю карточку
       from anvil.js import get_dom_node
       try:
-        img_node = get_dom_node(self.image_1)
+        card_node = get_dom_node(self.card_1)
         def click_handler(event):
-          print(f"Creation image clicked, calling callback with index {grid_index}")
+          print(f"Creation card clicked, calling callback with index {grid_index}")
           on_click_callback(grid_index)
-        img_node.onclick = click_handler
-        img_node.style.cursor = 'pointer'
+        card_node.onclick = click_handler
+        card_node.style.cursor = 'pointer'
       except Exception as e:
         print(f"Error setting up click handler: {e}")
 
