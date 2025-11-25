@@ -116,7 +116,7 @@ class Create(CreateTemplate):
       indicator2_node = get_dom_node(self.step_indicator_2)
       indicator3_node = get_dom_node(self.step_indicator_3)
       
-      print(f"CLIENT: Got DOM nodes: {indicator1_node}, {indicator2_node}, {indicator3_node}")
+      print("CLIENT: Got DOM nodes: " + str(indicator1_node) + ", " + str(indicator2_node) + ", " + str(indicator3_node))
       
       # Создаем Python обработчики, которые будут вызываться из JS
       def handler1(event):
@@ -143,23 +143,21 @@ class Create(CreateTemplate):
       
       print("CLIENT: ✓ JS click handlers registered successfully")
     except Exception as e:
-      print(f"CLIENT: ✗ Error setting up JS click handlers: {e}")
-      import traceback
-      traceback.print_exc()
+      print("CLIENT: ✗ Error setting up JS click handlers: " + str(e))
 
   # Методы управления этапами
   def set_step(self, step):
     """Переключение между этапами"""
-    print(f"CLIENT: set_step({step}) called, current_step={self.current_step}, reached_step_3={self.reached_step_3}")
-    print(f"CLIENT: img exists: {self.img is not None}")
-    print(f"CLIENT: Creations count: {len(self.all_creations)}")
+    print("CLIENT: set_step(" + str(step) + ") called, current_step=" + str(self.current_step) + ", reached_step_3=" + str(self.reached_step_3))
+    print("CLIENT: img exists: " + str(self.img is not None))
+    print("CLIENT: Creations count: " + str(len(self.all_creations)))
     
     self.current_step = step
     
     # Отмечаем, что пользователь достиг этапа 3
     if step == 3:
       self.reached_step_3 = True
-      print(f"CLIENT: User reached step 3! Navigation unlocked.")
+      print("CLIENT: User reached step 3! Navigation unlocked.")
 
     # Скрываем все панели
     self.step1_panel.visible = False
@@ -198,7 +196,7 @@ class Create(CreateTemplate):
       self.button_create.visible = False
       self.flow_panel_active_creation.visible = False
       self.container_previous_creations.visible = False
-      print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
+      print("CLIENT: Step 1 activated (clean), indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role))
     elif step == 2:
       self.step2_panel.visible = True
       self.step_indicator_2.role = 'step-active'
@@ -207,7 +205,7 @@ class Create(CreateTemplate):
       # Явно скрываем creations на этапе 2
       self.flow_panel_active_creation.visible = False
       self.container_previous_creations.visible = False
-      print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
+      print("CLIENT: Step 2 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role))
       # Показываем canvas только если есть изображение
       if self.img is not None:
       self.canvas_1.visible = True
@@ -225,7 +223,7 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
       self.button_close.visible = True
-      print(f"CLIENT: Step 3 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
+      print("CLIENT: Step 3 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role))
       # Скрываем canvas и элементы управления на этапе 3
       self.canvas_1.visible = False
       self.flow_panel_canvas.visible = False
@@ -240,9 +238,9 @@ class Create(CreateTemplate):
   def step_indicator_1_click(self, **event_args):
     """Переход к этапу 1"""
     print("=" * 50)
-    print(f"CLIENT: ✓ step_indicator_1_click TRIGGERED!")
-    print(f"CLIENT: reached_step_3={self.reached_step_3}, current_step={self.current_step}")
-    print(f"CLIENT: event_args={event_args}")
+    print("CLIENT: ✓ step_indicator_1_click TRIGGERED!")
+    print("CLIENT: reached_step_3=" + str(self.reached_step_3) + ", current_step=" + str(self.current_step))
+    print("CLIENT: event_args=" + str(event_args))
     print("=" * 50)
     # Переход на этап 1 всегда разрешен (если уже не на нем)
     if self.current_step != 1:
@@ -255,9 +253,9 @@ class Create(CreateTemplate):
   def step_indicator_2_click(self, **event_args):
     """Переход к этапу 2"""
     print("=" * 50)
-    print(f"CLIENT: ✓ step_indicator_2_click TRIGGERED!")
-    print(f"CLIENT: reached_step_3={self.reached_step_3}, img={self.img is not None}, current_step={self.current_step}")
-    print(f"CLIENT: event_args={event_args}")
+    print("CLIENT: ✓ step_indicator_2_click TRIGGERED!")
+    print("CLIENT: reached_step_3=" + str(self.reached_step_3) + ", img=" + str(self.img is not None) + ", current_step=" + str(self.current_step))
+    print("CLIENT: event_args=" + str(event_args))
     print("=" * 50)
     # Если достигли этап 3, навигация всегда доступна
     if self.reached_step_3:
@@ -271,9 +269,9 @@ class Create(CreateTemplate):
   def step_indicator_3_click(self, **event_args):
     """Переход к этапу 3"""
     print("=" * 50)
-    print(f"CLIENT: ✓ step_indicator_3_click TRIGGERED!")
-    print(f"CLIENT: creations count={len(self.all_creations)}, current_step={self.current_step}")
-    print(f"CLIENT: event_args={event_args}")
+    print("CLIENT: ✓ step_indicator_3_click TRIGGERED!")
+    print("CLIENT: creations count=" + str(len(self.all_creations)) + ", current_step=" + str(self.current_step))
+    print("CLIENT: event_args=" + str(event_args))
     print("=" * 50)
     # Можно перейти только если есть результаты
     if len(self.all_creations) > 0:
@@ -283,7 +281,7 @@ class Create(CreateTemplate):
 
   def button_close_click(self, **event_args):
     """Закрытие: на 3-м этапе -> к этапу 2, на 2-м этапе -> к этапу 1"""
-    print(f"CLIENT: button_close_click, current_step={self.current_step}, reached_step_3={self.reached_step_3}")
+    print("CLIENT: button_close_click, current_step=" + str(self.current_step) + ", reached_step_3=" + str(self.reached_step_3))
     if self.current_step == 3:
       # С третьего этапа возвращаемся ко второму
       self.set_step(2)
@@ -303,7 +301,7 @@ class Create(CreateTemplate):
 
   def refresh_creations_display(self):
     """Распределяет товары между активной панелью (центр) и grid панелью (под footer)"""
-    print(f"CLIENT: refresh_creations_display, total={len(self.all_creations)}")
+    print("CLIENT: refresh_creations_display, total=" + str(len(self.all_creations)))
     
     # Очищаем все панели
     for comp in self.flow_panel_active_creation.get_components():
@@ -353,9 +351,9 @@ class Create(CreateTemplate):
         from anvil.js import get_dom_node
         container_node = get_dom_node(self.container_previous_creations)
         container_node.setAttribute('data-visible', 'true')
-        print(f"CLIENT: Container visible, showing {len(previous_creations)} previous creations")
+        print("CLIENT: Container visible, showing " + str(len(previous_creations)) + " previous creations")
       except Exception as e:
-        print(f"CLIENT: Error setting data-visible: {e}")
+        print("CLIENT: Error setting data-visible: " + str(e))
     else:
       self.container_previous_creations.visible = False
       # Убираем data-visible
@@ -363,13 +361,13 @@ class Create(CreateTemplate):
         from anvil.js import get_dom_node
         container_node = get_dom_node(self.container_previous_creations)
         container_node.removeAttribute('data-visible')
-        print(f"CLIENT: Container hidden")
+        print("CLIENT: Container hidden")
       except Exception as e:
-        print(f"CLIENT: Error removing data-visible: {e}")
+        print("CLIENT: Error removing data-visible: " + str(e))
   
   def on_previous_creation_click(self, grid_index):
     """Обработчик клика на предыдущий товар - делает его активным"""
-    print(f"CLIENT: Clicked on creation at index {grid_index}")
+    print("CLIENT: Clicked on creation at index " + str(grid_index))
     # Перемещаем выбранный товар в начало списка
     clicked_creation = self.all_creations.pop(grid_index)
     self.all_creations.insert(0, clicked_creation)
@@ -381,16 +379,16 @@ class Create(CreateTemplate):
     def handle_message(event):
       # Проверяем, что сообщение от доверенного источника
       data = event.data
-      print(f"CLIENT: Received postMessage: {data}")
+      print("CLIENT: Received postMessage: " + str(data))
       
       # Пробуем получить action (работает и с dict, и с proxyobject)
       try:
         action = data.get('action') if hasattr(data, 'get') else data['action']
-        print(f"CLIENT: PostMessage action: {action}")
+        print("CLIENT: PostMessage action: " + str(action))
         
         if action == 'add_active_to_cart':
           # Добавляем активный товар (последний созданный) в корзину
-          print(f"CLIENT: Calling add_active_creation_to_cart()...")
+          print("CLIENT: Calling add_active_creation_to_cart()...")
           self.add_active_creation_to_cart()
         elif action == 'get_active_product':
           # Отправляем информацию об активном товаре обратно
@@ -403,7 +401,7 @@ class Create(CreateTemplate):
             }
             anvil.js.window.parent.postMessage(response, '*')
       except (AttributeError, KeyError, TypeError) as e:
-        print(f"CLIENT: Error processing postMessage: {e}, data type: {type(data)}")
+        print("CLIENT: Error processing postMessage: " + str(e) + ", data type: " + str(type(data)))
     
     # Регистрируем обработчик через JavaScript
     anvil.js.window.addEventListener('message', handle_message)
@@ -419,7 +417,7 @@ class Create(CreateTemplate):
       }, '*')
       return
     
-    print(f"CLIENT: Attempting to click Add to cart button in active creation...")
+    print("CLIENT: Attempting to click Add to cart button in active creation...")
     
     try:
       # Находим активную карточку (первую в flow_panel_active_creation)
@@ -434,7 +432,7 @@ class Create(CreateTemplate):
         return
       
       active_creation_component = active_components[0]
-      print(f"CLIENT: Found active creation component")
+      print("CLIENT: Found active creation component")
       
       # Находим кнопку "Add to cart" внутри компонента через JavaScript
       from anvil.js import get_dom_node
@@ -444,7 +442,7 @@ class Create(CreateTemplate):
       add_to_cart_button = component_node.querySelector('button')
       
       if add_to_cart_button:
-        print(f"CLIENT: Found Add to cart button, simulating click...")
+        print("CLIENT: Found Add to cart button, simulating click...")
         add_to_cart_button.click()
         
         # Даем время на обработку клика и отправляем подтверждение
@@ -456,7 +454,7 @@ class Create(CreateTemplate):
         # Задержка 500мс для завершения обработки клика
         anvil.js.window.setTimeout(send_success, 500)
         
-        print(f"CLIENT: Click simulated successfully")
+        print("CLIENT: Click simulated successfully")
       else:
         print("CLIENT: Add to cart button not found in component")
         anvil.js.window.parent.postMessage({
@@ -465,8 +463,8 @@ class Create(CreateTemplate):
         }, '*')
       
     except Exception as e:
-      print(f"CLIENT: Error simulating click: {e}")
-      print(f"CLIENT: Error type: {type(e).__name__}")
+      print("CLIENT: Error simulating click: " + str(e))
+      print("CLIENT: Error type: " + str(type(e).__name__))
       
       # Отправляем сообщение об ошибке родительскому окну
       anvil.js.window.parent.postMessage({
@@ -499,13 +497,13 @@ class Create(CreateTemplate):
       # Автоматически переходим к этапу 2 после загрузки изображения
       self.set_step(2)
     else:
-      alert(f"Maximal size is {MAX_MB_IMG} MB",title="File size too large",large=True,dismissible=False)
+      alert("Maximal size is " + str(MAX_MB_IMG) + " MB",title="File size too large",large=True,dismissible=False)
 
 
   ##### CALL SERVER FUNC #####
   def button_create_click(self, **event_args):
-    print(f"CLIENT: button_create_click called")
-    print(f"CLIENT: Current creations count BEFORE: {len(self.all_creations)}")
+    print("CLIENT: button_create_click called")
+    print("CLIENT: Current creations count BEFORE: " + str(len(self.all_creations)))
 
     # Защита от двойного нажатия
     if hasattr(self, 'is_creating') and self.is_creating:
@@ -540,10 +538,10 @@ class Create(CreateTemplate):
     self.spacer_progress.visible = True
     self.button_create.visible = False
     ############# call SERVER function ################
-    print(f"CLIENT: Calling server create() for {self.img.name}")
+    print("CLIENT: Calling server create() for " + str(self.img.name))
     try:
       row = anvil.server.call('create',cropped_img,paramsDict,mask_img,self.img.name) #nLines,resMediaImg
-      print(f"CLIENT: Server returned row with ID: {row.get_id()}")
+      print("CLIENT: Server returned row with ID: " + str(row.get_id()))
     except Exception as e:
       print(e)
       self.linear_progress.visible = False
@@ -561,10 +559,10 @@ class Create(CreateTemplate):
     self.is_creating = False  # Разрешаем повторное нажатие после завершения
 
     #display results
-    print(f"CLIENT: Adding creation to list, row ID: {row.get_id()}")
+    print("CLIENT: Adding creation to list, row ID: " + str(row.get_id()))
     # Добавляем в начало списка (последний созданный)
     self.all_creations.insert(0, row)
-    print(f"CLIENT: Total creations: {len(self.all_creations)}")
+    print("CLIENT: Total creations: " + str(len(self.all_creations)))
 
     # Автоматически переходим к этапу 3 после генерации
     self.set_step(3)
@@ -701,7 +699,7 @@ class Create(CreateTemplate):
     # fill large circle gray
     self.canvas_1.arc(self.canvas_1.width/2,self.canvas_1.height/2,self.canvas_1.width/2-4)
     val = 128
-    self.canvas_1.fill_style = f'rgb({val},{val},{val})'
+    self.canvas_1.fill_style = 'rgb(' + str(val) + ',' + str(val) + ',' + str(val) + ')'
     self.canvas_1.fill()
 
     # fill highlighted with white

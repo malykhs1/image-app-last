@@ -24,7 +24,7 @@ def send_add_to_cart(variant_id, anvil_id, add_frame):
     'add_frame': add_frame,
     'frame_id': frame_variant,
   }
-  print(f"Sending postMessage to parent window: {message}")
+  print("Sending postMessage to parent window: " + str(message))
   anvil.js.window.parent.postMessage(message, '*')
 
   # postMessage отправлено - родительское окно должно обработать его
@@ -64,17 +64,17 @@ class Creation(CreationTemplate):
       try:
         img_node = get_dom_node(self.image_1)
         def click_handler(event):
-          print(f"Creation image clicked, calling callback with index {grid_index}")
+          print("Creation image clicked, calling callback with index " + str(grid_index))
           on_click_callback(grid_index)
         img_node.onclick = click_handler
         img_node.style.cursor = 'pointer'
       except Exception as e:
-        print(f"Error setting up click handler: {e}")
+        print("Error setting up click handler: " + str(e))
 
     if locale == 'he':
       self.button_add_to_cart.text = 'הוספה לעגלה'
       self.button_add_to_cart.font_family = 'Rubik'
-      self.text_length.text = f'אורך חוט: {length_meters} מטרים'
+      self.text_length.text = 'אורך חוט: ' + str(length_meters) + ' מטרים'
       self.text_length.font_family = 'Rubik'
 
   def button_add_to_cart_click(self, **event_args):
@@ -96,7 +96,7 @@ class Creation(CreationTemplate):
       # Получаем результат: variant_id, anvil_id
       variant_id, anvil_id = task.get_return_value()
 
-      print(f"Received variant_id: {variant_id}, anvil_id: {anvil_id}")
+      print("Received variant_id: " + str(variant_id) + ", anvil_id: " + str(anvil_id))
 
       # Отправляем postMessage родительскому окну для добавления в корзину
       send_add_to_cart(variant_id, anvil_id, add_frame)
@@ -105,8 +105,8 @@ class Creation(CreationTemplate):
       alert("Product added to cart successfully!", title="Success")
 
     except Exception as e:
-      print(f"Error adding to cart: {e}")
-      alert(f"Failed to add product to cart: {str(e)}", title="Error")
+      print("Error adding to cart: " + str(e))
+      alert("Failed to add product to cart: " + str(e), title="Error")
 
     finally:
       self.button_add_to_cart.visible = True
@@ -120,7 +120,7 @@ class Creation(CreationTemplate):
     # Удаляем товар из списка all_creations родительской формы
     if hasattr(parent_form, 'all_creations') and self.item in parent_form.all_creations:
       parent_form.all_creations.remove(self.item)
-      print(f"CLIENT: Removed creation from list, remaining: {len(parent_form.all_creations)}")
+      print("CLIENT: Removed creation from list, remaining: " + str(len(parent_form.all_creations)))
     
     # Удаляем из базы данных
     anvil.server.call_s('delete_creation', self.item)
