@@ -176,9 +176,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -210,11 +210,11 @@ class Create(CreateTemplate):
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -248,7 +248,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -292,9 +292,9 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
-        self.resetMoveAndZoom()
-        self.canvas_1.visible = False
+      self.img = None
+      self.resetMoveAndZoom()
+      self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
@@ -321,7 +321,9 @@ class Create(CreateTemplate):
     
     # Последний созданный товар (индекс 0) - показываем в центре над footer
     active_creation = self.all_creations[0]
-    comp = Creation(locale=self.locale, item=active_creation)
+    # Скрываем крестик удаления, если это единственная карточка
+    show_delete = len(self.all_creations) > 1
+    comp = Creation(locale=self.locale, item=active_creation, show_delete=show_delete)
     self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
     self.flow_panel_active_creation.visible = True
     

@@ -31,7 +31,7 @@ def send_add_to_cart(variant_id, anvil_id, add_frame):
   # и открыть cart-drawer автоматически
 
 class Creation(CreationTemplate):
-  def __init__(self, locale, is_in_grid=False, grid_index=None, on_click_callback=None, **properties):
+  def __init__(self, locale, is_in_grid=False, grid_index=None, on_click_callback=None, show_delete=True, **properties):
     # Set Form properties and Data Bindings.
     self.init_components(**properties)
     # Уменьшаем размер для grid карточек
@@ -47,6 +47,9 @@ class Creation(CreationTemplate):
     length_meters = int(self.item['wire_len_km']*1000)
     self.text_length.text = 'String length: ' + str(length_meters) + ' meters'
     self.locale = locale
+    
+    # Скрываем крестик удаления, если нужно (например, когда осталась одна карточка)
+    self.link_delete.visible = show_delete
     
     # Сохраняем параметры для grid
     self.is_in_grid = is_in_grid
