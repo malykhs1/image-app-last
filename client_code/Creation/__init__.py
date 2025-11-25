@@ -68,7 +68,8 @@ class Creation(CreationTemplate):
     
     # Если это карточка в grid, добавляем обработчик клика на всю карточку
     if is_in_grid and on_click_callback:
-      self.card_1.role = (self.card_1.role or '') + ' clickable-grid-card'
+      current_card_role = self.card_1.role or ''
+      self.card_1.role = (current_card_role + ' clickable-grid-card').strip()
       # Добавляем JavaScript обработчик клика на всю карточку
       from anvil.js import get_dom_node
       try:
