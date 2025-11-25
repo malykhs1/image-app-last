@@ -26,9 +26,10 @@ body {
   margin: 11px !important;
 }
 
-/* Main layout container */
+/* Main layout container - стабильная высота */
 [name="main_content_panel"] {
-  min-height: calc(100vh - 220px) !important;
+  min-height: calc(100vh - 200px) !important;
+  height: calc(100vh - 200px) !important; /* Фиксированная высота */
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
@@ -138,7 +139,7 @@ body {
   z-index: 110 !important;
 }
 
-/* Upload panel */
+/* Upload panel - стабильный круг */
 [anvil-role="upload-panel"] {
   display: flex;
   flex-direction: column;
@@ -146,19 +147,20 @@ body {
   align-items: center;
   background: #FFFFFF;
   border-radius: 50%;
-  max-width: 500px;
-  max-height: 500px;
+  width: 500px;
+  height: 500px;
   aspect-ratio: 1;
   margin: 0px auto;
   padding: 0px;
-  min-height: 500px;
+  flex-shrink: 0; /* Не сжимается */
 }
 
-/* Content panels - стабильная высота */
+/* Content panels - стабильная высота для ВСЕХ этапов */
 [name="step1_panel"],
 [name="step2_panel"],
+[name="step3_panel"],
 [name="flow_panel_active_creation"] {
-  min-height: 500px !important;
+  min-height: 600px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
@@ -167,6 +169,21 @@ body {
   transition: opacity 0.3s ease-in-out !important;
   max-width: 100vw !important;
   overflow-x: hidden !important;
+}
+
+/* Canvas container - стабильная высота на этапе 2 */
+[name="flow_panel_canvas"] {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 400px !important;
+  width: 100% !important;
+}
+
+[name="canvas_1"] {
+  display: block !important;
+  margin: 0 auto !important;
 }
 
 /* Active creation panel - последний созданный товар в центре */
@@ -540,8 +557,9 @@ canvas {
 
   [name="step1_panel"],
   [name="step2_panel"],
+  [name="step3_panel"],
   [name="flow_panel_active_creation"] {
-    min-height: 400px !important;
+    min-height: 450px !important;
   }
 
   /* Previous creations на мобильном - фиксированный контейнер */
@@ -584,9 +602,11 @@ canvas {
   }
 
   [anvil-role="upload-panel"] {
+    width: min(400px, 90vw) !important;
+    height: min(400px, 90vw) !important;
     max-width: 90vw !important;
     max-height: 90vw !important;
-    min-height: 300px !important;
+    flex-shrink: 0 !important;
   }
 
   /* Mobile positioning for zoom buttons */
