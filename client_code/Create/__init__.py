@@ -155,7 +155,7 @@ class Create(CreateTemplate):
     print(f"CLIENT: Creations count: {len(self.all_creations)}")
     
     self.current_step = step
-    
+
     # Отмечаем, что пользователь достиг этапа 3
     if step == 3:
       self.reached_step_3 = True
@@ -174,9 +174,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -198,9 +198,10 @@ class Create(CreateTemplate):
       self.file_loader_1.clear()
       # Сбрасываем текущее изображение
       self.img = None
-      # Если есть созданные карточки, показываем их
+      # Скрываем активную карточку, показываем только grid карточки
+      self.flow_panel_active_creation.visible = False
       if len(self.all_creations) > 0:
-        self.refresh_creations_display()
+        self.refresh_previous_creations_only()
       print(f"CLIENT: Step 1 activated (clean), indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
     elif step == 2:
       self.step2_panel.visible = True
@@ -210,20 +211,21 @@ class Create(CreateTemplate):
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
         self.flow_panel_canvas.visible = False
         self.flow_panel_zoom.visible = False
         self.button_create.visible = False
-      # Если есть созданные карточки, показываем их
+      # Скрываем активную карточку, показываем только grid карточки
+      self.flow_panel_active_creation.visible = False
       if len(self.all_creations) > 0:
-        self.refresh_creations_display()
+        self.refresh_previous_creations_only()
     elif step == 3:
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
@@ -251,7 +253,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -295,17 +297,58 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
-        self.resetMoveAndZoom()
-        self.canvas_1.visible = False
+      self.img = None
+      self.resetMoveAndZoom()
+      self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
     drop_panel_node = get_dom_node(self.flow_panel_canvas)
     call_js("setUpListeners", drop_panel_node)
 
+  def refresh_previous_creations_only(self):
+    """Показывает только grid карточки (без активной) - для шагов 1 и 2"""
+    print(f"CLIENT: refresh_previous_creations_only, total={len(self.all_creations)}")
+    
+    # Очищаем grid панели
+    for comp in self.row1_previous_creations.get_components():
+      comp.remove_from_parent()
+    for comp in self.row2_previous_creations.get_components():
+      comp.remove_from_parent()
+    
+    if len(self.all_creations) == 0:
+      self.container_previous_creations.visible = False
+      return
+    
+    # Показываем все карточки в grid (максимум 4)
+    grid_creations = self.all_creations[:4]  # Берем до 4 карточек
+    
+    for idx, creation in enumerate(grid_creations, start=1):
+      comp = Creation(
+        locale=self.locale,
+        item=creation,
+        is_in_grid=True,
+        grid_index=idx,
+        on_click_callback=self.on_previous_creation_click
+      )
+      # Первые 2 карточки в row1, следующие 2 в row2
+      if idx <= 2:
+        self.row1_previous_creations.add_component(comp)
+      else:
+        self.row2_previous_creations.add_component(comp)
+    
+    self.container_previous_creations.visible = True
+    # Устанавливаем data-visible для CSS анимации
+    try:
+      from anvil.js import get_dom_node
+      container_node = get_dom_node(self.container_previous_creations)
+      container_node.setAttribute('data-visible', 'true')
+      print(f"CLIENT: Container visible (grid only), showing {len(grid_creations)} creations")
+    except Exception as e:
+      print(f"CLIENT: Error setting data-visible: {e}")
+
   def refresh_creations_display(self):
-    """Распределяет товары между активной панелью (центр) и grid панелью (под footer)"""
+    """Распределяет товары между активной панелью (центр) и grid панелью (под footer) - для шага 3"""
     print(f"CLIENT: refresh_creations_display, total={len(self.all_creations)}")
     
     # Очищаем все панели
@@ -371,13 +414,20 @@ class Create(CreateTemplate):
         print(f"CLIENT: Error removing data-visible: {e}")
   
   def on_previous_creation_click(self, grid_index):
-    """Обработчик клика на предыдущий товар - делает его активным"""
-    print(f"CLIENT: Clicked on creation at index {grid_index}")
+    """Обработчик клика на предыдущий товар - делает его активным и переходит на шаг 3"""
+    print(f"CLIENT: Clicked on creation at grid_index {grid_index}")
+    
+    # grid_index начинается с 1, а индексы списка с 0
+    # Но мы берем карточки из [:4], поэтому:
+    # grid_index 1 = all_creations[0], grid_index 2 = all_creations[1], и т.д.
+    list_index = grid_index - 1
+    
     # Перемещаем выбранный товар в начало списка
-    clicked_creation = self.all_creations.pop(grid_index)
+    clicked_creation = self.all_creations.pop(list_index)
     self.all_creations.insert(0, clicked_creation)
-    # Обновляем отображение
-    self.refresh_creations_display()
+    
+    # Переходим на шаг 3 для отображения активной карточки
+    self.set_step(3)
 
   def setup_postmessage_listener(self):
     """Настраиваем прослушивание сообщений от родительского окна (внешняя кнопка Add to cart)"""
