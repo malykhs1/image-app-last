@@ -1,6 +1,8 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
+/* CACHE BUSTER v3.0 - Mobile fixes: canvas centered, cards single column */
+
 body {
   /*added Montserrat as default*/
   font-family: sans-serif, "Rubik"; 
@@ -548,8 +550,8 @@ canvas {
     padding: 15px 5px !important;
   }
 
-  .anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter,
-  .anvil-flow-panel.anvil-flow-spacing-huge>.anvil-flow-panel-gutter {
+  /* Grid только для footer_panel с индикаторами этапов */
+  [name="footer_panel"] > .anvil-flow-panel-gutter {
     margin-left: 3px !important;
     margin-right: 0 !important;
     display: grid !important;
@@ -564,7 +566,8 @@ canvas {
     padding: 4px 8px !important;
   }
 
-  .anvil-flow-panel-item:nth-child(3) {
+  /* Третий индикатор на всю ширину */
+  [name="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
     grid-column: 1 / span 2 !important;
     width: 100%;
   }
@@ -581,6 +584,10 @@ canvas {
     height: 500px !important; /* ФИКСИРОВАННАЯ высота для мобильных */
     min-height: 500px !important;
     max-height: 500px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   /* Previous creations на мобильном - фиксированный контейнер */
@@ -594,15 +601,32 @@ canvas {
     bottom: 0 !important; /* Выезжает вверх */
   }
 
-  /* На мобильном - вертикальный стэк всех карточек */
+  /* На мобильном - вертикальный стэк всех карточек (по одной) */
   [name="row1_previous_creations"],
   [name="row2_previous_creations"] {
+    display: flex !important;
     flex-direction: column !important;
     gap: 15px !important;
     overflow-x: visible !important;
     justify-content: center !important;
+    align-items: center !important;
     padding: 10px !important;
     width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Canvas на мобильном - центрирование без grid */
+  [name="flow_panel_canvas"] {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  [name="canvas_1"] {
+    display: block !important;
+    margin: 0 auto !important;
   }
 
   /* Grid карточки на мобильном - немного больше для лучшей читаемости */
