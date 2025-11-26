@@ -620,7 +620,7 @@ canvas {
   [name="main_content_panel"] {
     min-height: calc(100vh - 280px) !important;
   }
-  [name="anvil-m3-button"] {
+  [anvil-role="crop-panel"] .anvil-m3-button {
     background: #FFC985 !important;
     border: none !important;    
   }
