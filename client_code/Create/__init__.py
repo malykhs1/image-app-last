@@ -209,29 +209,23 @@ class Create(CreateTemplate):
       self.step_indicator_2.bold = True
       self.button_close.visible = True
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
-      # Показываем canvas только если есть новое изображение для crop
+      # Показываем canvas только если есть изображение
       if self.img is not None:
         self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
         self.flow_panel_zoom.visible = True
         self.button_create.visible = True
         self.drawCanvas()
-        # Скрываем активную карточку, показываем только grid
-        if len(self.all_creations) > 0:
-          self.refresh_previous_creations_only()
-        else:
-          self.flow_panel_active_creation.visible = False
       else:
-        # Если нового изображения нет, скрываем элементы управления canvas
+        # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
         self.flow_panel_canvas.visible = False
         self.flow_panel_zoom.visible = False
         self.button_create.visible = False
-        # Если есть созданные товары, показываем последний активный + grid
-        if len(self.all_creations) > 0:
-          self.refresh_creations_display()
-        else:
-          self.flow_panel_active_creation.visible = False
+      # Скрываем активную карточку, показываем только grid карточки
+      self.flow_panel_active_creation.visible = False
+      if len(self.all_creations) > 0:
+        self.refresh_previous_creations_only()
     elif step == 3:
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
