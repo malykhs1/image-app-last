@@ -67,7 +67,12 @@ body {
   background: #FFC985 !important;
   border: none !important;    
 }
-
+.anvil-role-active-creations {
+  margin-top: -20px !important;
+}
+.anvil-role-active-creations .anvil-m3-button {
+  margin-top: 10px !important;
+}
 .anvil-role-crop-panel .anvil-panel-section {
   max-height: 55px !important;
 }
