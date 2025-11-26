@@ -50,3 +50,4 @@ color_scheme:
 roles:
 - {name: footer_panel}
 - {name: navigation-item}
+- {name: active-creations}
