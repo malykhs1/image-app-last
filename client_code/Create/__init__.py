@@ -174,9 +174,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -211,11 +211,11 @@ class Create(CreateTemplate):
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -253,7 +253,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -297,9 +297,9 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
-        self.resetMoveAndZoom()
-        self.canvas_1.visible = False
+      self.img = None
+      self.resetMoveAndZoom()
+      self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
@@ -320,7 +320,7 @@ class Create(CreateTemplate):
       self.container_previous_creations.visible = False
       return
     
-    # Показываем все карточки в grid (максимум 4)
+    # Показываем все карточки в один ряд (максимум 4)
     grid_creations = self.all_creations[:4]  # Берем до 4 карточек
     
     for idx, creation in enumerate(grid_creations, start=1):
@@ -331,11 +331,8 @@ class Create(CreateTemplate):
         grid_index=idx,
         on_click_callback=self.on_previous_creation_click
       )
-      # Первые 2 карточки в row1, следующие 2 в row2
-      if idx <= 2:
-        self.row1_previous_creations.add_component(comp)
-      else:
-        self.row2_previous_creations.add_component(comp)
+      # Все 4 карточки добавляем в row1 (они будут в один горизонтальный ряд)
+      self.row1_previous_creations.add_component(comp)
     
     self.container_previous_creations.visible = True
     # Устанавливаем data-visible для CSS анимации
@@ -373,11 +370,11 @@ class Create(CreateTemplate):
     self.flow_panel_active_creation.add_component(comp, width=CARD_WIDTH)
     self.flow_panel_active_creation.visible = True
     
-    # Если есть предыдущие товары (от 1 до 4) - показываем в grid 2x2
+    # Если есть предыдущие товары (от 1 до 4) - показываем в один ряд
     if len(self.all_creations) > 1:
       previous_creations = self.all_creations[1:5]  # Максимум 4 товара
       
-      # Распределяем карточки по рядам: 2 в row1, 2 в row2
+      # Все карточки добавляем в row1 (будут в один горизонтальный ряд)
       for idx, creation in enumerate(previous_creations, start=1):
         # Передаем callback функцию и индекс в компонент
         comp = Creation(
@@ -387,11 +384,8 @@ class Create(CreateTemplate):
           grid_index=idx,
           on_click_callback=self.on_previous_creation_click
         )
-        # Первые 2 карточки в row1, следующие 2 в row2
-        if idx <= 2:
-          self.row1_previous_creations.add_component(comp)
-        else:
-          self.row2_previous_creations.add_component(comp)
+        # Все карточки в row1
+        self.row1_previous_creations.add_component(comp)
       
       self.container_previous_creations.visible = True
       # Устанавливаем data-visible для CSS анимации

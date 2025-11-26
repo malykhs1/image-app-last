@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v3.3 - Mobile navigation: using anvil-role-footer_panel class */
+/* CACHE BUSTER v3.4 - Desktop: 4 cards in one row instead of 2x2 */
 
 body {
   /*added Montserrat as default*/
@@ -218,27 +218,27 @@ body {
   object-fit: contain !important;
 }
 
-/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer, grid 2x2 */
+/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer, 4 карточки в ряд */
 [name="container_previous_creations"],
 div[anvil-name="container_previous_creations"],
 .anvil-component[anvil-name="container_previous_creations"] {
   position: fixed !important;
-  bottom: -500px !important; /* Скрыт по умолчанию (увеличили для 2 рядов) */
+  bottom: -350px !important; /* Скрыт по умолчанию (одна строка) */
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important; /* НИЖЕ footer (z-index: 999) */
   
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 0 !important;
-  padding: 30px 20px !important;
+  padding: 25px 20px !important;
   
   width: 100vw !important;
-  max-height: 450px !important; /* Больше для 2 рядов */
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  max-height: 320px !important; /* Высота для одного ряда */
+  overflow-y: hidden !important;
+  overflow-x: auto !important;
   
   background: rgba(250, 250, 250, 0.98) !important;
   backdrop-filter: blur(10px) !important;
@@ -254,27 +254,40 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   bottom: 0 !important; /* Выезжает снизу ДО footer */
 }
 
-/* Ряды с карточками - grid 2x2 */
+/* Ряды с карточками - ОДНА строка с 4 карточками на десктопе */
 [name="row1_previous_creations"],
 [name="row2_previous_creations"] {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 20px !important;
+  gap: 15px !important;
   flex-wrap: nowrap !important;
   width: 100% !important;
-  padding: 10px 0 !important;
+  max-width: 1200px !important; /* 4 карточки по ~240px + gaps */
+  padding: 0 !important;
+  margin: 0 auto !important;
 }
 
-/* Grid creation cards - уменьшенная версия карточек для 2x2 grid */
+/* Альтернативно: Grid для gutter контейнера (4 колонки на десктопе) */
+[name="container_previous_creations"] .anvil-flow-panel-gutter {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 15px !important;
+  justify-items: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Grid creation cards - 4 карточки в ряд на десктопе */
 [anvil-role~="grid-creation-card"] {
-  max-width: 240px !important;
-  width: 240px !important;
-  min-width: 240px !important;
+  max-width: 260px !important;
+  width: 260px !important;
+  min-width: 220px !important;
   cursor: pointer !important;
   transition: all 0.3s ease !important;
-  opacity: 0.85;
+  opacity: 0.9;
   flex-shrink: 0 !important;
 }
 
