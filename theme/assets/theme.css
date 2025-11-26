@@ -602,14 +602,6 @@ canvas {
     box-sizing: border-box !important;
   }
 
-  @media screen and (minwidth: 1024px) {
-    [anvil-role="anvil-role-navigation-item"] {
-      transform: scale(0.8);
-      margin-top: -70px;
-    }
-    
-  }
-
   /* Третий flow-panel-item - занимает обе колонки */
   .anvil-role-footer_panel .anvil-flow-panel-item:nth-child(3),
   [anvil-role="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
