@@ -347,7 +347,7 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   justify-content: center;
   align-items: center;
   margin: 10px auto;
-  gap: 15px;
+  gap: 0px;
 }
 
 /* Canvas styling */
@@ -602,6 +602,14 @@ canvas {
     box-sizing: border-box !important;
   }
 
+  @media screen and (minwidth: 1024px) {
+    [anvil-role="anvil-role-navigation-item"] {
+      transform: scale(0.8);
+      margin-top: -70px;
+    }
+    
+  }
+
   /* Третий flow-panel-item - занимает обе колонки */
   .anvil-role-footer_panel .anvil-flow-panel-item:nth-child(3),
   [anvil-role="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
@@ -612,6 +620,11 @@ canvas {
   [name="main_content_panel"] {
     min-height: calc(100vh - 280px) !important;
   }
+  [name="anvil-m3-button"] {
+    background: #FFC985 Im !important;
+    border: none !important;    
+  }
+
 
   [name="step1_panel"],
   [name="step2_panel"],
