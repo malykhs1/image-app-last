@@ -49,3 +49,4 @@ color_scheme:
   preset_groups: []
 roles:
 - {name: footer_panel}
+- {name: navigation-item}
