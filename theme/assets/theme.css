@@ -621,7 +621,7 @@ canvas {
     min-height: calc(100vh - 280px) !important;
   }
   [name="anvil-m3-button"] {
-    background: #FFC985 Im !important;
+    background: #FFC985 !important;
     border: none !important;    
   }
 
