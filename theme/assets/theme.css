@@ -665,6 +665,7 @@ canvas {
     margin: 0 auto !important;
   }
 
+  
   /* Grid карточки на мобильном - немного больше для лучшей читаемости */
   [anvil-role~="grid-creation-card"] {
     width: 280px !important;
