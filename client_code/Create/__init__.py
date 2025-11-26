@@ -196,7 +196,8 @@ class Create(CreateTemplate):
       self.button_create.visible = False
       # Сбрасываем file_loader для возможности повторной загрузки
       self.file_loader_1.clear()
-      # Сбрасываем текущее изображение
+      # Сбрасываем текущее изображение при возврате на шаг 1
+      # Пользователь должен загрузить новое изображение, чтобы перейти на шаг 2
       self.img = None
       # Скрываем активную карточку, показываем только grid карточки
       self.flow_panel_active_creation.visible = False
@@ -264,14 +265,12 @@ class Create(CreateTemplate):
     print(f"CLIENT: reached_step_3={self.reached_step_3}, img={self.img is not None}, current_step={self.current_step}")
     print(f"CLIENT: event_args={event_args}")
     print("=" * 50)
-    # Если достигли этап 3, навигация всегда доступна
-    if self.reached_step_3:
-      self.set_step(2)
-    # Иначе можно перейти только если изображение загружено
-    elif self.img is not None:
+    # Можно перейти на шаг 2 ТОЛЬКО если есть загруженное изображение
+    # (независимо от того, достигли ли шаг 3)
+    if self.img is not None:
       self.set_step(2)
     else:
-      print("CLIENT: Cannot navigate to step 2 - no image and haven't reached step 3")
+      print("CLIENT: Cannot navigate to step 2 - no image loaded. Please upload an image first.")
 
   def step_indicator_3_click(self, **event_args):
     """Переход к этапу 3"""
