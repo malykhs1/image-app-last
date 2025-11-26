@@ -112,11 +112,11 @@ components:
 - components:
   - layout_properties: {}
     name: row1_previous_creations
-    properties: {align: center, spacing: medium, visible: true}
+    properties: {align: center, role: navigation-item, spacing: medium, visible: true}
     type: FlowPanel
   - layout_properties: {}
     name: row2_previous_creations
-    properties: {align: center, spacing: medium, visible: true}
+    properties: {align: center, role: navigation-item, spacing: medium, visible: true}
     type: FlowPanel
   layout_properties: {slot: default}
   name: container_previous_creations
