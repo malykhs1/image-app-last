@@ -61,6 +61,17 @@ body {
   pointer-events: auto !important;
 }
 
+.anvil-role-active-creations .anvil-m3-button,
+.anvil-m3-fileloader-form a,
+.anvil-role-crop-panel .anvil-m3-button {
+  background: #FFC985 !important;
+  border: none !important;    
+}
+
+.anvil-role-crop-panel .anvil-panel-section {
+  max-height: 55px !important;
+}
+
 /* Убеждаемся, что дочерние элементы footer тоже получают клики */
 [name="footer_panel"] * {
   pointer-events: auto !important;
@@ -346,7 +357,7 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10px auto;
+  margin: 0px auto;
   gap: 0px;
 }
 
@@ -544,7 +555,6 @@ canvas {
   border: none !important;
 }
 
-
 #anvil-header {
   display: none !important;
 }
@@ -611,17 +621,6 @@ canvas {
   /* Mobile content height */
   [name="main_content_panel"] {
     min-height: calc(100vh - 280px) !important;
-  }
-
-  .anvil-role-active-creations .anvil-m3-button,
-  .anvil-m3-fileloader-form a,
-  .anvil-role-crop-panel .anvil-m3-button {
-    background: #FFC985 !important;
-    border: none !important;    
-  }
-
-  .anvil-role-crop-panel .anvil-panel-section {
-    max-height: 55px !important;
   }
 
   [name="step1_panel"],
