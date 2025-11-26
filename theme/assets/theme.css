@@ -159,6 +159,13 @@ body {
   z-index: 110 !important;
 }
 
+@media screen and (min-width: 1024px) {
+  .anvil-role-navigation-item .anvil-flow-panel-gutter {
+    transform: scale(0.8);
+    margin-top: -35px;
+  }
+}
+
 /* Upload panel - стабильный круг */
 [anvil-role="upload-panel"] {
   display: flex;
