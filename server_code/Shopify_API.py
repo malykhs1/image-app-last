@@ -137,7 +137,7 @@ class ShopifyClient:
         "metafields": [{
           "namespace": "seo",
           "key": "hidden",
-          "type": "single_line_text_field",
+          "type": "number_integer",
           "value": "1",
         },
                        {
