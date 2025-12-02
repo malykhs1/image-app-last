@@ -61,6 +61,7 @@ body {
   pointer-events: auto !important;
 }
 
+.anvil-role-grid-creation-card .anvil-m3-button,
 .anvil-role-active-creations .anvil-m3-button,
 .anvil-m3-fileloader-form a,
 .anvil-role-crop-panel .anvil-m3-button {
@@ -693,8 +694,11 @@ canvas {
     width: 280px !important;
     max-width: 90vw !important;
     min-width: 280px !important;
+    padding: 0 30px !important;
   }
-  
+  [anvil-role~="grid-creation-card"] .anvil-m3-button {
+    margin-top: 15px !important;
+  }
   [anvil-role~="grid-creation-card"] img {
     height: 220px !important;
     max-width: 260px !important;
