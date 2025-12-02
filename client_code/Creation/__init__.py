@@ -70,9 +70,9 @@ class Creation(CreationTemplate):
 
     if locale == 'he':
       self.button_add_to_cart.text = 'הוספה לעגלה'
-      self.button_add_to_cart.font_family = 'Rubik'
+      self.button_add_to_cart.font = 'Rubik'
       self.text_length.text = 'אורך חוט: ' + str(length_meters) + ' מטרים'
-      self.text_length.font_family = 'Rubik'
+      self.text_length.font = 'Rubik'
 
   def button_add_to_cart_click(self, **event_args):
     self.linear_progress_cart.visible = True

@@ -57,21 +57,21 @@ class Create(CreateTemplate):
     # Локализация
     if self.locale == 'he':
       self.file_loader_1.text = 'העלאת תמונה'
-      self.file_loader_1.font_family = 'Rubik'
+      self.file_loader_1.font = 'Rubik'
       self.button_create.text = 'צור הדמיית חוטים'
-      self.button_create.font_family = 'Rubik'
+      self.button_create.font = 'Rubik'
       self.label_upload_title.text = 'העלה את התמונה שלך'
-      self.label_upload_title.font_family = 'Rubik'
+      self.label_upload_title.font = 'Rubik'
       self.label_upload_subtitle.text = 'אנו תומכים בקבצי png ו-jpg'
-      self.label_upload_subtitle.font_family = 'Rubik'
+      self.label_upload_subtitle.font = 'Rubik'
       self.button_close.text = 'סגור'
-      self.button_close.font_family = 'Rubik'
+      self.button_close.font = 'Rubik'
       self.step_indicator_1.text = '1/3    העלאת קובץ'
-      self.step_indicator_1.font_family = 'Rubik'
+      self.step_indicator_1.font = 'Rubik'
       self.step_indicator_2.text = '2/3    התאמת חיתוך'
-      self.step_indicator_2.font_family = 'Rubik'
+      self.step_indicator_2.font = 'Rubik'
       self.step_indicator_3.text = '3/3    קבל את היצירה שלך'
-      self.step_indicator_3.font_family = 'Rubik'
+      self.step_indicator_3.font = 'Rubik'
 
     self.erase_mode = False
     self.enhance_mode = False
