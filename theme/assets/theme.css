@@ -576,6 +576,10 @@ canvas {
   box-shadow: none !important;
 }
 
+[anvil-role~="grid-creation-card"] .anvil-m3-button {
+  margin-top: 15px !important;
+}
+
 @media (max-width: 600px) {
   body {
     padding-bottom: 160px !important; /* Больше места для footer на мобильном */
@@ -696,9 +700,7 @@ canvas {
     min-width: 280px !important;
     padding: 0 30px !important;
   }
-  [anvil-role~="grid-creation-card"] .anvil-m3-button {
-    margin-top: 15px !important;
-  }
+
   [anvil-role~="grid-creation-card"] img {
     height: 220px !important;
     max-width: 260px !important;
