@@ -186,9 +186,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -224,11 +224,11 @@ class Create(CreateTemplate):
       print("CLIENT: Step 2 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role) + "")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -266,7 +266,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -308,10 +308,10 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
-        self.resetMoveAndZoom()
-        self.canvas_1.visible = False
-        self.set_step(1)
+      self.img = None
+      self.resetMoveAndZoom()
+      self.canvas_1.visible = False
+      self.set_step(1)
 
   def setup_drag_and_drop(self):
     drop_panel_node = get_dom_node(self.flow_panel_canvas)
@@ -421,7 +421,8 @@ class Create(CreateTemplate):
   def on_previous_creation_click(self, grid_index):
     """
     Обработчик клика на предыдущий товар в grid.
-    При клике карточка переносится в активную зону (центр) на шаге 3.
+    При клике карточка переносится в активную зону (центр).
+    Работает на всех этапах - переключает активную карточку.
     """
     print("CLIENT: Clicked on creation at grid_index " + str(grid_index))
     
@@ -435,10 +436,16 @@ class Create(CreateTemplate):
     clicked_creation = self.all_creations.pop(list_index)
     self.all_creations.insert(0, clicked_creation)
     
-    # Переходим на шаг 3, где первая карточка показывается в активной зоне (центр)
-    # На шаге 3: flow_panel_active_creation содержит активную карточку (большую, с кнопкой Add to cart)
-    # row1_previous_creations содержит остальные карточки (маленькие превью)
-    self.set_step(3)
+    # Если мы уже на шаге 3, просто обновляем отображение
+    # Если на другом шаге, переходим на шаг 3
+    if self.current_step == 3:
+      # Уже на шаге 3 - просто обновляем карточки
+      print("CLIENT: Already on step 3, just refreshing cards")
+      self.refresh_creations_display()
+    else:
+      # Переходим на шаг 3
+      print("CLIENT: Moving to step 3 to show active card")
+      self.set_step(3)
 
   def setup_postmessage_listener(self):
     """Настраиваем прослушивание сообщений от родительского окна (внешняя кнопка Add to cart)"""
@@ -546,8 +553,8 @@ class Create(CreateTemplate):
     else:
       if self.locale == 'he':
         alert("הקובץ חייב להיות תמונה!")
-      else:
-        alert("File must be an image!")
+    else:
+      alert("File must be an image!")
 
   def file_loader_1_change(self, file, **event_args):
     self.file_loaded(file)
@@ -625,8 +632,8 @@ class Create(CreateTemplate):
       if self.locale == 'he':
         alert('השרת כרגע אינו זמין. אנא נסה שוב מאוחר יותר.')
       else:
-        alert('The server is currently unreachable. Please try again soon.')
-        return
+      alert('The server is currently unreachable. Please try again soon.')
+      return
 
     self.linear_progress.visible = False
     self.spacer_progress.visible = False
