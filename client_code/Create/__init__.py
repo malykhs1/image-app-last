@@ -29,17 +29,34 @@ class Create(CreateTemplate):
     # Определяем язык по URL родительского окна
     # https://paraloom.co.il/ = иврит (default)
     # https://paraloom.co.il/en = английский
+    self.locale = 'he'  # Default - иврит
+    
     try:
       parent_url = anvil.js.window.parent.location.href
-      if '/en' in parent_url:
+      print("CLIENT: Got parent URL: " + str(parent_url))
+      if '/en' in parent_url or '/en/' in parent_url:
         self.locale = 'en'
+        print("CLIENT: Detected English from parent URL")
       else:
-        self.locale = 'he'  # Default - иврит
-      print("CLIENT: Detected locale from parent URL: " + str(self.locale) + ", URL: " + str(parent_url))
-    except:
-      # Если не можем получить parent URL (cross-origin), используем параметр или default
-      self.locale = url_params.get('locale', 'he')  # Default - иврит
-      print("CLIENT: Using locale from params or default: " + str(self.locale))
+        print("CLIENT: Detected Hebrew from parent URL (default)")
+    except Exception as e:
+      # Cross-origin - пробуем получить из document.referrer
+      print("CLIENT: Cannot access parent URL (cross-origin), trying referrer...")
+      try:
+        referrer = anvil.js.window.document.referrer
+        print("CLIENT: Referrer: " + str(referrer))
+        if referrer and ('/en' in referrer or '/en/' in referrer):
+          self.locale = 'en'
+          print("CLIENT: Detected English from referrer")
+      except:
+        pass
+      
+      # Финальная проверка - параметр URL
+      if url_params and url_params.get('locale'):
+        self.locale = url_params.get('locale')
+        print("CLIENT: Using locale from URL param: " + str(self.locale))
+      else:
+        print("CLIENT: Using default locale: " + str(self.locale))
     self.current_step = 1  # Текущий этап: 1, 2 или 3
     self.reached_step_3 = False  # Флаг: достиг ли пользователь этапа 3
     self.brush_size = 10
@@ -186,9 +203,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -224,11 +241,11 @@ class Create(CreateTemplate):
       print("CLIENT: Step 2 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role) + "")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -266,7 +283,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -308,7 +325,7 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
+      self.img = None
       self.resetMoveAndZoom()
       self.canvas_1.visible = False
       self.set_step(1)
@@ -424,12 +441,25 @@ class Create(CreateTemplate):
     При клике карточка переносится в активную зону (центр).
     Работает на всех этапах - переключает активную карточку.
     """
-    print("CLIENT: Clicked on creation at grid_index " + str(grid_index))
+    print("CLIENT: Clicked on creation at grid_index " + str(grid_index) + ", current_step=" + str(self.current_step))
     
-    # grid_index начинается с 1, а индексы списка с 0
-    # Но мы берем карточки из [:4], поэтому:
-    # grid_index 1 = all_creations[0], grid_index 2 = all_creations[1], и т.д.
-    list_index = grid_index - 1
+    # На этапах 1-2:
+    # all_creations[:4] показываются в grid
+    # grid_index=1 → all_creations[0], grid_index=2 → all_creations[1]
+    #
+    # На этапе 3:
+    # all_creations[0] = активная карточка (в центре)
+    # all_creations[1:5] = карточки в grid
+    # grid_index=1 → all_creations[1], grid_index=2 → all_creations[2]
+    
+    if self.current_step == 3:
+      # На этапе 3: grid карточки начинаются с индекса 1
+      list_index = grid_index  
+    else:
+      # На этапах 1-2: grid карточки начинаются с индекса 0
+      list_index = grid_index - 1
+    
+    print("CLIENT: Moving creation from index " + str(list_index) + " to position 0 (active)")
     
     # Перемещаем кликнутую карточку в начало списка
     # Это делает её активной (первая карточка = активная)
@@ -553,8 +583,8 @@ class Create(CreateTemplate):
     else:
       if self.locale == 'he':
         alert("הקובץ חייב להיות תמונה!")
-      else:
-        alert("File must be an image!")
+    else:
+      alert("File must be an image!")
 
   def file_loader_1_change(self, file, **event_args):
     self.file_loaded(file)
@@ -632,8 +662,8 @@ class Create(CreateTemplate):
       if self.locale == 'he':
         alert('השרת כרגע אינו זמין. אנא נסה שוב מאוחר יותר.')
       else:
-        alert('The server is currently unreachable. Please try again soon.')
-        return
+      alert('The server is currently unreachable. Please try again soon.')
+      return
 
     self.linear_progress.visible = False
     self.spacer_progress.visible = False
