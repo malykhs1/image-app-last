@@ -71,7 +71,7 @@ class Creation(CreationTemplate):
     if locale == 'he':
       self.button_add_to_cart.text = 'הוספה לעגלה'
       self.button_add_to_cart.font_family = 'Rubik'
-      self.text_length.text = f'אורך חוט: {length_meters} מטרים'
+      self.text_length.text = 'אורך חוט: ' + str(length_meters) + ' מטרים'
       self.text_length.font_family = 'Rubik'
 
   def button_add_to_cart_click(self, **event_args):
@@ -99,11 +99,17 @@ class Creation(CreationTemplate):
       send_add_to_cart(variant_id, anvil_id, add_frame)
 
       # Показываем сообщение об успехе
-      alert("Product added to cart successfully!", title="Success")
+      if self.locale == 'he':
+        alert("המוצר נוסף לעגלה בהצלחה!", title="הצלחה")
+      else:
+        alert("Product added to cart successfully!", title="Success")
 
     except Exception as e:
-      print(f"Error adding to cart: {e}")
-      alert(f"Failed to add product to cart: {str(e)}", title="Error")
+      print("Error adding to cart: " + str(e))
+      if self.locale == 'he':
+        alert("נכשל בהוספת מוצר לעגלה: " + str(e), title="שגיאה")
+      else:
+        alert("Failed to add product to cart: " + str(e), title="Error")
 
     finally:
       self.button_add_to_cart.visible = True

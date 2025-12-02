@@ -25,7 +25,21 @@ class Point():
 class Create(CreateTemplate):
   def __init__(self, **properties):
     url_params = anvil.js.call_js('getUrlParams')
-    self.locale = url_params.get('locale', 'en')
+    
+    # Определяем язык по URL родительского окна
+    # https://paraloom.co.il/ = иврит (default)
+    # https://paraloom.co.il/en = английский
+    try:
+      parent_url = anvil.js.window.parent.location.href
+      if '/en' in parent_url:
+        self.locale = 'en'
+      else:
+        self.locale = 'he'  # Default - иврит
+      print("CLIENT: Detected locale from parent URL: " + str(self.locale) + ", URL: " + str(parent_url))
+    except:
+      # Если не можем получить parent URL (cross-origin), используем параметр или default
+      self.locale = url_params.get('locale', 'he')  # Default - иврит
+      print("CLIENT: Using locale from params or default: " + str(self.locale))
     self.current_step = 1  # Текущий этап: 1, 2 или 3
     self.reached_step_3 = False  # Флаг: достиг ли пользователь этапа 3
     self.brush_size = 10
@@ -174,9 +188,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -212,11 +226,11 @@ class Create(CreateTemplate):
       print(f"CLIENT: Step 2 activated, indicators: 1={self.step_indicator_1.role}, 2={self.step_indicator_2.role}, 3={self.step_indicator_3.role}")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -254,7 +268,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -296,9 +310,9 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
-        self.resetMoveAndZoom()
-        self.canvas_1.visible = False
+      self.img = None
+      self.resetMoveAndZoom()
+      self.canvas_1.visible = False
       self.set_step(1)
 
   def setup_drag_and_drop(self):
@@ -407,19 +421,25 @@ class Create(CreateTemplate):
         print(f"CLIENT: Error removing data-visible: {e}")
   
   def on_previous_creation_click(self, grid_index):
-    """Обработчик клика на предыдущий товар - делает его активным и переходит на шаг 3"""
-    print(f"CLIENT: Clicked on creation at grid_index {grid_index}")
+    """
+    Обработчик клика на предыдущий товар в grid.
+    При клике карточка переносится в активную зону (центр) на шаге 3.
+    """
+    print("CLIENT: Clicked on creation at grid_index " + str(grid_index))
     
     # grid_index начинается с 1, а индексы списка с 0
     # Но мы берем карточки из [:4], поэтому:
     # grid_index 1 = all_creations[0], grid_index 2 = all_creations[1], и т.д.
     list_index = grid_index - 1
     
-    # Перемещаем выбранный товар в начало списка
+    # Перемещаем кликнутую карточку в начало списка
+    # Это делает её активной (первая карточка = активная)
     clicked_creation = self.all_creations.pop(list_index)
     self.all_creations.insert(0, clicked_creation)
     
-    # Переходим на шаг 3 для отображения активной карточки
+    # Переходим на шаг 3, где первая карточка показывается в активной зоне (центр)
+    # На шаге 3: flow_panel_active_creation содержит активную карточку (большую, с кнопкой Add to cart)
+    # row1_previous_creations содержит остальные карточки (маленькие превью)
     self.set_step(3)
 
   def setup_postmessage_listener(self):
@@ -526,6 +546,9 @@ class Create(CreateTemplate):
       dropped_file = BlobMedia(content_type, data, name=name)
       self.file_loaded(dropped_file)
     else:
+      if self.locale == 'he':
+        alert("הקובץ חייב להיות תמונה!")
+    else:
       alert("File must be an image!")
 
   def file_loader_1_change(self, file, **event_args):
@@ -545,7 +568,10 @@ class Create(CreateTemplate):
       # Автоматически переходим к этапу 2 после загрузки изображения
       self.set_step(2)
     else:
-      alert(f"Maximal size is {MAX_MB_IMG} MB",title="File size too large",large=True,dismissible=False)
+      if self.locale == 'he':
+        alert("גודל מקסימלי הוא " + str(MAX_MB_IMG) + " MB", title="הקובץ גדול מדי", large=True, dismissible=False)
+      else:
+        alert("Maximal size is " + str(MAX_MB_IMG) + " MB", title="File size too large", large=True, dismissible=False)
 
 
   ##### CALL SERVER FUNC #####
@@ -598,6 +624,9 @@ class Create(CreateTemplate):
       self.is_creating = False  # Разрешаем повторное нажатие после ошибки
       # Telegram отключен
       # anvil.server.call('send_telegram_message','Someone is trying to create and server is down!')
+      if self.locale == 'he':
+        alert('השרת כרגע אינו זמין. אנא נסה שוב מאוחר יותר.')
+      else:
       alert('The server is currently unreachable. Please try again soon.')
       return
 
