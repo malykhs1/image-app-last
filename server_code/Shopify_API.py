@@ -137,7 +137,7 @@ class ShopifyClient:
         "metafields": [{
           "namespace": "seo",
           "key": "hidden",
-          "type": "single_line_text_field",
+          "type": "number_integer",
           "value": "1",
         },
                        {
@@ -327,7 +327,7 @@ class ShopifyClient:
     return [(edge["node"]["id"], edge["node"]["name"]) for edge in publications]
 
 def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
-                     shop_domain="mc8hfv-ce.myshopify.com",
+                     shop_domain="txmx0c-cc.myshopify.com",
                      online_store_publication="gid://shopify/Publication/128141623411"):
   """Main function to create a Shopify product from an Anvil image."""
   admin_token = anvil.secrets.get_secret('admin_API_token')
@@ -371,7 +371,7 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
 
   return variant_number
 
-def add_variant_to_cart(variant_id, quantity=1, shop_domain="mc8hfv-ce.myshopify.com"):
+def add_variant_to_cart(variant_id, quantity=1, shop_domain="txmx0c-cc.myshopify.com"):
   """
     Добавить товар в корзину Shopify через Storefront API
     Возвращает cart_id и checkout_url

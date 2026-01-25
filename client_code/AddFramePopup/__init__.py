@@ -13,11 +13,11 @@ class AddFramePopup(AddFramePopupTemplate):
     self.locale = locale
     if self.is_IL():
       self.heading_1.text = 'השלימו את העיצוב למראה מושלם עם מסגרת עץ מעוצבת'
-      self.heading_1.font_family = 'Rubik'
+      self.heading_1.font = 'Rubik'
       self.button_yes.text = 'מאוחר יותר'
-      self.button_yes.font_family = 'Rubik'
+      self.button_yes.font = 'Rubik'
       self.button_no.text = 'כן בבקשה'
-      self.button_no.font_family = 'Rubik'
+      self.button_no.font = 'Rubik'
 
   def is_IL(self):
     return self.locale == 'he'

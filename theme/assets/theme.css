@@ -1,7 +1,7 @@
 /* Import Mona Sans font */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&display=swap');
 
-/* CACHE BUSTER v2.2 - Improved grid card design + no scrolling */
+/* CACHE BUSTER v3.4 - Desktop: 4 cards in one row instead of 2x2 */
 
 body {
   /*added Montserrat as default*/
@@ -59,6 +59,23 @@ body {
   justify-content: center !important;
   align-items: center !important;
   pointer-events: auto !important;
+}
+
+.anvil-role-grid-creation-card .anvil-m3-button,
+.anvil-role-active-creations .anvil-m3-button,
+.anvil-m3-fileloader-form a,
+.anvil-role-crop-panel .anvil-m3-button {
+  background: #FFC985 !important;
+  border: none !important;    
+}
+.anvil-role-active-creations {
+  margin-top: -20px !important;
+}
+.anvil-role-active-creations .anvil-m3-button {
+  margin-top: 10px !important;
+}
+.anvil-role-crop-panel .anvil-panel-section {
+  max-height: 55px !important;
 }
 
 /* Убеждаемся, что дочерние элементы footer тоже получают клики */
@@ -143,6 +160,13 @@ body {
   z-index: 110 !important;
 }
 
+@media screen and (min-width: 1024px) {
+  .anvil-role-navigation-item .anvil-flow-panel-gutter {
+    transform: scale(0.8);
+    margin-top: -35px;
+  }
+}
+
 /* Upload panel - стабильный круг */
 [anvil-role="upload-panel"] {
   display: flex;
@@ -218,26 +242,27 @@ body {
   object-fit: contain !important;
 }
 
-/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer, grid 2x2 с горизонтальными карточками */
+/* Previous creations container - ФИКСИРОВАННЫЙ ПОД footer, 4 карточки в ряд */
 [name="container_previous_creations"],
 div[anvil-name="container_previous_creations"],
 .anvil-component[anvil-name="container_previous_creations"] {
   position: fixed !important;
-  bottom: -240px !important; /* Скрыт по умолчанию */
+  bottom: -350px !important; /* Скрыт по умолчанию (одна строка) */
   left: 0 !important;
   right: 0 !important;
   z-index: 10 !important; /* НИЖЕ footer (z-index: 999) */
   
   display: flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 10px !important;
-  padding: 20px 20px 25px 20px !important;
+  gap: 0 !important;
+  padding: 25px 20px !important;
   
   width: 100vw !important;
-  max-height: 220px !important; /* Точная высота: 2 ряда по 80px + gaps + padding */
-  overflow: hidden !important; /* УБРАЛИ СКРОЛЛИНГ */
+  max-height: 320px !important; /* Высота для одного ряда */
+  overflow-y: hidden !important;
+  overflow-x: auto !important;
   
   background: rgba(250, 250, 250, 0.98) !important;
   backdrop-filter: blur(10px) !important;
@@ -253,31 +278,40 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   bottom: 0 !important; /* Выезжает снизу ДО footer */
 }
 
-/* Ряды с карточками - grid 2x2 с горизонтальными карточками */
+/* Ряды с карточками - ОДНА строка с 4 карточками на десктопе */
 [name="row1_previous_creations"],
 [name="row2_previous_creations"] {
   display: flex !important;
   flex-direction: row !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 14px !important;
+  gap: 15px !important;
   flex-wrap: nowrap !important;
   width: 100% !important;
-  max-width: 640px !important; /* 2 карточки по 310px + gap 14px */
+  max-width: 1200px !important; /* 4 карточки по ~240px + gaps */
   padding: 0 !important;
-  margin: 0 !important;
+  margin: 0 auto !important;
 }
 
-/* Grid creation cards - ГОРИЗОНТАЛЬНЫЕ карточки как на скриншоте */
+/* Альтернативно: Grid для gutter контейнера (4 колонки на десктопе) */
+[name="container_previous_creations"] .anvil-flow-panel-gutter {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 15px !important;
+  justify-items: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Grid creation cards - 4 карточки в ряд на десктопе */
 [anvil-role~="grid-creation-card"] {
-  max-width: 310px !important;
-  width: 310px !important;
-  min-width: 310px !important;
-  height: 80px !important;
-  max-height: 80px !important;
+  max-width: 260px !important;
+  width: 260px !important;
+  min-width: 220px !important;
   cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+  opacity: 0.9;
   flex-shrink: 0 !important;
   position: relative !important;
 }
@@ -447,8 +481,8 @@ div[anvil-name="container_previous_creations"][data-visible="true"],
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10px auto;
-  gap: 15px;
+  margin: 0px auto;
+  gap: 0px;
 }
 
 /* Canvas styling */
@@ -645,13 +679,16 @@ canvas {
   border: none !important;
 }
 
-
 #anvil-header {
   display: none !important;
 }
 
 .anvil-m3-card.anvil-m3-elevated {
   box-shadow: none !important;
+}
+
+[anvil-role~="grid-creation-card"] .anvil-m3-button {
+  margin-top: 15px !important;
 }
 
 @media (max-width: 600px) {
@@ -664,25 +701,49 @@ canvas {
     padding: 15px 5px !important;
   }
 
-  .anvil-flow-panel.anvil-flow-spacing-medium>.anvil-flow-panel-gutter,
-  .anvil-flow-panel.anvil-flow-spacing-huge>.anvil-flow-panel-gutter {
-    margin-left: 3px !important;
-    margin-right: 0 !important;
+  /* Footer panel с уникальным классом - Grid на мобильных */
+  .anvil-role-footer_panel,
+  [anvil-role="footer_panel"] {
+    padding: 15px 10px !important;
+    width: 100% !important;
+  }
+
+  /* Применяем Grid к gutter внутри footer_panel */
+  .anvil-role-footer_panel > .anvil-flow-panel-gutter,
+  [anvil-role="footer_panel"] > .anvil-flow-panel-gutter {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
+    gap: 10px 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    justify-content: center !important;
   }
 
-  [anvil-role="step-inactive"],
-  [anvil-role="step-active"],
-  [anvil-role="step-navigable"] { 
-    width: 95% !important;
+  /* Убираем FlexBox стили у item'ов */
+  .anvil-role-footer_panel .anvil-flow-panel-item,
+  [anvil-role="footer_panel"] .anvil-flow-panel-item {
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  /* Все индикаторы - базовые стили */
+  .anvil-role-footer_panel [anvil-role="step-inactive"],
+  .anvil-role-footer_panel [anvil-role="step-active"],
+  .anvil-role-footer_panel [anvil-role="step-navigable"],
+  [anvil-role="footer_panel"] [anvil-role="step-inactive"],
+  [anvil-role="footer_panel"] [anvil-role="step-active"],
+  [anvil-role="footer_panel"] [anvil-role="step-navigable"] { 
+    width: 100% !important;
     font-size: 12px !important;
-    padding: 4px 8px !important;
+    padding: 8px 6px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  .anvil-flow-panel-item:nth-child(3) {
+  /* Третий flow-panel-item - занимает обе колонки */
+  .anvil-role-footer_panel .anvil-flow-panel-item:nth-child(3),
+  [anvil-role="footer_panel"] .anvil-flow-panel-item:nth-child(3) {
     grid-column: 1 / span 2 !important;
-    width: 100%;
   }
 
   /* Mobile content height */
@@ -697,6 +758,10 @@ canvas {
     height: 500px !important; /* ФИКСИРОВАННАЯ высота для мобильных */
     min-height: 500px !important;
     max-height: 500px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   /* Previous creations на мобильном - фиксированный контейнер с горизонтальными карточками */
@@ -712,57 +777,51 @@ canvas {
     bottom: 0 !important; /* Выезжает вверх */
   }
 
-  /* На мобильном - вертикальный стэк всех карточек (одна под другой) */
+  /* На мобильном - вертикальный стэк всех карточек (по одной) */
   [name="row1_previous_creations"],
   [name="row2_previous_creations"] {
+    display: flex !important;
     flex-direction: column !important;
     gap: 10px !important;
     overflow: hidden !important;
     justify-content: center !important;
-    padding: 0 !important;
+
+    align-items: center !important;
+    padding: 10px !important;
     width: 100% !important;
     max-width: 100% !important;
   }
 
-  /* Grid карточки на мобильном - ГОРИЗОНТАЛЬНЫЕ */
+  /* Canvas на мобильном - центрирование без grid */
+  [name="flow_panel_canvas"] {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+  }
+
+  [name="canvas_1"] {
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  
+  /* Grid карточки на мобильном - немного больше для лучшей читаемости */
   [anvil-role~="grid-creation-card"] {
     width: 90vw !important;
     max-width: 90vw !important;
     min-width: 280px !important;
     height: 80px !important;
     max-height: 80px !important;
+    padding: 0 30px !important;
+  }
+
+  [anvil-role~="grid-creation-card"] img {
+    height: 220px !important;
+    max-width: 260px !important;
   }
   
-  [anvil-role~="grid-creation-card"] [name="card_1"] {
-    padding: 8px 12px !important;
-    height: 80px !important;
-  }
-  
-  [anvil-role~="grid-creation-card"] img,
-  [anvil-role~="grid-creation-card"] [name="image_1"] {
-    width: 56px !important;
-    height: 56px !important;
-    min-width: 56px !important;
-    min-height: 56px !important;
-    max-width: 56px !important;
-    max-height: 56px !important;
-  }
-  
-  [anvil-role~="grid-creation-card"] [name="label_artwork_name"] {
-    font-size: 14px !important;
-    padding-left: 2px !important;
-  }
-  
-  [anvil-role~="grid-creation-card"] [name="button_add_to_cart"] {
-    padding: 7px 14px !important;
-    font-size: 12px !important;
-  }
-  
-  [anvil-role~="grid-creation-card"] [name="link_delete"] {
-    width: 22px !important;
-    height: 22px !important;
-    font-size: 14px !important;
-  }
   
   /* Активная карточка на мобильном */
   [name="flow_panel_active_creation"] > * {

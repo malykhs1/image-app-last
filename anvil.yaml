@@ -77,7 +77,7 @@ runtime_options:
 secrets:
   admin_API_token:
     type: secret
-    value: {POY3XLKM3H3FLBA5: qNC/gOo88NQvhNtpIfYumRr9aEPhdkC4q+w8LiB+3GqJRhYk1VTVMbd1Tq7tLKI+4+pcD3wtjbtTMiTIyIHsMpnRk/hM8bDBrGdduoAg2Txv4nPC52NY3ZnXruIYMiPCMCMkGgkiQNi8Vys0waGqMNiN+MDrmhR+jciUABRzHlawM5gZjw==, W6DFDO4B5LDID3XU: O74JrQcnqcls1TPGOrlxnU7OZ4dWMNBwDLEwcV0tzeJc4t354WGQzYinMCrxZvvnf3zmV2L4sGArNgk4vb/vkrgstE8wRp6GetFeOvxZV335YIRe4J0M2Kv2H3FXPAn1q42AQCqcdfvil53aJx0yZDBZTc+oENcQ4cHqoijlVuN5Qu5GIg==}
+    value: {POY3XLKM3H3FLBA5: qNC/gOo88NQvhNtpIfYumRr9aEPhdkC4q+w8LiB+3GqJRhYk1VTVMbd1Tq7tLKI+4+pcD3wtjbtTMiTIyIHsMpnRk/hM8bDBrGdduoAg2Txv4nPC52NY3ZnXruIYMiPCMCMkGgkiQNi8Vys0waGqMNiN+MDrmhR+jciUABRzHlawM5gZjw==, W6DFDO4B5LDID3XU: 7+0f2F9zRzPzm90HZanebl8/HqXKXgNEn+xEkcw5mCHmpfsJZzD2EBC6EbqUpfXJaeXqq2rzBIo+oMbc9tXgyjfoATvMS+30KSCmVCe7x7RiHGV4HVueOx8kdc0tpYfh1u6YMoRdXInbZa5a4vrfv9QEg10zV0c0Rab7TRkWoIdz2nZwrA==}
 services:
 - client_config: {enable_v2: true}
   server_config: {}
