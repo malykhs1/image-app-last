@@ -31,20 +31,29 @@
 
       // Формируем данные для добавления в корзину
       const items = [{
-        id: data.variant_id,
+        id: String(data.variant_id),  // Явно преобразуем в строку
         quantity: 1
       }];
+
+      console.log('🔍 Debug: add_frame =', data.add_frame);
+      console.log('🔍 Debug: frame_id =', data.frame_id);
 
       // Если нужно добавить рамку
       if (data.add_frame && data.frame_id) {
         items.push({
-          id: data.frame_id,
+          id: String(data.frame_id),  // Явно преобразуем в строку
           quantity: 1
         });
         console.log('🖼️ Adding frame to cart as well');
+      } else {
+        console.log('⏭️ Skipping frame (add_frame=' + data.add_frame + ')');
       }
 
+      console.log('📦 Final items array:', JSON.stringify(items));
+
       // Добавляем товар(ы) в корзину через Shopify Cart API
+      console.log('🚀 Sending request to /cart/add.js with body:', JSON.stringify({ items: items }));
+      
       fetch('/cart/add.js', {
         method: 'POST',
         headers: {
@@ -52,14 +61,26 @@
         },
         body: JSON.stringify({ items: items })
       })
-      .then(response => response.json())
+      .then(response => {
+        console.log('📡 Response status:', response.status, response.statusText);
+        
+        // Проверяем статус ответа
+        if (!response.ok) {
+          return response.json().then(errorData => {
+            console.error('❌ Server returned error:', errorData);
+            throw new Error(errorData.description || errorData.message || 'Failed to add to cart');
+          });
+        }
+        
+        return response.json();
+      })
       .then(data => {
         console.log('✅ Successfully added to cart:', data);
         
-        // Отправляем подтверждение обратно в iframe (если нужно)
+        // Отправляем подтверждение обратно в iframe
         event.source.postMessage({
           action: 'cart_add_success',
-          variant_id: data.variant_id
+          variant_id: data.variant_id || data.id
         }, '*');
 
         // Опция 1: Открываем корзину (если используется cart drawer)
@@ -67,9 +88,9 @@
           Shopify.CartDrawer.open();
         }
         // Опция 2: Редирект на страницу корзины (раскомментируйте если нужно)
-        // else {
-        //   window.location.href = '/cart';
-        // }
+        else {
+          window.location.href = '/cart';
+        }
 
         // Опция 3: Показываем уведомление (если есть на вашей теме)
         // theme.showQuickCart && theme.showQuickCart();
@@ -83,7 +104,7 @@
           error: error.message || 'Failed to add to cart'
         }, '*');
 
-        alert('Failed to add product to cart. Please try again.');
+        alert('Failed to add product to cart: ' + error.message);
       });
     }
 

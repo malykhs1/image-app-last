@@ -16,8 +16,8 @@ body {
   min-height: 100vh;
   position: relative;
   padding-bottom: 120px; /* Место для footer */
-  overflow-x: hidden !important;
   max-width: 100vw !important;
+  overflow: hidden;
 }
 
 .anvil-show-banner {

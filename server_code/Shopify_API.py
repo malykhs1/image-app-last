@@ -135,24 +135,22 @@ class ShopifyClient:
           "originalSource": image_url,
         }],
         "metafields": [{
-          "namespace": "seo",
-          "key": "hidden",
-          "type": "number_integer",
-          "value": "1",
-        },
-                       {
-                         "namespace": "anvil",
-                         "key": "id",
-                         "type": "single_line_text_field",
-                         "value": anvil_id
-                       }],
+          "namespace": "anvil",
+          "key": "id",
+          "type": "single_line_text_field",
+          "value": anvil_id
+        }],
         "variants": [
           {
             "optionValues": [{
               "optionName": "Size",
               "name": "40x40cm"
             }],
-            "price": PRICE
+            "price": PRICE,
+            "inventoryPolicy": "CONTINUE",
+            "inventoryItem": {
+              "tracked": False
+            }
           },
         ]
       }
@@ -365,6 +363,12 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
     print(f"Publishing warning: {e}")
 
   client.wait_for_product_image_ready(product_id)
+
+  # НОВОЕ: Ждем, пока товар станет доступен в Storefront (для корзины)
+  print(f"Waiting for product to be available in Storefront API...")
+  import time
+  time.sleep(7)  # Ждем 7 секунд, чтобы Shopify проиндексировал товар
+  print(f"Product should be ready now!")
 
   # Extract the variant number from the variant ID
   variant_number = variant_id.split('/')[-1]

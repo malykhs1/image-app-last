@@ -19,10 +19,10 @@ def send_add_to_cart(variant_id, anvil_id, add_frame):
   message = {
     'sender': app_origin,  # Динамический URL приложения
     'action': 'add',
-    'variant_id': int(variant_id),
+    'variant_id': str(variant_id),  # Передаем как строку
     'anvil_id': anvil_id,
-    'add_frame': add_frame,
-    'frame_id': frame_variant,
+    'add_frame': add_frame,  # Возвращаем обратно
+    'frame_id': str(frame_variant),  # Передаем как строку
   }
   print("Sending postMessage to parent window: " + str(message))
   anvil.js.window.parent.postMessage(message, '*')
