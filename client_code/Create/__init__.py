@@ -707,6 +707,17 @@ class Create(CreateTemplate):
 
     # Автоматически переходим к этапу 3 после генерации
     self.set_step(3)
+    
+    # ВАЖНО: Ждем 7 секунд перед активацией кнопок "Add to cart"
+    # Shopify нужно время на индексацию товара для Storefront API
+    print("CLIENT: Product created, disabling Add to cart for 7 seconds...")
+    self.disable_add_to_cart_buttons()
+    
+    # Используем Anvil Timer для включения кнопок через 7 секунд
+    def enable_buttons_callback():
+      self.enable_add_to_cart_buttons()
+    
+    anvil.Timer(interval=7, repeating=False, tick=lambda **e: enable_buttons_callback()).start()
 
 
   def drop_down_effect_change(self, **event_args):
@@ -716,6 +727,30 @@ class Create(CreateTemplate):
     #self.text_strength.enabled = shouldDisplay
     self.text_strength.visible = shouldDisplay
     self.label_strength.visible = shouldDisplay
+
+  def disable_add_to_cart_buttons(self):
+    """Временно отключаем кнопки Add to cart пока Shopify индексирует товар"""
+    print("CLIENT: Disabling Add to cart buttons for 7 seconds...")
+    # Отключаем кнопки во всех Creation компонентах
+    for comp in self.flow_panel_active_creation.get_components():
+      if hasattr(comp, 'button_add_to_cart'):
+        comp.button_add_to_cart.enabled = False
+        if self.locale == 'he':
+          comp.button_add_to_cart.text = "מכין מוצר... (7 שניות)"
+        else:
+          comp.button_add_to_cart.text = "Preparing... (7s)"
+  
+  def enable_add_to_cart_buttons(self):
+    """Активируем кнопки Add to cart после индексации"""
+    print("CLIENT: Enabling Add to cart buttons - product should be ready!")
+    # Включаем кнопки во всех Creation компонентах
+    for comp in self.flow_panel_active_creation.get_components():
+      if hasattr(comp, 'button_add_to_cart'):
+        comp.button_add_to_cart.enabled = True
+        if self.locale == 'he':
+          comp.button_add_to_cart.text = "הוסף לעגלה"
+        else:
+          comp.button_add_to_cart.text = "Add to cart"
 
   def drop_down_to_show_change(self, **event_args):
     #self.refresh_creations()
