@@ -710,9 +710,14 @@ class Create(CreateTemplate):
     
     # ВАЖНО: Ждем 7 секунд перед активацией кнопок "Add to cart"
     # Shopify нужно время на индексацию товара для Storefront API
-    print("CLIENT: Product created, waiting 7 seconds for Shopify indexing...")
+    print("CLIENT: Product created, disabling Add to cart for 7 seconds...")
     self.disable_add_to_cart_buttons()
-    anvil.js.call_js('setTimeout', self.enable_add_to_cart_buttons, 7000)
+    
+    # Используем Anvil Timer для включения кнопок через 7 секунд
+    def enable_buttons_callback():
+      self.enable_add_to_cart_buttons()
+    
+    anvil.Timer(interval=7, repeating=False, tick=lambda **e: enable_buttons_callback()).start()
 
 
   def drop_down_effect_change(self, **event_args):
