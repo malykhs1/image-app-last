@@ -254,6 +254,11 @@ class Create(CreateTemplate):
       self.step_indicator_2.role = 'step-active'
       self.step_indicator_2.bold = True
       self.button_close.visible = True
+      # Меняем текст кнопки на "Close" / "סגור"
+      if self.locale == 'he':
+        self.button_close.text = 'סגור'
+      else:
+        self.button_close.text = 'Close'
       print("CLIENT: Step 2 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role) + "")
       # Показываем canvas только если есть изображение
       if self.img is not None:
@@ -276,6 +281,11 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-active'
       self.step_indicator_3.bold = True
       self.button_close.visible = True
+      # Меняем текст кнопки на "Try Again" / "נסה שוב"
+      if self.locale == 'he':
+        self.button_close.text = 'נסה שוב'
+      else:
+        self.button_close.text = 'Try Again'
       print("CLIENT: Step 3 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role) + "")
       # Скрываем canvas и элементы управления на этапе 3
       self.canvas_1.visible = False
