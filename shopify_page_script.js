@@ -31,14 +31,14 @@
 
       // Формируем данные для добавления в корзину
       const items = [{
-        id: data.variant_id,
+        id: String(data.variant_id),  // Явно преобразуем в строку
         quantity: 1
       }];
 
       // Если нужно добавить рамку
       if (data.add_frame && data.frame_id) {
         items.push({
-          id: data.frame_id,
+          id: String(data.frame_id),  // Явно преобразуем в строку
           quantity: 1
         });
         console.log('🖼️ Adding frame to cart as well');
