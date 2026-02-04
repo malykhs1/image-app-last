@@ -83,17 +83,13 @@
           variant_id: data.variant_id || data.id
         }, '*');
 
-        // Опция 1: Открываем корзину (если используется cart drawer)
-        if (typeof Shopify !== 'undefined' && Shopify.CartDrawer) {
-          Shopify.CartDrawer.open();
-        }
-        // Опция 2: Редирект на страницу корзины (раскомментируйте если нужно)
-        else {
-          window.location.href = '/cart';
-        }
-
-        // Опция 3: Показываем уведомление (если есть на вашей теме)
-        // theme.showQuickCart && theme.showQuickCart();
+        console.log('Cart updated:', data);
+        
+        // Запускаем обновление корзины и открываем cart-drawer
+        document.dispatchEvent(new CustomEvent('cart:refresh', {
+          bubbles: true, 
+          detail: { open: true }
+        }));
       })
       .catch(error => {
         console.error('❌ Error adding to cart:', error);
