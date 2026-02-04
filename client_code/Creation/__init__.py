@@ -21,7 +21,7 @@ def send_add_to_cart(variant_id, anvil_id, add_frame):
     'action': 'add',
     'variant_id': str(variant_id),  # Передаем как строку
     'anvil_id': anvil_id,
-    'add_frame': add_frame,
+    'add_frame': False,  # ВРЕМЕННО ОТКЛЮЧАЕМ рамку для тестирования
     'frame_id': str(frame_variant),  # Передаем как строку
   }
   print("Sending postMessage to parent window: " + str(message))

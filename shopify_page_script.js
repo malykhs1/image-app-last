@@ -35,6 +35,9 @@
         quantity: 1
       }];
 
+      console.log('🔍 Debug: add_frame =', data.add_frame);
+      console.log('🔍 Debug: frame_id =', data.frame_id);
+
       // Если нужно добавить рамку
       if (data.add_frame && data.frame_id) {
         items.push({
@@ -42,7 +45,11 @@
           quantity: 1
         });
         console.log('🖼️ Adding frame to cart as well');
+      } else {
+        console.log('⏭️ Skipping frame (add_frame=' + data.add_frame + ')');
       }
+
+      console.log('📦 Final items array:', JSON.stringify(items));
 
       // Добавляем товар(ы) в корзину через Shopify Cart API
       console.log('🚀 Sending request to /cart/add.js with body:', JSON.stringify({ items: items }));
