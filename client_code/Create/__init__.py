@@ -26,37 +26,53 @@ class Create(CreateTemplate):
   def __init__(self, **properties):
     url_params = anvil.js.call_js('getUrlParams')
     
-    # Определяем язык по URL родительского окна
-    # https://paraloom.co.il/ = иврит (default)
-    # https://paraloom.co.il/en = английский
-    self.locale = 'he'  # Default - иврит
+    # Определяем язык по приоритету:
+    # 1. Параметр URL ?locale=en (самый надежный способ)
+    # 2. Попытка получить URL родителя
+    # 3. document.referrer
+    # 4. Default = иврит
     
-    try:
-      parent_url = anvil.js.window.parent.location.href
-      print("CLIENT: Got parent URL: " + str(parent_url))
-      if '/en' in parent_url or '/en/' in parent_url:
-        self.locale = 'en'
-        print("CLIENT: Detected English from parent URL")
-      else:
-        print("CLIENT: Detected Hebrew from parent URL (default)")
-    except Exception as e:
-      # Cross-origin - пробуем получить из document.referrer
-      print("CLIENT: Cannot access parent URL (cross-origin), trying referrer...")
+    self.locale = 'he'  # Default - иврит
+    detected_from = 'default'
+    
+    # ПРИОРИТЕТ 1: Параметр URL (передается через src iframe)
+    if url_params and url_params.get('locale'):
+      self.locale = url_params.get('locale')
+      detected_from = 'URL parameter'
+      print("CLIENT: ✓ Locale from URL param: " + str(self.locale))
+    else:
+      # ПРИОРИТЕТ 2: Попытка получить parent URL
       try:
-        referrer = anvil.js.window.document.referrer
-        print("CLIENT: Referrer: " + str(referrer))
-        if referrer and ('/en' in referrer or '/en/' in referrer):
+        parent_url = anvil.js.window.parent.location.href
+        print("CLIENT: Got parent URL: " + str(parent_url))
+        if '/en' in parent_url or '/en/' in parent_url:
           self.locale = 'en'
-          print("CLIENT: Detected English from referrer")
-      except:
-        pass
-      
-      # Финальная проверка - параметр URL
-      if url_params and url_params.get('locale'):
-        self.locale = url_params.get('locale')
-        print("CLIENT: Using locale from URL param: " + str(self.locale))
-      else:
-        print("CLIENT: Using default locale: " + str(self.locale))
+          detected_from = 'parent URL'
+          print("CLIENT: ✓ Detected English from parent URL")
+        else:
+          detected_from = 'parent URL (Hebrew)'
+          print("CLIENT: ✓ Detected Hebrew from parent URL")
+      except Exception as e:
+        # ПРИОРИТЕТ 3: Cross-origin - пробуем referrer
+        print("CLIENT: Cannot access parent URL (cross-origin)")
+        try:
+          referrer = anvil.js.window.document.referrer
+          print("CLIENT: Referrer: " + str(referrer))
+          if referrer and ('/en' in referrer or '/en/' in referrer):
+            self.locale = 'en'
+            detected_from = 'document.referrer'
+            print("CLIENT: ✓ Detected English from referrer")
+          elif referrer:
+            detected_from = 'document.referrer (Hebrew)'
+            print("CLIENT: ✓ Detected Hebrew from referrer")
+          else:
+            print("CLIENT: Referrer is empty, using default")
+        except:
+          print("CLIENT: Cannot access referrer either")
+    
+    print("CLIENT: ===================================")
+    print("CLIENT: FINAL LOCALE: " + str(self.locale) + " (from: " + detected_from + ")")
+    print("CLIENT: ===================================")
     self.current_step = 1  # Текущий этап: 1, 2 или 3
     self.reached_step_3 = False  # Флаг: достиг ли пользователь этапа 3
     self.brush_size = 10
@@ -203,9 +219,9 @@ class Create(CreateTemplate):
       self.step_indicator_3.role = 'step-navigable'
     else:
       # До достижения этапа 3 - неактивные индикаторы неинтерактивные
-      self.step_indicator_1.role = 'step-inactive'
-      self.step_indicator_2.role = 'step-inactive'
-      self.step_indicator_3.role = 'step-inactive'
+    self.step_indicator_1.role = 'step-inactive'
+    self.step_indicator_2.role = 'step-inactive'
+    self.step_indicator_3.role = 'step-inactive'
     
     # Сбрасываем bold для всех
     self.step_indicator_1.bold = False
@@ -241,11 +257,11 @@ class Create(CreateTemplate):
       print("CLIENT: Step 2 activated, indicators: 1=" + str(self.step_indicator_1.role) + ", 2=" + str(self.step_indicator_2.role) + ", 3=" + str(self.step_indicator_3.role) + "")
       # Показываем canvas только если есть изображение
       if self.img is not None:
-        self.canvas_1.visible = True
+      self.canvas_1.visible = True
         self.flow_panel_canvas.visible = True
-        self.flow_panel_zoom.visible = True
-        self.button_create.visible = True
-        self.drawCanvas()
+      self.flow_panel_zoom.visible = True
+      self.button_create.visible = True
+      self.drawCanvas()
       else:
         # Если изображения нет, скрываем элементы управления
         self.canvas_1.visible = False
@@ -283,7 +299,7 @@ class Create(CreateTemplate):
     if self.current_step != 1:
       # Если достигли этап 3 и возвращаемся на 1, НЕ сбрасываем изображение
       # (только кнопка Close сбрасывает изображение)
-      self.set_step(1)
+    self.set_step(1)
     else:
       print("CLIENT: Already on step 1, ignoring click")
 
@@ -325,7 +341,7 @@ class Create(CreateTemplate):
       # Если уже достигли этап 3 (навигация активна), НЕ сбрасываем изображение
       if not self.reached_step_3:
         # Сбрасываем изображение только если еще не прошли весь flow
-        self.img = None
+      self.img = None
       self.resetMoveAndZoom()
       self.canvas_1.visible = False
       self.set_step(1)
@@ -481,13 +497,21 @@ class Create(CreateTemplate):
     """Настраиваем прослушивание сообщений от родительского окна (внешняя кнопка Add to cart)"""
     def handle_message(event):
       # Проверяем, что сообщение от доверенного источника
-      data = event.data
-      print("CLIENT: Received postMessage: " + str(data) + "")
+      raw_data = event.data
+      print("CLIENT: Received postMessage (raw): " + str(raw_data) + ", type: " + str(type(raw_data)))
       
-      # Пробуем получить action (работает и с dict, и с proxyobject)
+      # Если data - это строка, парсим как JSON
       try:
+        if isinstance(raw_data, str):
+          import json
+          data = json.loads(raw_data)
+          print("CLIENT: Parsed JSON string to object")
+        else:
+          data = raw_data
+        
+        # Пробуем получить action (работает и с dict, и с proxyobject)
         action = data.get('action') if hasattr(data, 'get') else data['action']
-        print("CLIENT: PostMessage action: " + str(action) + "")
+        print("CLIENT: PostMessage action: " + str(action))
         
         if action == 'add_active_to_cart':
           # Добавляем активный товар (последний созданный) в корзину
@@ -503,8 +527,13 @@ class Create(CreateTemplate):
               'anvil_id': active.get_id()
             }
             anvil.js.window.parent.postMessage(response, '*')
-      except (AttributeError, KeyError, TypeError) as e:
-        print("CLIENT: Error processing postMessage: " + str(e) + ", data type: " + str(type(data)) + "")
+        elif action == 'cart_add_success':
+          print("CLIENT: ✅ Cart add confirmed by parent window")
+        elif action == 'cart_add_error':
+          error = data.get('error', 'Unknown error')
+          print("CLIENT: ❌ Cart add error from parent: " + str(error))
+      except (AttributeError, KeyError, TypeError, ValueError) as e:
+        print("CLIENT: Error processing postMessage: " + str(e) + ", raw data: " + str(raw_data))
     
     # Регистрируем обработчик через JavaScript
     anvil.js.window.addEventListener('message', handle_message)
@@ -583,8 +612,8 @@ class Create(CreateTemplate):
     else:
       if self.locale == 'he':
         alert("הקובץ חייב להיות תמונה!")
-      else:
-        alert("File must be an image!")
+    else:
+      alert("File must be an image!")
 
   def file_loader_1_change(self, file, **event_args):
     self.file_loaded(file)
@@ -662,7 +691,7 @@ class Create(CreateTemplate):
       if self.locale == 'he':
         alert('השרת כרגע אינו זמין. אנא נסה שוב מאוחר יותר.')
       else:
-        alert('The server is currently unreachable. Please try again soon.')
+      alert('The server is currently unreachable. Please try again soon.')
       return
 
     self.linear_progress.visible = False

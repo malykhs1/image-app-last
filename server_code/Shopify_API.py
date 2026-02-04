@@ -135,24 +135,22 @@ class ShopifyClient:
           "originalSource": image_url,
         }],
         "metafields": [{
-          "namespace": "seo",
-          "key": "hidden",
-          "type": "number_integer",
-          "value": "1",
-        },
-                       {
-                         "namespace": "anvil",
-                         "key": "id",
-                         "type": "single_line_text_field",
-                         "value": anvil_id
-                       }],
+          "namespace": "anvil",
+          "key": "id",
+          "type": "single_line_text_field",
+          "value": anvil_id
+        }],
         "variants": [
           {
             "optionValues": [{
               "optionName": "Size",
               "name": "40x40cm"
             }],
-            "price": PRICE
+            "price": PRICE,
+            "inventoryPolicy": "CONTINUE",
+            "inventoryItem": {
+              "tracked": False
+            }
           },
         ]
       }
