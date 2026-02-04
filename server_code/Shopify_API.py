@@ -364,6 +364,12 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
 
   client.wait_for_product_image_ready(product_id)
 
+  # НОВОЕ: Ждем, пока товар станет доступен в Storefront (для корзины)
+  print(f"Waiting for product to be available in Storefront API...")
+  import time
+  time.sleep(7)  # Ждем 7 секунд, чтобы Shopify проиндексировал товар
+  print(f"Product should be ready now!")
+
   # Extract the variant number from the variant ID
   variant_number = variant_id.split('/')[-1]
 
