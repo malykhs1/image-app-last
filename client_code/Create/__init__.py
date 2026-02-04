@@ -705,6 +705,15 @@ class Create(CreateTemplate):
     self.all_creations.insert(0, row)
     print("CLIENT: Total creations: " + str(len(self.all_creations)) + "")
 
+    # ВАЖНО: Ждем 7 секунд, чтобы Shopify проиндексировал товар для Storefront API
+    print("CLIENT: ⏳ Waiting 7 seconds for Shopify indexing...")
+    anvil.js.await_promise(
+      anvil.js.window.Promise(lambda resolve, reject: 
+        anvil.js.window.setTimeout(lambda: resolve(None), 7000)
+      )
+    )
+    print("CLIENT: ✅ Wait complete, product should be ready!")
+
     # Автоматически переходим к этапу 3 после генерации
     self.set_step(3)
 
