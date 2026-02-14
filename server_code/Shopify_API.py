@@ -86,7 +86,8 @@ class ShopifyClient:
       logging.error(f"Failed to upload image to Shopify: {str(e)}")
       raise ValueError(f"Failed to upload image: {str(e)}")
 
-  def create_product_with_variants(self, image_url, anvil_id, string_len_meters, title="Custom String Art", tags=None):
+  def create_product_with_variants(self, image_url, anvil_id, string_len_meters, location_ids=None, title="Custom String Art", tags=None):
+
     """Create a Shopify product with variants and return product ID and variant ID."""
     if tags is None:
       tags = ['Custom']
@@ -147,7 +148,12 @@ class ShopifyClient:
               "optionName": "Size",
               "name": "40x40cm"
             }],
-            "price": PRICE
+            "price": PRICE,
+            "inventoryPolicy": "CONTINUE",
+            **({"inventoryQuantities": [
+              {"locationId": loc_id, "name": "available", "quantity": 5}
+              for loc_id in location_ids
+            ]} if location_ids else {})
           },
         ]
       }
@@ -299,7 +305,31 @@ class ShopifyClient:
         #print(f'image is ready at iter {i} !!!')
         break
         #delay maybe (via full python 3 on business plan)
+  
+  def get_locations(self):
+    """Get active fulfillment locations. Returns Tel Aviv if found, otherwise all active locations."""
+    query = """
+        {
+          locations(first: 20) {
+            edges {
+              node {
+                id
+                name
+                isActive
+              }
+            }
+          }
+        }
+        """
+    result = self._execute_graphql(query)
+    locations = result["data"]["locations"]["edges"]
+    active = [edge["node"] for edge in locations if edge["node"]["isActive"]]
 
+    # Prefer Tel Aviv if it exists
+    tel_aviv = [loc for loc in active if "tel aviv" in loc["name"].lower()]
+    if tel_aviv:
+      return tel_aviv
+    return active
 
   def get_publication_ids(self):
     """List all available sales channels (publications)."""
@@ -331,8 +361,12 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
   # Upload the image
   image_url = client.upload_image(image_obj)
 
-  # Create the product with variants
-  product_id, variant_id = client.create_product_with_variants(image_url, anvil_id, string_len_meters)
+  # Get fulfillment location IDs (prefer Tel Aviv, fallback to all active)
+  locations = client.get_locations()
+  location_ids = [loc["id"] for loc in locations]
+  
+  # Create the product with variants and inventory at the location(s)
+  product_id, variant_id = client.create_product_with_variants(image_url, anvil_id, string_len_meters, location_ids=location_ids)
 
   # Add hebrew translations
   client.register_translations(product_id, string_len_meters) 
