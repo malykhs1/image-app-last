@@ -297,15 +297,28 @@ class ShopifyClient:
       "productId": product_id,
     }
 
-    i = 0
-    while i < 10:
-      i += 1
+    for i in range(15):
       result = self._execute_graphql(query, variables)
       if result['data']['product']['media']['edges'][0]['node']['status'] == 'READY':
-        #print(f'image is ready at iter {i} !!!')
         break
-        #delay maybe (via full python 3 on business plan)
-  
+
+  def wait_for_variant_sellable(self, variant_id):
+    """Poll until the variant's sellableOnlineQuantity > 0."""
+    query = """
+      query VariantSellable($variantId: ID!) {
+        productVariant(id: $variantId) {
+          sellableOnlineQuantity
+        }
+      }
+      """
+    variables = {"variantId": variant_id}
+
+    for i in range(15):
+      result = self._execute_graphql(query, variables)
+      sellable = result['data']['productVariant']['sellableOnlineQuantity']
+      if sellable and sellable > 0:
+        break
+      
   def get_locations(self):
     """Get active fulfillment locations. Returns Tel Aviv if found, otherwise all active locations."""
     query = """
@@ -375,6 +388,7 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
   client.publish_product(product_id)
 
   client.wait_for_product_image_ready(product_id)
+  client.wait_for_variant_sellable(variant_id)
 
   # Extract the variant number from the variant ID
   variant_number = variant_id.split('/')[-1]
