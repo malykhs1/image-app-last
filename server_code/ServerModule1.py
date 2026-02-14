@@ -8,38 +8,38 @@ import requests
 from datetime import datetime
 
 # Telegram отключен
-# @anvil.server.callable
-# def send_telegram_message(message):
-#   BOT_TOKEN = '7125646035:AAFyT7KcJx0FSBQG5KJ-xhEnxuSRYAfhaPQ'
-#   CHAT_ID = '909283054'
-#   url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
-#   response = requests.get(url)
-#   return response.json()
-
 @anvil.server.callable
-def create(cropped_img, paramsDict, mask_img, img_name):
-  """Создание artwork из изображения (временная заглушка)"""
-  print(f"SERVER: create() called for {img_name}")
-  session_id = get_session_id()
+def send_telegram_message(message):
+  BOT_TOKEN = '7125646035:AAFyT7KcJx0FSBQG5KJ-xhEnxuSRYAfhaPQ'
+  CHAT_ID = '909283054'
+  url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
+  response = requests.get(url)
+  return response.json()
 
-  # ВРЕМЕННО: Пока без обработки - просто сохраняем исходное изображение
-  # TODO: Добавить реальную обработку изображения (эффект нитей/плетения)
+# @anvil.server.callable
+# def create(cropped_img, paramsDict, mask_img, img_name):
+#   """Создание artwork из изображения (временная заглушка)"""
+#   print(f"SERVER: create() called for {img_name}")
+#   session_id = get_session_id()
 
-  # Временный расчет длины нити (можно заменить на реальный алгоритм)
-  wire_len_km = 0.5  # Примерное значение в километрах
+#   # ВРЕМЕННО: Пока без обработки - просто сохраняем исходное изображение
+#   # TODO: Добавить реальную обработку изображения (эффект нитей/плетения)
 
-  # Сохраняем в базу данных
-  row = app_tables.creations.add_row(
-    session_id=session_id,
-    in_image=cropped_img,
-    out_image=cropped_img,  # Пока возвращаем то же изображение
-    out_image_medium=cropped_img,
-    wire_len_km=wire_len_km,
-    created_at=datetime.now()
-  )
+#   # Временный расчет длины нити (можно заменить на реальный алгоритм)
+#   wire_len_km = 0.5  # Примерное значение в километрах
 
-  print(f"SERVER: Created row with ID {row.get_id()}")
-  return row
+#   # Сохраняем в базу данных
+#   row = app_tables.creations.add_row(
+#     session_id=session_id,
+#     in_image=cropped_img,
+#     out_image=cropped_img,  # Пока возвращаем то же изображение
+#     out_image_medium=cropped_img,
+#     wire_len_km=wire_len_km,
+#     created_at=datetime.now()
+#   )
+
+#   print(f"SERVER: Created row with ID {row.get_id()}")
+#   return row
 
 @anvil.server.callable
 def get_session_id():
