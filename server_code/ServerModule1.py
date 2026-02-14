@@ -16,31 +16,6 @@ def send_telegram_message(message):
   response = requests.get(url)
   return response.json()
 
-# @anvil.server.callable
-# def create(cropped_img, paramsDict, mask_img, img_name):
-#   """Создание artwork из изображения (временная заглушка)"""
-#   print(f"SERVER: create() called for {img_name}")
-#   session_id = get_session_id()
-
-#   # ВРЕМЕННО: Пока без обработки - просто сохраняем исходное изображение
-#   # TODO: Добавить реальную обработку изображения (эффект нитей/плетения)
-
-#   # Временный расчет длины нити (можно заменить на реальный алгоритм)
-#   wire_len_km = 0.5  # Примерное значение в километрах
-
-#   # Сохраняем в базу данных
-#   row = app_tables.creations.add_row(
-#     session_id=session_id,
-#     in_image=cropped_img,
-#     out_image=cropped_img,  # Пока возвращаем то же изображение
-#     out_image_medium=cropped_img,
-#     wire_len_km=wire_len_km,
-#     created_at=datetime.now()
-#   )
-
-#   print(f"SERVER: Created row with ID {row.get_id()}")
-#   return row
-
 @anvil.server.callable
 def get_session_id():
   return anvil.server.get_session_id()
