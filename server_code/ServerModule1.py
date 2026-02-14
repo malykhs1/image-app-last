@@ -72,18 +72,9 @@ def launch_add_to_cart_task(item, locale):
 
 @anvil.server.background_task
 def add_to_cart_bg_task(item, locale):
-  # Конвертируем row объект в словарь для создания новой записи
-  # Включаем только поля, которые существуют в таблице cart_added
-  item_dict = {
-    'out_image': item['out_image'],
-    'wire_len_km': item['wire_len_km']
-  }
-
-  row = app_tables.cart_added.add_row(**item_dict)
+  row = app_tables.cart_added.add_row(**item)
   anvil_id = row.get_id()
   # create a product and return the product variant
   string_len_meters = int(row['wire_len_km']*1000)
   variant_id = Shopify_API.anvil_to_shopify(row['out_image'], anvil_id, locale, string_len_meters)
-
-  # Продукт создан как ACTIVE, отправляем variant_id для добавления в корзину через postMessage
   return variant_id, anvil_id

@@ -118,9 +118,6 @@ class ShopifyClient:
       "productSet": {
         "title": title,
         "descriptionHtml": f"Made from {string_len_meters} meters of string",
-        "productType": "String Art",
-        "vendor": "Custom String Art",
-        "status": "ACTIVE",
         "tags": tags,
         "productOptions": [{
           "name": "Size",
@@ -135,30 +132,29 @@ class ShopifyClient:
           "originalSource": image_url,
         }],
         "metafields": [{
-          "namespace": "anvil",
-          "key": "id",
-          "type": "single_line_text_field",
-          "value": anvil_id
-        }],
+          "namespace": "seo",
+          "key": "hidden",
+          "value": "1",
+        },
+                       {
+                         "namespace": "anvil",
+                         "key": "id",
+                         "value": anvil_id
+                       }],
         "variants": [
           {
             "optionValues": [{
               "optionName": "Size",
               "name": "40x40cm"
             }],
-            "price": PRICE,
-            "inventoryPolicy": "CONTINUE",
-            "inventoryItem": {
-              "tracked": False
-            }
+            "price": PRICE
           },
         ]
       }
     }
 
-    print("Creating product with variables:", variables)
     result = self._execute_graphql(mutation, variables)
-    print("Shopify response:", result)
+    print(result)
     if 'errors' in result:
       user_errors = result['errors']
       error_messages = [error["message"] for error in user_errors]
@@ -342,101 +338,11 @@ def anvil_to_shopify(image_obj, anvil_id, locale, string_len_meters,
   client.register_translations(product_id, string_len_meters) 
 
   # Publish the product to the online store
-  # Получаем правильный Publication ID для Online Store
-  try:
-    publications = client.get_publication_ids()
-    print(f"Available publications: {publications}")
-    online_store_pub = None
-    for pub_id, pub_name in publications:
-      if 'Online Store' in pub_name or 'online' in pub_name.lower():
-        online_store_pub = pub_id
-        break
-
-    if online_store_pub:
-      # Обновляем ID публикации и публикуем
-      client.online_store_publication_id = online_store_pub
-      client.publish_product(product_id)
-      print(f"Published to: {online_store_pub}")
-    else:
-      print("Warning: Online Store publication not found")
-  except Exception as e:
-    print(f"Publishing warning: {e}")
+  client.publish_product(product_id)
 
   client.wait_for_product_image_ready(product_id)
-
 
   # Extract the variant number from the variant ID
   variant_number = variant_id.split('/')[-1]
 
   return variant_number
-
-def add_variant_to_cart(variant_id, quantity=1, shop_domain="txmx0c-cc.myshopify.com"):
-  """
-    Добавить товар в корзину Shopify через Storefront API
-    Возвращает cart_id и checkout_url
-    """
-  storefront_token = anvil.secrets.get_secret('storefront_access_token')
-
-  url = f"https://{shop_domain}/api/2024-10/graphql.json"
-  headers = {
-    "Content-Type": "application/json",
-    "X-Shopify-Storefront-Access-Token": storefront_token
-  }
-
-  # Создаем корзину и добавляем товар
-  mutation = """
-    mutation cartCreate($input: CartInput!) {
-      cartCreate(input: $input) {
-        cart {
-          id
-          checkoutUrl
-          lines(first: 10) {
-            edges {
-              node {
-                id
-                quantity
-                merchandise {
-                  ... on ProductVariant {
-                    id
-                    title
-                    product {
-                      title
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        userErrors {
-          field
-          message
-        }
-      }
-    }
-    """
-
-  variables = {
-    "input": {
-      "lines": [
-        {
-          "merchandiseId": f"gid://shopify/ProductVariant/{variant_id}",
-          "quantity": quantity
-        }
-      ]
-    }
-  }
-
-  response = requests.post(url, json={"query": mutation, "variables": variables}, headers=headers)
-  result = response.json()
-
-  if "errors" in result or result.get("data", {}).get("cartCreate", {}).get("userErrors"):
-    errors = result.get("errors") or result["data"]["cartCreate"]["userErrors"]
-    error_messages = [error.get("message", str(error)) for error in errors]
-    raise ValueError(f"Failed to add to cart: {', '.join(error_messages)}")
-
-  cart = result["data"]["cartCreate"]["cart"]
-  return {
-    "cart_id": cart["id"],
-    "checkout_url": cart["checkoutUrl"]
-  }
