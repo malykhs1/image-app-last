@@ -90,6 +90,74 @@
   }
 
   // ========================================
+  // НОВОЕ: Замена изображений при открытии/загрузке cart-drawer
+  // ========================================
+  
+  // Наблюдаем за изменениями DOM для обнаружения открытия cart-drawer
+  const cartDrawerObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      // Проверяем, появился ли cart-drawer в DOM
+      if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+        for (let i = 0; i < mutation.addedNodes.length; i++) {
+          const node = mutation.addedNodes[i];
+          // Ищем элементы корзины
+          if (node.nodeType === 1 && (
+            node.classList && (
+              node.classList.contains('cart-drawer') ||
+              node.classList.contains('drawer') ||
+              node.querySelector && node.querySelector('.horizontal-product__media')
+            )
+          )) {
+            console.log('🔔 Cart drawer opened/updated, replacing images...');
+            setTimeout(replaceCartImages, 300);
+            break;
+          }
+        }
+      }
+      
+      // Также проверяем изменения атрибутов (например, открытие drawer через класс)
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        const target = mutation.target;
+        if (target.classList && (
+          target.classList.contains('cart-drawer') ||
+          target.classList.contains('drawer')
+        ) && target.classList.contains('is-open')) {
+          console.log('🔔 Cart drawer opened via class change, replacing images...');
+          setTimeout(replaceCartImages, 300);
+        }
+      }
+    });
+  });
+
+  // Начинаем наблюдение за изменениями в body
+  cartDrawerObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['class', 'open', 'data-open']
+  });
+
+  // ========================================
+  // НОВОЕ: Замена изображений при загрузке страницы
+  // ========================================
+  window.addEventListener('load', function() {
+    console.log('🌐 Page loaded, checking for cart items...');
+    setTimeout(replaceCartImages, 1000);
+  });
+
+  // ========================================
+  // НОВОЕ: Периодическая проверка (на случай, если что-то пропустили)
+  // ========================================
+  setInterval(function() {
+    // Проверяем, открыт ли cart-drawer
+    const cartDrawer = document.querySelector('.cart-drawer, .drawer[open], [data-drawer-open="true"]');
+    if (cartDrawer) {
+      console.log('⏰ Periodic check: cart drawer is open, replacing images...');
+      replaceCartImages();
+    }
+  }, 3000); // Проверка каждые 3 секунды
+
+  // ========================================
   // СЛУШАТЕЛЬ: Сообщения от Anvil iframe
   // ========================================
   window.addEventListener('message', function(event) {
