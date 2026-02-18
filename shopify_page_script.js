@@ -316,6 +316,13 @@
     }
 
     console.log('📨 Received postMessage:', data);
+    
+    // ОТЛАДКА: Показываем тип и содержимое data
+    if (data.action) {
+      console.log('✅ Found action:', data.action);
+    } else {
+      console.log('⚠️ No action field in postMessage');
+    }
 
     // ========================================
     // ОБРАБОТКА ДОБАВЛЕНИЯ В КОРЗИНУ
@@ -332,7 +339,10 @@
 
       // ВАЖНО: Сначала заменяем изображение на странице продукта
       if (data.image_url) {
+        console.log('🎯 Calling replaceProductPageImage with URL:', data.image_url);
         replaceProductPageImage(data.image_url);
+      } else {
+        console.error('❌ No image_url in postMessage data!');
       }
 
       // Формируем данные для добавления в корзину
