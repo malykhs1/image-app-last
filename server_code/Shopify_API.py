@@ -135,11 +135,11 @@ class ShopifyClient:
           "originalSource": image_url,
         }],
         "metafields": [{
-          "namespace": "anvil",
-          "key": "id",
-          "type": "single_line_text_field",
-          "value": anvil_id
-        }],
+                         "namespace": "anvil",
+                         "key": "id",
+                         "type": "single_line_text_field",
+                         "value": anvil_id
+                       }],
         "variants": [
           {
             "optionValues": [{

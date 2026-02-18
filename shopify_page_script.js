@@ -4,9 +4,94 @@
 // ============================================
 
 (function() {
-  console.log('🎨 String Art - Cart integration script loaded');
+  console.log('🎨 String Art - Cart integration script loaded (Line Item Properties version)');
 
-  // Ждем, когда iframe загрузится
+  // Хранилище для кастомных изображений (по line item key)
+  window.customArtImages = window.customArtImages || {};
+
+  // ========================================
+  // ФУНКЦИЯ: Замена изображения на странице продукта
+  // ========================================
+  function replaceProductPageImage(imageUrl) {
+    console.log('🖼️ Replacing product page image with:', imageUrl);
+    
+    // Находим основное изображение товара на странице
+    const productMediaDiv = document.querySelector('.product__media[data-media-type="image"]');
+    if (productMediaDiv) {
+      const img = productMediaDiv.querySelector('img');
+      if (img) {
+        // Заменяем src и srcset на кастомное изображение
+        img.src = imageUrl;
+        img.srcset = imageUrl;
+        console.log('✅ Product page image replaced');
+      }
+    }
+  }
+
+  // ========================================
+  // ФУНКЦИЯ: Замена изображений в корзине и cart-drawer
+  // ========================================
+  function replaceCartImages() {
+    console.log('🛒 Replacing cart images...');
+    
+    // Получаем текущую корзину для доступа к line item properties
+    fetch('/cart.js')
+      .then(response => response.json())
+      .then(cart => {
+        console.log('📦 Current cart:', cart);
+        
+        cart.items.forEach((item, index) => {
+          // Проверяем наличие кастомного изображения в properties
+          const imageProperty = item.properties && item.properties._image_url;
+          
+          if (imageProperty) {
+            console.log(`🎨 Found custom image for item ${index}:`, imageProperty);
+            
+            // Заменяем в cart-drawer
+            const cartDrawerItems = document.querySelectorAll('.horizontal-product__media');
+            if (cartDrawerItems[index]) {
+              const img = cartDrawerItems[index].querySelector('img');
+              if (img) {
+                img.src = imageProperty;
+                img.srcset = imageProperty;
+                console.log(`✅ Replaced cart-drawer image for item ${index}`);
+              }
+            }
+            
+            // Заменяем на странице корзины (/cart)
+            const cartPageItems = document.querySelectorAll('.cart-item__media');
+            if (cartPageItems[index]) {
+              const img = cartPageItems[index].querySelector('img');
+              if (img) {
+                img.src = imageProperty;
+                img.srcset = imageProperty;
+                console.log(`✅ Replaced cart page image for item ${index}`);
+              }
+            }
+          }
+        });
+      })
+      .catch(error => {
+        console.error('❌ Error fetching cart:', error);
+      });
+  }
+
+  // ========================================
+  // СЛУШАТЕЛЬ: Обновление корзины
+  // ========================================
+  document.addEventListener('cart:refresh', function() {
+    console.log('🔄 Cart refresh event detected, replacing images...');
+    setTimeout(replaceCartImages, 300); // Небольшая задержка для загрузки DOM
+  });
+
+  // Замена изображений при загрузке страницы (для /cart)
+  if (window.location.pathname.includes('/cart')) {
+    setTimeout(replaceCartImages, 500);
+  }
+
+  // ========================================
+  // СЛУШАТЕЛЬ: Сообщения от Anvil iframe
+  // ========================================
   window.addEventListener('message', function(event) {
     const data = event.data;
     
@@ -22,17 +107,27 @@
     // Когда пользователь нажимает "Add to cart" ВНУТРИ iframe
     // ========================================
     if (data.action === 'add' && data.variant_id) {
-      console.log('🛒 Adding to cart:', {
+      console.log('🛒 Adding to cart with custom image:', {
         variant_id: data.variant_id,
         anvil_id: data.anvil_id,
+        image_url: data.image_url,
         add_frame: data.add_frame,
         frame_id: data.frame_id
       });
 
+      // ВАЖНО: Сначала заменяем изображение на странице продукта
+      if (data.image_url) {
+        replaceProductPageImage(data.image_url);
+      }
+
       // Формируем данные для добавления в корзину
       const items = [{
-        id: String(data.variant_id),  // Явно преобразуем в строку
-        quantity: 1
+        id: String(data.variant_id),
+        quantity: 1,
+        properties: {
+          '_image_url': data.image_url,  // Сохраняем URL изображения
+          '_anvil_id': data.anvil_id     // Сохраняем Anvil ID
+        }
       }];
 
       console.log('🔍 Debug: add_frame =', data.add_frame);
@@ -41,7 +136,7 @@
       // Если нужно добавить рамку
       if (data.add_frame && data.frame_id) {
         items.push({
-          id: String(data.frame_id),  // Явно преобразуем в строку
+          id: String(data.frame_id),
           quantity: 1
         });
         console.log('🖼️ Adding frame to cart as well');
@@ -90,6 +185,9 @@
           bubbles: true, 
           detail: { open: true }
         }));
+        
+        // Заменяем изображения после добавления в корзину
+        setTimeout(replaceCartImages, 500);
       })
       .catch(error => {
         console.error('❌ Error adding to cart:', error);
@@ -115,7 +213,7 @@
     }
   });
 
-  console.log('✓ PostMessage listener registered for iframe cart operations');
+  console.log('✓ PostMessage listener registered for iframe cart operations (Line Item Properties)');
 })();
 
 

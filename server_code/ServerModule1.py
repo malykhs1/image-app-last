@@ -81,9 +81,21 @@ def add_to_cart_bg_task(item, locale):
 
   row = app_tables.cart_added.add_row(**item_dict)
   anvil_id = row.get_id()
-  # create a product and return the product variant
-  string_len_meters = int(row['wire_len_km']*1000)
-  variant_id = Shopify_API.anvil_to_shopify(row['out_image'], anvil_id, locale, string_len_meters)
-
-  # Продукт создан как ACTIVE, отправляем variant_id для добавления в корзину через postMessage
-  return variant_id, anvil_id
+  
+  # НОВАЯ ЛОГИКА: Вместо создания нового продукта,
+  # загружаем изображение в Shopify CDN и возвращаем его URL
+  admin_token = anvil.secrets.get_secret('admin_API_token')
+  client = Shopify_API.ShopifyClient(
+    "paraloom.co.il", 
+    admin_token, 
+    "gid://shopify/Publication/128141623411"
+  )
+  
+  # Загружаем изображение в Shopify CDN
+  image_url = client.upload_image(row['out_image'])
+  print(f"SERVER: Uploaded image to Shopify CDN: {image_url}")
+  
+  # Возвращаем фиксированный variant_id существующего продукта и image URL
+  fixed_variant_id = "44317714841715"  # ID варианта продукта 8199461339251
+  
+  return fixed_variant_id, anvil_id, image_url

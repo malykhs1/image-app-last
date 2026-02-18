@@ -8,19 +8,20 @@ from ..AddFramePopup import AddFramePopup
 
 WH_IMG_CARD = 350
 
-def send_add_to_cart(variant_id, anvil_id, add_frame):
-  """Добавляем товар в корзину Shopify"""
+def send_add_to_cart(variant_id, anvil_id, image_url, add_frame):
+  """Добавляем товар в корзину Shopify с line item properties"""
   frame_variant = 43092453359731 # product id 8003777167475
 
   # Получаем текущий URL приложения динамически
   app_origin = anvil.server.get_app_origin()
 
-  # 1. Отправляем postMessage родительскому окну (для совместимости)
+  # 1. Отправляем postMessage родительскому окну
   message = {
     'sender': app_origin,  # Динамический URL приложения
     'action': 'add',
     'variant_id': str(variant_id),  # Передаем как строку
     'anvil_id': anvil_id,
+    'image_url': image_url,  # НОВОЕ: URL изображения для замены на странице
     'add_frame': add_frame,  # Возвращаем обратно
     'frame_id': str(frame_variant),  # Передаем как строку
   }
@@ -104,13 +105,13 @@ class Creation(CreationTemplate):
       while task.is_completed() is False:
         waitHere = 1
 
-      # Получаем результат: variant_id, anvil_id
-      variant_id, anvil_id = task.get_return_value()
+      # Получаем результат: variant_id, anvil_id, image_url
+      variant_id, anvil_id, image_url = task.get_return_value()
 
-      print("Received variant_id: " + str(variant_id) + ", anvil_id: " + str(anvil_id))
+      print("Received variant_id: " + str(variant_id) + ", anvil_id: " + str(anvil_id) + ", image_url: " + str(image_url))
 
       # Отправляем postMessage родительскому окну для добавления в корзину
-      send_add_to_cart(variant_id, anvil_id, add_frame)
+      send_add_to_cart(variant_id, anvil_id, image_url, add_frame)
 
       # Показываем сообщение об успехе
       if self.locale == 'he':
