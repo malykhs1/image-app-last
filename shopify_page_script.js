@@ -50,18 +50,52 @@
   // ФУНКЦИЯ: Восстановление изображения из localStorage
   // ========================================
   function restoreProductPageImage() {
-    const variantId = getVariantIdFromUrl();
+    // Вариант 1: Пробуем получить variant ID из URL
+    let variantId = getVariantIdFromUrl();
+    
+    // Вариант 2: Если нет в URL, пробуем найти на странице
     if (!variantId) {
-      console.log('ℹ️ No variant ID in URL, skipping image restore');
+      const variantInput = document.querySelector('input[name="id"], select[name="id"]');
+      if (variantInput) {
+        variantId = variantInput.value;
+        console.log('📍 Found variant ID from form input: ' + variantId);
+      }
+    }
+    
+    // Вариант 3: Пробуем найти в скриптах Shopify
+    if (!variantId) {
+      try {
+        const metaVariant = document.querySelector('meta[property="product:variant"]');
+        if (metaVariant) {
+          variantId = metaVariant.getAttribute('content');
+          console.log('📍 Found variant ID from meta tag: ' + variantId);
+        }
+      } catch(e) {
+        console.log('Could not find variant in meta tags');
+      }
+    }
+    
+    if (!variantId) {
+      console.log('ℹ️ No variant ID found, skipping image restore');
       return;
     }
 
     const savedImageUrl = localStorage.getItem('custom_image_' + variantId);
     if (savedImageUrl) {
       console.log('🔄 Restoring custom image from localStorage for variant ' + variantId);
+      console.log('🔗 Image URL: ' + savedImageUrl);
       replaceProductPageImage(savedImageUrl);
     } else {
       console.log('ℹ️ No saved custom image for variant ' + variantId);
+      
+      // Дополнительно: показываем все сохраненные ключи для отладки
+      console.log('💾 Available localStorage keys:');
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('custom_image_')) {
+          console.log('  - ' + key + ': ' + localStorage.getItem(key).substring(0, 50) + '...');
+        }
+      }
     }
   }
 
@@ -183,8 +217,22 @@
     // Восстанавливаем изображение на странице продукта (если есть)
     restoreProductPageImage();
     
+    // Пробуем еще раз через 500мс (на случай если DOM еще не готов)
+    setTimeout(restoreProductPageImage, 500);
+    
+    // И еще раз через 1.5 секунды (для медленных соединений)
+    setTimeout(restoreProductPageImage, 1500);
+    
     // Заменяем изображения в корзине
     setTimeout(replaceCartImages, 1000);
+  });
+  
+  // ========================================
+  // ДОПОЛНИТЕЛЬНО: Попытка при DOMContentLoaded
+  // ========================================
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM ready, attempting to restore product image...');
+    setTimeout(restoreProductPageImage, 100);
   });
 
   // ========================================
