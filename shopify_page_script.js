@@ -15,26 +15,83 @@
   function replaceProductPageImage(imageUrl) {
     console.log('🖼️ Replacing product page image with:', imageUrl);
     
-    // Находим ВСЕ изображения товара на странице (может быть несколько)
-    const productImages = document.querySelectorAll('.product__media[data-media-type="image"] img, .product__media-list img');
+    // Пробуем несколько селекторов (от специфичного к общему)
+    const selectors = [
+      '.product__gallery-container .product__media img',
+      '.product__gallery-container .product__media-list img',
+      '.product__media[data-media-type="image"] img',
+      '.product__media-list img',
+      '.product-single__photo img',
+      '[data-product-single-media-wrapper] img'
+    ];
     
-    if (productImages.length > 0) {
-      productImages.forEach(function(img) {
-        // Заменяем src и srcset на кастомное изображение
-        img.src = imageUrl;
-        img.srcset = imageUrl;
-      });
-      console.log('✅ Replaced ' + productImages.length + ' product page image(s)');
+    let totalReplaced = 0;
+    
+    selectors.forEach(function(selector) {
+      const images = document.querySelectorAll(selector);
+      if (images.length > 0) {
+        console.log('📍 Found ' + images.length + ' image(s) with selector: ' + selector);
+        images.forEach(function(img) {
+          console.log('  - Current src: ' + img.src);
+          console.log('  - New src: ' + imageUrl);
+          
+          // Заменяем src и srcset
+          img.src = imageUrl;
+          img.srcset = imageUrl;
+          
+          // Также заменяем data-src для lazy loading
+          if (img.hasAttribute('data-src')) {
+            img.setAttribute('data-src', imageUrl);
+          }
+          if (img.hasAttribute('data-srcset')) {
+            img.setAttribute('data-srcset', imageUrl);
+          }
+          
+          // Добавляем класс для отслеживания
+          img.classList.add('custom-art-replaced');
+          
+          totalReplaced++;
+        });
+      }
+    });
+    
+    if (totalReplaced > 0) {
+      console.log('✅ Replaced ' + totalReplaced + ' product page image(s)');
       
       // Сохраняем URL в localStorage для восстановления после перезагрузки
-      // Ключ: variant ID из URL
       const variantId = getVariantIdFromUrl();
       if (variantId) {
         localStorage.setItem('custom_image_' + variantId, imageUrl);
         console.log('💾 Saved custom image URL to localStorage for variant ' + variantId);
+      } else {
+        console.warn('⚠️ Could not save to localStorage - no variant ID');
       }
+      
+      // Повторяем замену через 500мс и 1.5с на случай если theme перезаписывает
+      setTimeout(function() {
+        console.log('🔄 Re-applying image replacement (500ms delay)...');
+        document.querySelectorAll('img.custom-art-replaced').forEach(function(img) {
+          img.src = imageUrl;
+          img.srcset = imageUrl;
+        });
+      }, 500);
+      
+      setTimeout(function() {
+        console.log('🔄 Re-applying image replacement (1500ms delay)...');
+        document.querySelectorAll('img.custom-art-replaced').forEach(function(img) {
+          img.src = imageUrl;
+          img.srcset = imageUrl;
+        });
+      }, 1500);
+      
     } else {
-      console.warn('⚠️ Product images not found on page');
+      console.error('❌ Product images not found on page with any selector!');
+      console.log('🔍 Available images on page:');
+      document.querySelectorAll('img').forEach(function(img, index) {
+        if (index < 10) { // Показываем первые 10
+          console.log('  [' + index + '] ' + img.className + ' - ' + img.src);
+        }
+      });
     }
   }
 
