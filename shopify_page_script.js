@@ -15,16 +15,53 @@
   function replaceProductPageImage(imageUrl) {
     console.log('🖼️ Replacing product page image with:', imageUrl);
     
-    // Находим основное изображение товара на странице
-    const productMediaDiv = document.querySelector('.product__media[data-media-type="image"]');
-    if (productMediaDiv) {
-      const img = productMediaDiv.querySelector('img');
-      if (img) {
+    // Находим ВСЕ изображения товара на странице (может быть несколько)
+    const productImages = document.querySelectorAll('.product__media[data-media-type="image"] img, .product__media-list img');
+    
+    if (productImages.length > 0) {
+      productImages.forEach(function(img) {
         // Заменяем src и srcset на кастомное изображение
         img.src = imageUrl;
         img.srcset = imageUrl;
-        console.log('✅ Product page image replaced');
+      });
+      console.log('✅ Replaced ' + productImages.length + ' product page image(s)');
+      
+      // Сохраняем URL в localStorage для восстановления после перезагрузки
+      // Ключ: variant ID из URL
+      const variantId = getVariantIdFromUrl();
+      if (variantId) {
+        localStorage.setItem('custom_image_' + variantId, imageUrl);
+        console.log('💾 Saved custom image URL to localStorage for variant ' + variantId);
       }
+    } else {
+      console.warn('⚠️ Product images not found on page');
+    }
+  }
+
+  // ========================================
+  // ФУНКЦИЯ: Получение variant ID из URL
+  // ========================================
+  function getVariantIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('variant');
+  }
+
+  // ========================================
+  // ФУНКЦИЯ: Восстановление изображения из localStorage
+  // ========================================
+  function restoreProductPageImage() {
+    const variantId = getVariantIdFromUrl();
+    if (!variantId) {
+      console.log('ℹ️ No variant ID in URL, skipping image restore');
+      return;
+    }
+
+    const savedImageUrl = localStorage.getItem('custom_image_' + variantId);
+    if (savedImageUrl) {
+      console.log('🔄 Restoring custom image from localStorage for variant ' + variantId);
+      replaceProductPageImage(savedImageUrl);
+    } else {
+      console.log('ℹ️ No saved custom image for variant ' + variantId);
     }
   }
 
@@ -141,7 +178,12 @@
   // НОВОЕ: Замена изображений при загрузке страницы
   // ========================================
   window.addEventListener('load', function() {
-    console.log('🌐 Page loaded, checking for cart items...');
+    console.log('🌐 Page loaded, checking for cart items and product images...');
+    
+    // Восстанавливаем изображение на странице продукта (если есть)
+    restoreProductPageImage();
+    
+    // Заменяем изображения в корзине
     setTimeout(replaceCartImages, 1000);
   });
 
