@@ -85,15 +85,21 @@ def add_to_cart_bg_task(item, locale):
   # НОВАЯ ЛОГИКА: Вместо создания нового продукта,
   # загружаем изображение в Shopify CDN и возвращаем его URL
   admin_token = anvil.secrets.get_secret('admin_API_token')
+  
+  # ВАЖНО: Используем myshopify.com домен для API, не кастомный домен
+  # paraloom.co.il - это кастомный домен, API работает через *.myshopify.com
+  # TODO: Уточнить правильный myshopify.com поддомен для paraloom.co.il
+  shop_domain = "txmx0c-cc.myshopify.com"  # Используем старый домен (временно)
+  
   client = Shopify_API.ShopifyClient(
-    "paraloom.co.il", 
+    shop_domain, 
     admin_token, 
     "gid://shopify/Publication/128141623411"
   )
   
   # Загружаем изображение в Shopify CDN
   image_url = client.upload_image(row['out_image'])
-  print(f"SERVER: Uploaded image to Shopify CDN: {image_url}")
+  print("SERVER: Uploaded image to Shopify CDN: " + str(image_url))
   
   # Возвращаем фиксированный variant_id существующего продукта и image URL
   fixed_variant_id = "44317714841715"  # ID варианта продукта 8199461339251
