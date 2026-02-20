@@ -293,16 +293,37 @@
   });
 
   // ========================================
-  // НОВОЕ: Периодическая проверка (на случай, если что-то пропустили)
+  // НОВОЕ: Отслеживание изменений внутри CartDrawer
   // ========================================
-  setInterval(function() {
-    // Проверяем, открыт ли cart-drawer
-    const cartDrawer = document.querySelector('.cart-drawer, .drawer[open], [data-drawer-open="true"]');
+  function observeCartDrawer() {
+    const cartDrawer = document.getElementById('CartDrawer');
     if (cartDrawer) {
-      console.log('⏰ Periodic check: cart drawer is open, replacing images...');
-      replaceCartImages();
+      console.log('👁️ Setting up observer for #CartDrawer');
+      let debounceTimer = null;
+      
+      const cartContentObserver = new MutationObserver(function(mutations) {
+        // Используем debounce чтобы не вызывать replaceCartImages слишком часто
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function() {
+          console.log('🔄 CartDrawer content changed, replacing images...');
+          replaceCartImages();
+        }, 200);
+      });
+      
+      cartContentObserver.observe(cartDrawer, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['class', 'data-quantity', 'src']
+      });
+    } else {
+      // Если CartDrawer еще не существует, пробуем позже
+      setTimeout(observeCartDrawer, 1000);
     }
-  }, 3000); // Проверка каждые 3 секунды
+  }
+  
+  // Запускаем наблюдение за CartDrawer
+  observeCartDrawer();
 
   // ========================================
   // СЛУШАТЕЛЬ: Сообщения от Anvil iframe
