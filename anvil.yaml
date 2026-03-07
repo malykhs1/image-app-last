@@ -21,7 +21,8 @@ db_schema:
   creations:
     client: none
     columns:
-    - admin_ui: {width: 200}
+    - admin_ui: {order: 0, width: 455}
+      client_hidden: false
       name: in_image
       type: media
     - admin_ui: {width: 200}
