@@ -697,11 +697,11 @@ class Create(CreateTemplate):
       self.button_create.visible = True
       self.is_creating = False  # Разрешаем повторное нажатие после ошибки
       # Telegram отключен
-      # anvil.server.call('send_telegram_message','Someone is trying to create and server is down!')
+      anvil.server.call('send_telegram_message','Someone is trying to create and server is down!')
       if self.locale == 'he':
-        alert('השרת כרגע אינו זמין. אנא נסה שוב מאוחר יותר.')
+        alert('השרת כרגע למטה בשביל תחזוקה, הוא יהיה זמין בעוד כמה דקות.')
       else:
-        alert('The server is currently unreachable. Please try again soon.')
+        alert('The server is currently down. It will be up again in few minutes.')
       return
 
     self.linear_progress.visible = False

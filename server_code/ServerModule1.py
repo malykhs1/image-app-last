@@ -8,38 +8,38 @@ import requests
 from datetime import datetime
 
 # Telegram отключен
-# @anvil.server.callable
-# def send_telegram_message(message):
-#   BOT_TOKEN = '7125646035:AAFyT7KcJx0FSBQG5KJ-xhEnxuSRYAfhaPQ'
-#   CHAT_ID = '909283054'
-#   url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
-#   response = requests.get(url)
-#   return response.json()
-
 @anvil.server.callable
-def create(cropped_img, paramsDict, mask_img, img_name):
-  """Создание artwork из изображения (временная заглушка)"""
-  print(f"SERVER: create() called for {img_name}")
-  session_id = get_session_id()
+def send_telegram_message(message):
+  BOT_TOKEN = '7125646035:AAFyT7KcJx0FSBQG5KJ-xhEnxuSRYAfhaPQ'
+  CHAT_ID = '909283054'
+  url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
+  response = requests.get(url)
+  return response.json()
 
-  # ВРЕМЕННО: Пока без обработки - просто сохраняем исходное изображение
-  # TODO: Добавить реальную обработку изображения (эффект нитей/плетения)
+# @anvil.server.callable
+# def create(cropped_img, paramsDict, mask_img, img_name):
+#   """Создание artwork из изображения (временная заглушка)"""
+#   print(f"SERVER: create() called for {img_name}")
+#   session_id = get_session_id()
 
-  # Временный расчет длины нити (можно заменить на реальный алгоритм)
-  wire_len_km = 0.5  # Примерное значение в километрах
+#   # ВРЕМЕННО: Пока без обработки - просто сохраняем исходное изображение
+#   # TODO: Добавить реальную обработку изображения (эффект нитей/плетения)
 
-  # Сохраняем в базу данных
-  row = app_tables.creations.add_row(
-    session_id=session_id,
-    in_image=cropped_img,
-    out_image=cropped_img,  # Пока возвращаем то же изображение
-    out_image_medium=cropped_img,
-    wire_len_km=wire_len_km,
-    created_at=datetime.now()
-  )
+#   # Временный расчет длины нити (можно заменить на реальный алгоритм)
+#   wire_len_km = 0.5  # Примерное значение в километрах
 
-  print(f"SERVER: Created row with ID {row.get_id()}")
-  return row
+#   # Сохраняем в базу данных
+#   row = app_tables.creations.add_row(
+#     session_id=session_id,
+#     in_image=cropped_img,
+#     out_image=cropped_img,  # Пока возвращаем то же изображение
+#     out_image_medium=cropped_img,
+#     wire_len_km=wire_len_km,
+#     created_at=datetime.now()
+#   )
+
+#   print(f"SERVER: Created row with ID {row.get_id()}")
+#   return row
 
 @anvil.server.callable
 def get_session_id():
@@ -72,24 +72,21 @@ def launch_add_to_cart_task(item, locale):
 
 @anvil.server.background_task
 def add_to_cart_bg_task(item, locale):
-  # Конвертируем row объект в словарь для создания новой записи
-  # Включаем только поля, которые существуют в таблице cart_added
-  item_dict = {
-    'out_image': item['out_image'],
-    'wire_len_km': item['wire_len_km']
-  }
 
-  row = app_tables.cart_added.add_row(**item_dict)
+  # Add the item with ALL it's fields to cart_added table
+  # This is important because we periodically delete items from Creations table (to clean up space)
+  # but not from cart_added table
+  row = app_tables.cart_added.add_row(**item)
   anvil_id = row.get_id()
   
-  # НОВАЯ ЛОГИКА: Вместо создания нового продукта,
-  # загружаем изображение в Shopify CDN и возвращаем его URL
+  # NEW LOGIC: Instead of creating a new product,
+  # upload the image to Shopify CDN and return its URL
   admin_token = anvil.secrets.get_secret('admin_API_token')
   
-  # ВАЖНО: Используем myshopify.com домен для API, не кастомный домен
-  # paraloom.co.il - это кастомный домен, API работает через *.myshopify.com
-  # TODO: Уточнить правильный myshopify.com поддомен для paraloom.co.il
-  shop_domain = "txmx0c-cc.myshopify.com"  # Используем старый домен (временно)
+  # IMPORTANT: Use the myshopify.com domain for the API, not the custom domain
+  # paraloom.co.il is a custom domain; the API works via *.myshopify.com
+  # TODO: Verify the correct myshopify.com subdomain for paraloom.co.il
+  shop_domain = "txmx0c-cc.myshopify.com"  # Using the old domain (temporarily)
   
   client = Shopify_API.ShopifyClient(
     shop_domain, 
@@ -97,11 +94,11 @@ def add_to_cart_bg_task(item, locale):
     "gid://shopify/Publication/128141623411"
   )
   
-  # Загружаем изображение в Shopify CDN
+  # Upload the image to Shopify CDN
   image_url = client.upload_image(row['out_image'])
   print("SERVER: Uploaded image to Shopify CDN: " + str(image_url))
   
-  # Возвращаем фиксированный variant_id существующего продукта и image URL
-  fixed_variant_id = "44317714841715"  # ID варианта продукта 8199461339251
+  # Return the fixed variant_id of an existing product and the image URL
+  fixed_variant_id = "44317714841715"  # Variant ID of product 8199461339251
   
   return fixed_variant_id, anvil_id, image_url
